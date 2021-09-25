@@ -27,7 +27,6 @@ function Login({ setUser }) {
         <Header centered>Login</Header>
         <Segment>
           <Form onSubmit={handleSubmit}>
-            {/* <Form.Group> */}
             <Form.Input
               placeholder="Name"
               label="name"
@@ -44,7 +43,6 @@ function Login({ setUser }) {
               onChange={(e) => setPassword(e.target.value)}
             />
             <Form.Button content="Log-in" fluid primary />
-            {/* </Form.Group> */}
           </Form>
         </Segment>
       </Grid.Column>
