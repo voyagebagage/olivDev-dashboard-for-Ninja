@@ -1,15 +1,14 @@
 import "./index.css";
 import React, { useState } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
+  BrowserRouter as Switch,
   Route,
   Link,
   Redirect,
-  useHistory,
+  // useHistory,
   useLocation,
 } from "react-router-dom";
-import { Header, Icon, Image, Menu, Segment, Sidebar } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { SidebarData } from "./SidebarData";
 import Campaigns from "../../views/Campaigns";
 import Dashboard from "../../views/Dashboard";
@@ -24,9 +23,7 @@ const SidebarComponent = () => {
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
   const [token, setToken] = useState(Cookies.get("token") || null);
   const [username, setUsername] = useState(Cookies.get("username") || "");
-  let history = useHistory();
   let location = useLocation();
-  let path = location.pathname;
 
   const setUser = (userToken, username) => {
     setToken(userToken);

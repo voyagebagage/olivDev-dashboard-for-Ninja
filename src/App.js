@@ -1,10 +1,10 @@
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Campaigns from "./views/Campaigns";
-import Dashboard from "./views/Dashboard";
-import Interested from "./views/Interested";
+import { BrowserRouter as Router } from "react-router-dom";
+// import Campaigns from "./views/Campaigns";
+// import Dashboard from "./views/Dashboard";
+// import Interested from "./views/Interested";
 
 import SidebarComponent from "./component/Sidebar";
 
