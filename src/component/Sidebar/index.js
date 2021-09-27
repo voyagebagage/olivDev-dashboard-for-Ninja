@@ -5,32 +5,26 @@ import {
   Route,
   Link,
   Redirect,
-  // useHistory,
-  useLocation,
+  useHistory,
+  Router,
+  // useLocation,
 } from "react-router-dom";
 import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { SidebarData } from "./SidebarData";
 import Campaigns from "../../views/Campaigns";
-import Dashboard from "../../views/Dashboard";
-import Interested from "../../views/Interested";
-import QualifiedLead from "../../views/QualifiedLead";
+import LeaderBoard from "../../views/Dashboard";
+import Agent from "../../views/Agent";
+import Reports from "../../views/Reports";
+import ClientList from "../../views/ClientList";
+import Stats from "../../views/Stats";
 // import User from "../../views/" ;
-import Login from "../../views/Login";
-import Cookies from "js-cookie";
+// import Login from "../../views/Login";
+//plugins
 
-const SidebarComponent = () => {
-  const [sidebarItem, setSidebarItem] = useState(false);
-  const handleSidebarItem = () => setSidebarItem(!sidebarItem);
-  const [token, setToken] = useState(Cookies.get("token") || null);
-  const [username, setUsername] = useState(Cookies.get("username") || "");
-  let location = useLocation();
+const SidebarComponent = ({ sidebarItem }) => {
+  // let location = useLocation();
+  let history = useHistory();
 
-  const setUser = (userToken, username) => {
-    setToken(userToken);
-    setUsername(username);
-    Cookies.set("token", userToken, { expires: 1 });
-    Cookies.set("username", username, { expires: 1 });
-  };
   return (
     <>
       <Sidebar.Pushable as={Segment}>
@@ -49,65 +43,52 @@ const SidebarComponent = () => {
             return (
               <Menu.Item
                 key={index}
-                as={view.path ? Link : null}
+                as={Link}
                 to={view.path}
                 className={view.cName}
-                onClick={index === 0 ? () => handleSidebarItem() : null}
+                // label={{ pointing: "right" }}
               >
                 <Icon name={view.iconName} />
-                {view.title ? view.title : null}
+                {view.title}
               </Menu.Item>
             );
           })}
         </Sidebar>
 
         <Sidebar.Pusher>
-          <Segment basic>
-            {console.log(location.pathname)}
-            <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route path="/login">
-                <Login setUser={setUser} />
-              </Route>
+          <Segment
+            basic
+            style={
+              sidebarItem
+                ? { width: "85vw", minWidth: "35vw" }
+                : { width: "80vw", minWidth: "35vw" }
+            }
+          >
+            {/* <Router> */}
+            {/* <Switch> */}
+            <Route exact path="/" component={LeaderBoard} />
 
-              <Route path="/campaigns">
-                {token ? <Campaigns token={token} /> : <Redirect to="/login" />}
-              </Route>
-              <Route path="/qualifiedLead">
-                {token ? (
-                  <QualifiedLead token={token} />
-                ) : (
-                  <Redirect to="/login" />
-                )}
-              </Route>
-              <Route path="/interested">
-                {token ? (
-                  <Interested token={token} />
-                ) : (
-                  <Redirect to="/login" />
-                )}
-              </Route>
-              {/* <Route path="/user/details">
-                {token ? <User token={token} /> : <Redirect to="/login" />}
-              </Route>
-              <Route path="/meetings">
-                {token ? <Meetings token={token} /> : <Redirect to="/login" />}
-              </Route> */}
-              {/* <Route path="/charts">
-                {token ? <Charts token={token} /> : <Redirect to="/login" />}
-              </Route> */}
-              {/* <Route path="/qualifiedLead" component={QualifiedLead} />
-              <Route path="/interested" component={Interested} /> */}
-            </Switch>
+            <Route path="/client-list" component={ClientList} />
+
+            <Route path="/campaigns">
+              <Campaigns />
+            </Route>
+            <Route path="/reports">
+              <Reports />
+            </Route>
+            <Route path="/agent">
+              <Agent />
+            </Route>
+
+            <Route path="/stats">
+              <Stats />
+            </Route>
+            {/* </Switch> */}
+            {/* </Router> */}
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     </>
   );
 };
-
-// const SidebarComponent = () => (
-
-// );
-
 export default SidebarComponent;

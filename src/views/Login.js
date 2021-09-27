@@ -13,7 +13,7 @@ function Login({ setUser }) {
     e.preventDefault();
     try {
       setUser(Math.ceil(Math.random() * 10000), name);
-      history.goBack();
+      history.push("/");
     } catch (error) {
       console.log(error);
     }

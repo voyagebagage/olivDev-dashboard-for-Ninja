@@ -1,7 +1,7 @@
 // import { Redirect } from "react-router-dom";
 
-function QualifiedLead() {
+function Reports() {
   return <h1>Q.Leads</h1>;
 }
 
-export default QualifiedLead;
+export default Reports;
