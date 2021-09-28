@@ -20,7 +20,7 @@ function Client() {
   const [visible, setVisible] = useState(false);
   //---------------------Function------------------------------
   const handleMoreButton = () => setVisible(true);
-
+  const handleClickClient = () => history.push("/client");
   let history = useHistory();
 
   return (
@@ -52,7 +52,7 @@ function Client() {
           <Table.Body>
             {/* ---------------------TABLE BODY---------------------------- */}
             <Table.Row
-              onClick={() => history.push("/client")}
+              onClick={handleClickClient}
               style={{ cursor: "pointer" }}
             >
               <Table.Cell>0123</Table.Cell>
@@ -65,7 +65,7 @@ function Client() {
                 <Radio toggle />
               </Table.Cell>
             </Table.Row>
-            <Table.Row onClick={() => history.push("/client")}>
+            <Table.Row onClick={handleClickClient}>
               <Table.Cell>01234</Table.Cell>
               <Table.Cell>Sonia</Table.Cell>
               <Table.Cell>jhlfgfdilk22@yahoo.com</Table.Cell>
@@ -76,7 +76,7 @@ function Client() {
                 <Radio toggle />
               </Table.Cell>
             </Table.Row>
-            <Table.Row onClick={() => history.push("/client")}>
+            <Table.Row onClick={handleClickClient}>
               <Table.Cell>01235</Table.Cell>
               <Table.Cell>Sameer</Table.Cell>
               <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
@@ -87,7 +87,7 @@ function Client() {
                 <Radio toggle />
               </Table.Cell>
             </Table.Row>
-            <Table.Row onClick={() => history.push("/client")}>
+            <Table.Row onClick={handleClickClient}>
               <Table.Cell>01236</Table.Cell>
               <Table.Cell>Sameer</Table.Cell>
               <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
@@ -111,78 +111,80 @@ function Client() {
             totalPages={10}
           />
         </div>
-        <Sidebar
-          as={Menu}
-          animation="overlay"
-          direction="right"
-          vertical
-          visible={visible}
-          onHide={() => setVisible(false)}
-          style={{ width: "28vw" }}
-        >
-          <Segment style={{ padding: "7%" }}>
-            <Form>
-              <Form.Group inline>
+        <div style={{ height: "100vh" }}>
+          <Sidebar
+            as={Menu}
+            animation="overlay"
+            direction="right"
+            vertical
+            visible={visible}
+            onHide={() => setVisible(false)}
+            style={{ width: "30vw" }}
+          >
+            <Segment style={{ padding: "7%" }} basic>
+              <Form>
+                <Form.Group inline>
+                  <Form.Input
+                    type="text"
+                    label="First Name"
+                    placeholder="Matthew"
+                    // value={name}
+                  />
+
+                  <Form.Input
+                    type="text"
+                    label="Last Name"
+                    placeholder="Dunn"
+                    // value={name}
+                  />
+                </Form.Group>
                 <Form.Input
                   type="text"
-                  label="First Name"
-                  placeholder="Matthew"
-                  // value={name}
-                />
+                  label="Email"
+                  placeholder="Email"
+                  // value={email}
 
+                  // onChange={}
+                />
                 <Form.Input
                   type="text"
-                  label="Last Name"
-                  placeholder="Dunn"
-                  // value={name}
+                  label="Company"
+                  placeholder="Company"
+                  // value={company}
+                  // onChange={}
                 />
-              </Form.Group>
-              <Form.Input
-                type="text"
-                label="Email"
-                placeholder="Email"
-                // value={email}
+                <Form.Input
+                  type="text"
+                  label="Website"
+                  placeholder="Website"
+                  // value={website}
 
-                // onChange={}
-              />
-              <Form.Input
-                type="text"
-                label="Company"
-                placeholder="Company"
-                // value={company}
-                // onChange={}
-              />
-              <Form.Input
-                type="text"
-                label="Website"
-                placeholder="Website"
-                // value={website}
+                  // onChange={}
+                />
+                <Form.Input
+                  type="text"
+                  label="Location"
+                  placeholder="Location"
+                  // value={location}
 
-                // onChange={}
-              />
-              <Form.Input
-                type="text"
-                label="Location"
-                placeholder="Location"
-                // value={location}
+                  // onChange={}
+                />
+                <Form.Input
+                  type="text"
+                  label="Notes"
+                  placeholder="Notes"
+                  // value={notes}
 
-                // onChange={}
-              />
-              <Form.Input
-                type="text"
-                label="Notes"
-                placeholder="Notes"
-                // value={notes}
+                  // onChange={}
+                />
 
-                // onChange={}
-              />
-
-              <Button type="submit" primary fluid>
-                Add Client
-              </Button>
-            </Form>
-          </Segment>
-        </Sidebar>
+                <Button type="submit" primary fluid>
+                  Add Client
+                </Button>
+              </Form>
+            </Segment>
+          </Sidebar>
+        </div>
       </Sidebar.Pushable>
     </>
   );

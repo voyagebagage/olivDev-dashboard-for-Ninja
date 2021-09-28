@@ -17,10 +17,8 @@ import Agent from "../../views/Agent";
 import Reports from "../../views/Reports";
 import ClientList from "../../views/ClientList";
 import Stats from "../../views/Stats";
-// import User from "../../views/" ;
-// import Login from "../../views/Login";
-//plugins
-
+// import Client from "../../views/ClientDetails" ;
+import ClientDetails from "../../views/ClientDetails";
 const SidebarComponent = ({ sidebarItem }) => {
   // let location = useLocation();
   let history = useHistory();
@@ -46,7 +44,6 @@ const SidebarComponent = ({ sidebarItem }) => {
                 as={Link}
                 to={view.path}
                 className={view.cName}
-                // label={{ pointing: "right" }}
               >
                 <Icon name={view.iconName} />
                 {view.title}
@@ -64,11 +61,10 @@ const SidebarComponent = ({ sidebarItem }) => {
                 : { width: "80vw", minWidth: "35vw" }
             }
           >
-            {/* <Router> */}
-            {/* <Switch> */}
             <Route exact path="/" component={LeaderBoard} />
 
             <Route path="/client-list" component={ClientList} />
+            <Route path="/client" component={ClientDetails} />
 
             <Route path="/campaigns">
               <Campaigns />
@@ -83,8 +79,6 @@ const SidebarComponent = ({ sidebarItem }) => {
             <Route path="/stats">
               <Stats />
             </Route>
-            {/* </Switch> */}
-            {/* </Router> */}
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>

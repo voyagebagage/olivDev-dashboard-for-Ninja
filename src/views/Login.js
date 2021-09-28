@@ -22,7 +22,7 @@ function Login({ setUser }) {
     // <div>
     <Grid centered relaxed>
       <Grid.Column
-        style={{ marginTop: "10vh", maxWidth: "20vw", marginLeft: "-12.5%" }}
+      // style={{ marginTop: "10vh", maxWidth: "20vw", marginLeft: "-12.5%" }}
       >
         <Header centered>Login</Header>
         <Segment>
