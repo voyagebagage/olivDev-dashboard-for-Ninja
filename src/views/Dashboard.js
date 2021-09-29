@@ -6,6 +6,9 @@ import {
   Table,
   Icon,
   Segment,
+  Pagination,
+  Grid,
+  Container,
 } from "semantic-ui-react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -14,17 +17,17 @@ import { useState } from "react";
 function Dashboard() {
   const [activeItem, setActiveItem] = useState("daily");
   const handle = useFullScreenHandle();
-  console.log(handle.active);
+  console.log(handle);
   return (
     <Segment basic>
-      <FullScreen handle={handle}>
-        <div
-          style={
-            handle.active
-              ? { paddingLeft: "10%", paddingRight: "10%", paddingTop: "2%" }
-              : null
-          }
-        >
+      <div
+        style={
+          handle.active
+            ? { paddingLeft: "10%", paddingRight: "10%", paddingTop: "2%" }
+            : { width: "50vw" }
+        }
+      >
+        <FullScreen handle={handle}>
           <Menu fluid widths={3} style={{ marginTop: "5vh" }}>
             <Menu.Item
               name="daily"
@@ -56,10 +59,8 @@ function Dashboard() {
               <Table.Row>
                 <Table.HeaderCell>RANK</Table.HeaderCell>
                 <Table.HeaderCell>NINJA</Table.HeaderCell>
-                <Table.HeaderCell>Q.LEADS</Table.HeaderCell>
-                <Table.HeaderCell>INTERESTED</Table.HeaderCell>
-                {/* <Table.HeaderCell>POINTS</Table.HeaderCell> */}
-                <Table.HeaderCell>% TO TARGET</Table.HeaderCell>
+                <Table.HeaderCell>POINTS</Table.HeaderCell>
+                {/* <Table.HeaderCell>% TO TARGET</Table.HeaderCell> */}
                 <Table.HeaderCell>+/-</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -73,37 +74,31 @@ function Dashboard() {
                       color="yellow"
                       // size="large"
                     />
-                    First
+                    1st
                   </Label>
                 </Table.Cell>
                 <Table.Cell>John Lilki</Table.Cell>
-                <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   {/* <Icon name="level down alternate" color="red" /> */}-
                 </Table.Cell>
               </Table.Row>
               <Table.Row positive>
                 <Table.Cell>
-                  <Label ribbon>Second</Label>
+                  <Label ribbon>2nd</Label>
                 </Table.Cell>
                 <Table.Cell>Jamie Harington</Table.Cell>
-                <Table.Cell>January 11, 2014</Table.Cell>
-                <Table.Cell>jamieharingonton@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level down alternate" color="red" />
                 </Table.Cell>
               </Table.Row>
               <Table.Row positive>
                 <Table.Cell>
-                  <Label ribbon>Third</Label>
+                  <Label ribbon>3rd</Label>
                 </Table.Cell>
                 <Table.Cell>Jill Lewis</Table.Cell>
-                <Table.Cell>May 11, 2014</Table.Cell>
-                <Table.Cell>jilsewris22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level up alternate" color="green" />
                 </Table.Cell>
@@ -111,9 +106,7 @@ function Dashboard() {
               <Table.Row>
                 <Table.Cell>John Lilki</Table.Cell>
                 <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level up alternate" color="green" />
                 </Table.Cell>
@@ -121,19 +114,15 @@ function Dashboard() {
               <Table.Row>
                 <Table.Cell>John Lilki</Table.Cell>
                 <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level up alternate" color="green" />
                 </Table.Cell>
               </Table.Row>
               <Table.Row negative>
                 <Table.Cell>Jamie Harington</Table.Cell>
-                <Table.Cell>January 11, 2014</Table.Cell>
                 <Table.Cell>jamieharingonton@yahoo.com</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level down alternate" color="red" />
                 </Table.Cell>
@@ -141,9 +130,7 @@ function Dashboard() {
               <Table.Row negative>
                 <Table.Cell>Jill Lewis</Table.Cell>
                 <Table.Cell>May 11, 2014</Table.Cell>
-                <Table.Cell>jilsewris22@yahoo.com</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level down alternate" color="red" />
                 </Table.Cell>
@@ -151,17 +138,41 @@ function Dashboard() {
               <Table.Row negative>
                 <Table.Cell>John Lilki</Table.Cell>
                 <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-                <Table.Cell>%</Table.Cell>
+                <Table.Cell>pts</Table.Cell>
                 <Table.Cell>
                   <Icon name="level down alternate" color="red" />
-                </Table.Cell>{" "}
+                </Table.Cell>
               </Table.Row>
             </Table.Body>
           </Table>
-        </div>
-      </FullScreen>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Pagination defaultActivePage={5} totalPages={10} />
+          </div>
+        </FullScreen>
+        <Segment basic>
+          <Container text>
+            <Header size="small">TOTALS</Header>
+            <p>
+              lipsum textlipsum textlipsum textlipsum textlipsum textlipsum
+              textlipsum textlipsum text
+            </p>
+          </Container>
+        </Segment>
+        <Grid floated relaxed="very" columns={4}>
+          <Grid.Column>
+            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+          </Grid.Column>
+          <Grid.Column>
+            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+          </Grid.Column>
+          <Grid.Column>
+            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+          </Grid.Column>
+          <Grid.Column>
+            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+          </Grid.Column>
+        </Grid>
+      </div>
     </Segment>
   );
 }

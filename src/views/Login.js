@@ -21,9 +21,7 @@ function Login({ setUser }) {
   return (
     // <div>
     <Grid centered relaxed>
-      <Grid.Column
-      // style={{ marginTop: "10vh", maxWidth: "20vw", marginLeft: "-12.5%" }}
-      >
+      <Grid.Column style={{ marginTop: "10vh", maxWidth: "30vw" }}>
         <Header centered>Login</Header>
         <Segment>
           <Form onSubmit={handleSubmit}>

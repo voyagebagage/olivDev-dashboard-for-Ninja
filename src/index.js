@@ -1,11 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import Layout from "./Layout";
+import { BrowserRouter, Router, Switch, Redirect } from "react-router-dom";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Layout />
+  </BrowserRouter>,
   document.getElementById("root")
 );
+
+{
+  // <React.StrictMode>
+  /* </React.StrictMode>, */
+}

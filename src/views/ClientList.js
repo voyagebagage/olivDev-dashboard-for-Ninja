@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-
+import { countries, toggleActive } from "../arrayLists/countries";
 import {
   Button,
   Image,
@@ -13,6 +13,7 @@ import {
   Table,
   Pagination,
   Radio,
+  Dropdown,
 } from "semantic-ui-react";
 
 function Client() {
@@ -138,44 +139,63 @@ function Client() {
                     // value={name}
                   />
                 </Form.Group>
-                <Form.Input
-                  type="text"
-                  label="Email"
-                  placeholder="Email"
-                  // value={email}
+                <Form.Group fluid>
+                  <Form.Input
+                    type="text"
+                    label="Email"
+                    // placeholder="Email"
+                    // value={email}
+                    // onChange={}
+                  />
+                  <Form.Input
+                    fluid
+                    type="text"
+                    label="Phone"
+                    // placeholder="Email"
+                    // value={email}
+                    // onChange={}
+                  />
+                </Form.Group>
+                <Form.Group fluid>
+                  <Form.Input
+                    type="text"
+                    label="Company Name"
+                    // placeholder="Company"
+                    // value={company}
+                    // onChange={}
+                  />
 
-                  // onChange={}
-                />
-                <Form.Input
-                  type="text"
-                  label="Company"
-                  placeholder="Company"
-                  // value={company}
-                  // onChange={}
-                />
+                  <Form.Dropdown
+                    clearable
+                    search
+                    selection
+                    options={countries}
+                    label="Select Country"
+                  />
+                </Form.Group>
                 <Form.Input
                   type="text"
                   label="Website"
-                  placeholder="Website"
+                  // placeholder="Website"
                   // value={website}
 
                   // onChange={}
                 />
-                <Form.Input
+
+                {/* <Form.Input
                   type="text"
                   label="Location"
                   placeholder="Location"
                   // value={location}
 
                   // onChange={}
-                />
-                <Form.Input
-                  type="text"
-                  label="Notes"
-                  placeholder="Notes"
+                /> */}
+                <Form.Dropdown
+                  label="Status"
+                  selection
+                  search
+                  options={toggleActive}
                   // value={notes}
-
-                  // onChange={}
                 />
 
                 <Button type="submit" primary fluid>

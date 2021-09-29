@@ -16,7 +16,7 @@ import Header from "./component/Header";
 
 import Cookies from "js-cookie";
 
-function App() {
+function Layout() {
   //---------------------States------------------------------
   const [sidebarItem, setSidebarItem] = useState(false);
   const [token, setToken] = useState(Cookies.get("token") || null);
@@ -55,4 +55,4 @@ function App() {
   );
 }
 
-export default App;
+export default Layout;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 function Header({ handleSidebarItem }) {
   return (
     <div>
-      <Menu stackable>
+      <Menu stackable transparent>
         <Menu.Item>
           <img src="https://react.semantic-ui.com/logo.png" />
         </Menu.Item>
@@ -13,7 +13,11 @@ function Header({ handleSidebarItem }) {
         </Menu.Item>
         <Menu.Menu position="right">
           <Menu.Item>
-            <Input transparent icon="search" placeholder="Search..." />
+            <Input
+              icon="search"
+              placeholder="Search..."
+              style={{ borderRadius: "50%" }}
+            />
           </Menu.Item>
         </Menu.Menu>
       </Menu>
