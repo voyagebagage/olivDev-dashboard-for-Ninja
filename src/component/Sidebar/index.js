@@ -10,15 +10,8 @@ import {
   // useLocation,
 } from "react-router-dom";
 import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
-import { SidebarData } from "./SidebarData";
-import Campaigns from "../../views/Campaigns";
-import LeaderBoard from "../../views/Dashboard";
-import Agent from "../../views/Agent";
-import Reports from "../../views/Reports";
-import ClientList from "../../views/ClientList";
-import Stats from "../../views/Stats";
-// import Client from "../../views/ClientDetails" ;
-import ClientDetails from "../../views/ClientDetails";
+import { Routes } from "../../Routes";
+
 const SidebarComponent = ({ sidebarItem }) => {
   // let location = useLocation();
   let history = useHistory();
@@ -31,13 +24,15 @@ const SidebarComponent = ({ sidebarItem }) => {
           animation="uncover"
           direction="left"
           icon="labeled"
-          color="blue"
+          primary
+          // color="8CABA0"
           inverted
           vertical
           visible
           width={sidebarItem ? "thin" : "big"}
+          style={{ backgroundColor: "#8CABA0" }}
         >
-          {SidebarData.map((view, index) => {
+          {Routes.map((view, index) => {
             return (
               <Menu.Item
                 key={index}
@@ -57,28 +52,17 @@ const SidebarComponent = ({ sidebarItem }) => {
             basic
             style={
               sidebarItem
-                ? { width: "85vw", minWidth: "35vw" }
-                : { width: "80vw", minWidth: "35vw" }
+                ? { width: "85vw", minWidth: "35vw", height: "92vh" }
+                : { width: "80vw", minWidth: "35vw", height: "92vh" }
             }
           >
-            <Route exact path="/" component={LeaderBoard} />
-
-            <Route path="/client-list" component={ClientList} />
-            <Route path="/client" component={ClientDetails} />
-
-            <Route path="/campaigns">
-              <Campaigns />
-            </Route>
-            <Route path="/reports">
-              <Reports />
-            </Route>
-            <Route path="/agent">
-              <Agent />
-            </Route>
-
-            <Route path="/stats">
-              <Stats />
-            </Route>
+            {Routes.map((route, index) => (
+              <Route
+                exact={route.exact}
+                path={route.path}
+                component={route.component}
+              />
+            ))}
           </Segment>
         </Sidebar.Pusher>
       </Sidebar.Pushable>

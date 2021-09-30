@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { countries, toggleActive } from "../arrayLists/countries";
+import AddIcon from "../component/AddIcon";
+import { PaginationShortCentered } from "../component/Pagination";
+import SidebarForm from "../component/SidebarForm";
+
 import {
   Button,
   Image,
@@ -14,31 +18,35 @@ import {
   Pagination,
   Radio,
   Dropdown,
+  Message,
+  Header,
 } from "semantic-ui-react";
 
 function Client() {
   //---------------------States------------------------------
   const [visible, setVisible] = useState(false);
+  const [activeCampaign, setActiveCampaign] = useState(false);
   //---------------------Function------------------------------
-  const handleMoreButton = () => setVisible(true);
+  // const handleMoreButton = () => setVisible(true);
   const handleClickClient = () => history.push("/client");
   let history = useHistory();
 
   return (
     <>
       <Sidebar.Pushable as={List}>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Icon
-            size="big"
-            name="add circle"
-            color="green"
-            onClick={handleMoreButton}
-          />
-        </div>
+        <Segment
+          basic
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Header as="h2">Clients</Header>
+          <AddIcon setVisible={setVisible} />
+        </Segment>
 
         <Table striped>
           {/* ---------------------TABLE HEADER---------------------------- */}
-
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing>ID</Table.HeaderCell>
@@ -101,88 +109,86 @@ function Client() {
             </Table.Row>
           </Table.Body>
         </Table>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Pagination
-            boundaryRange={0}
-            defaultActivePage={1}
-            ellipsisItem={null}
-            firstItem={null}
-            lastItem={null}
-            siblingRange={1}
-            totalPages={10}
-          />
-        </div>
-        <div style={{ height: "100vh" }}>
-          <Sidebar
-            as={Menu}
-            animation="overlay"
-            direction="right"
-            vertical
-            visible={visible}
-            onHide={() => setVisible(false)}
-            style={{ width: "30vw" }}
+        <PaginationShortCentered />
+        {/* ------------------------------------------------------------------
+        -                                 SIDEBAR                        -
+        ------------------------------------------------------------------ */}
+        <SidebarForm setVisible={setVisible} visible={visible}>
+          <Segment
+            as="h3"
+            padded
+            fluid
+            size="huge"
+            style={{
+              borderRightWidth: 0,
+              borderRadius: 0,
+            }}
           >
-            <Segment style={{ padding: "7%" }} basic>
-              <Form>
-                <Form.Group inline>
-                  <Form.Input
-                    type="text"
-                    label="First Name"
-                    placeholder="Matthew"
-                    // value={name}
-                  />
-
-                  <Form.Input
-                    type="text"
-                    label="Last Name"
-                    placeholder="Dunn"
-                    // value={name}
-                  />
-                </Form.Group>
-                <Form.Group fluid>
-                  <Form.Input
-                    type="text"
-                    label="Email"
-                    // placeholder="Email"
-                    // value={email}
-                    // onChange={}
-                  />
-                  <Form.Input
-                    fluid
-                    type="text"
-                    label="Phone"
-                    // placeholder="Email"
-                    // value={email}
-                    // onChange={}
-                  />
-                </Form.Group>
-                <Form.Group fluid>
-                  <Form.Input
-                    type="text"
-                    label="Company Name"
-                    // placeholder="Company"
-                    // value={company}
-                    // onChange={}
-                  />
-
-                  <Form.Dropdown
-                    clearable
-                    search
-                    selection
-                    options={countries}
-                    label="Select Country"
-                  />
-                </Form.Group>
+            New Client
+          </Segment>
+          {/* ------------------------------------------------------------------
+        -                                 FORM                        -
+      ------------------------------------------------------------------ */}
+          <Segment style={{ padding: "9%" }} padded basic>
+            <Form widths="equal">
+              <Form.Group>
                 <Form.Input
                   type="text"
-                  label="Website"
-                  // placeholder="Website"
-                  // value={website}
+                  label="First Name"
+                  placeholder="Matthew"
+                  // value={name}
+                />
 
+                <Form.Input
+                  type="text"
+                  label="Last Name"
+                  placeholder="Dunn"
+                  // value={name}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Input
+                  type="text"
+                  label="Email"
+                  // placeholder="Email"
+                  // value={email}
+                  // onChange={}
+                />
+                <Form.Input
+                  type="text"
+                  label="Phone"
+                  // placeholder="Email"
+                  // value={email}
+                  // onChange={}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Input
+                  type="text"
+                  label="Company Name"
+                  // placeholder="Company"
+                  // value={company}
                   // onChange={}
                 />
 
-                {/* <Form.Input
+                <Form.Dropdown
+                  clearable
+                  search
+                  selection
+                  options={countries}
+                  label="Select Country"
+                />
+              </Form.Group>
+              <Form.Input
+                type="text"
+                label="Website"
+                // placeholder="Website"
+                // value={website}
+
+                // onChange={}
+              />
+
+              {/* <Form.Input
                   type="text"
                   label="Location"
                   placeholder="Location"
@@ -190,21 +196,46 @@ function Client() {
 
                   // onChange={}
                 /> */}
-                <Form.Dropdown
+              <Form.Group>
+                <Form.Select
                   label="Status"
-                  selection
-                  search
                   options={toggleActive}
                   // value={notes}
                 />
+                OR
+                <Form.Radio
+                  toggle
+                  onClick={() => setActiveCampaign(!activeCampaign)}
+                  label={activeCampaign ? "on campaign" : "no campaign"}
+                  // style={!activeCampaign ? { label: "grey" } : null}
+                />
+              </Form.Group>
 
-                <Button type="submit" primary fluid>
-                  Add Client
-                </Button>
-              </Form>
-            </Segment>
-          </Sidebar>
-        </div>
+              <Form.Button type="submit" primary fluid>
+                Add Client
+              </Form.Button>
+            </Form>
+          </Segment>
+          {/* <div
+            style={{
+              height: "100%",
+              // width: "100%",
+              display: "flex",
+              alignItems: "flex-end",
+              paddingBottom: 0,
+              backgroundColor: "blue",
+            }}
+          >
+            <Message
+              attached="bottom"
+              warning
+              style={{ backgroundColor: "red", justifySelf: "flex-end" }}
+            >
+              <Icon name="help" />
+              Already signed up?&nbsp;<a href="#">Login here</a>&nbsp;instead.
+            </Message>
+          </div> */}
+        </SidebarForm>
       </Sidebar.Pushable>
     </>
   );

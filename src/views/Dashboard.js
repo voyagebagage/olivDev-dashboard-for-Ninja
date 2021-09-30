@@ -10,6 +10,8 @@ import {
   Grid,
   Container,
 } from "semantic-ui-react";
+import { PaginationLong } from "../component/Pagination";
+
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { useState } from "react";
@@ -17,7 +19,6 @@ import { useState } from "react";
 function Dashboard() {
   const [activeItem, setActiveItem] = useState("daily");
   const handle = useFullScreenHandle();
-  console.log(handle);
   return (
     <Segment basic>
       <div
@@ -145,9 +146,7 @@ function Dashboard() {
               </Table.Row>
             </Table.Body>
           </Table>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Pagination defaultActivePage={5} totalPages={10} />
-          </div>
+          <PaginationLong />
         </FullScreen>
         <Segment basic>
           <Container text>

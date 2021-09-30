@@ -8,9 +8,6 @@ import {
   Switch,
 } from "react-router-dom";
 import Login from "./views/Login";
-// import Dashboard from "./views/Dashboard";
-// import Interested from "./views/Interested";
-
 import SidebarComponent from "./component/Sidebar";
 import Header from "./component/Header";
 
@@ -35,22 +32,23 @@ function Layout() {
       <Route path="/login">
         <Login setUser={setUser} />
       </Route>
-      <Switch>
-        <Route
-          render={() =>
-            token ? (
+      {/* ------------------------------------------------------------------
+        -                                 LAYOUT                        -
+        ------------------------------------------------------------------    */}
+      <Route
+        render={() =>
+          token ? (
+            <div style={{ height: "100vh" }}>
+              <Header handleSidebarItem={handleSidebarItem} />
               <div>
-                <Header handleSidebarItem={handleSidebarItem} />
-                <div style={{ height: "100vh" }}>
-                  <SidebarComponent sidebarItem={sidebarItem} />
-                </div>
+                <SidebarComponent sidebarItem={sidebarItem} />
               </div>
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
-        />
-      </Switch>
+            </div>
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
     </Router>
   );
 }

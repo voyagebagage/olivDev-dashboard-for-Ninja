@@ -1,4 +1,4 @@
-import { Menu, Input, Icon } from "semantic-ui-react";
+import { Menu, Input, Icon, Search } from "semantic-ui-react";
 import React, { useState } from "react";
 
 function Header({ handleSidebarItem }) {
@@ -13,7 +13,7 @@ function Header({ handleSidebarItem }) {
         </Menu.Item>
         <Menu.Menu position="right">
           <Menu.Item>
-            <Input
+            <Search
               icon="search"
               placeholder="Search..."
               style={{ borderRadius: "50%" }}
