@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, Route } from "react-router-dom";
 import { countries, toggleActive } from "../arrayLists/countries";
 import AddIcon from "../component/AddIcon";
 import { PaginationShortCentered } from "../component/Pagination";
 import SidebarForm from "../component/SidebarForm";
-
+// import ClientDetails from "./views/ClientDetails";
 import {
   Button,
   Image,
@@ -28,19 +28,16 @@ function Client() {
   const [activeCampaign, setActiveCampaign] = useState(false);
   //---------------------Function------------------------------
   // const handleMoreButton = () => setVisible(true);
-  const handleClickClient = () => history.push("/client");
+  const handleClickClient = () => {
+    // <Route path="/client" component={ClientDetails} />;
+    history.push("/client");
+  };
   let history = useHistory();
 
   return (
     <>
       <Sidebar.Pushable as={List}>
-        <Segment
-          basic
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+        <Segment basic className="dFlex-sBetween">
           <Header as="h2">Clients</Header>
           <AddIcon setVisible={setVisible} />
         </Segment>

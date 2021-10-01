@@ -1,34 +1,30 @@
 import Campaigns from "./views/Campaigns";
-import LeaderBoard from "./views/Dashboard";
+import Dashboard from "./views/Dashboard";
 import Agent from "./views/Agent";
 import Reports from "./views/Reports";
 import ClientList from "./views/ClientList";
 import Stats from "./views/Stats";
-// import Client from "../../views/ClientDetails" ;
 import ClientDetails from "./views/ClientDetails";
+// import Client from "../../views/ClientDetails";
+// import Dashboard from "./views/Dashboard";
+import AgentReport from "./views/AgentReport";
 
 export const Routes = [
-  // {
-  //   title: undefined,
-  //   path: undefined,
-  //   iconName: "sidebar",
-  //   cName: "nav-text",
-  // },
+  {
+    title: "Client",
+    path: "/client",
+    component: ClientDetails,
+    // iconName: "user",
+    cName: "nav-text",
+  },
   {
     title: "LeaderBoard",
     path: "/",
     exact: true,
-    component: LeaderBoard,
+    component: Dashboard,
     iconName: "game",
     cName: "nav-text",
   },
-  //   {
-  //     title: "Client",
-  //     path: "/client",
-  //     component: ClientDetails,
-  //     iconName: "user",
-  //     cName: "nav-text",
-  //   },
   {
     title: "Clients",
     path: "/client-list",
@@ -57,7 +53,12 @@ export const Routes = [
     iconName: "hand point right",
     cName: "nav-text",
   },
-
+  {
+    title: "Agent Report",
+    path: "/agent-report",
+    component: AgentReport,
+    cName: "nav-text",
+  },
   {
     title: "Stats",
     path: "/stats",

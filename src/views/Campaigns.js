@@ -19,10 +19,7 @@ function Campaigns() {
   return (
     <>
       <Sidebar.Pushable as={List}>
-        <Segment
-          basic
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
+        <Segment basic className="dFlex-sBetween">
           <Header as="h2">Campaigns</Header>
           <AddIcon setVisible={setVisible} />
         </Segment>

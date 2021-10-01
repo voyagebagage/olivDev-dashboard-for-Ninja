@@ -1,50 +1,51 @@
-import { Menu, Segment, Table, Label } from "semantic-ui-react";
-
+import {
+  Menu,
+  Segment,
+  Table,
+  Label,
+  Search,
+  Header,
+  Icon,
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { PaginationLong } from "../component/Pagination";
 function Agent() {
   return (
-    <>
-      <Menu fluid widths={3}>
-        <Menu.Item
-          name="Daily"
-          // active={activeItem === "Daily"}
-          // onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name="Weekly"
-          // // active={activeItem === "Weekly"}
-          // onClick={this.handleItemClick}
-        />
-        <Menu.Item
-          name="Monthly"
-          // active={activeItem === "Monthly"}
-          // onClick={this.handleItemClick}
-        />
-      </Menu>
-
+    <Segment basic padded style={{ width: "70vw" }}>
+      <div className="dFlex-sBetween">
+        <Segment basic>
+          <Header as="h2">Agent:{"name"}</Header>
+        </Segment>
+        <Search />
+      </div>
       <Table striped>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>RANK</Table.HeaderCell>
-            <Table.HeaderCell>NINJA</Table.HeaderCell>
-            <Table.HeaderCell>Q.LEADS</Table.HeaderCell>
-            <Table.HeaderCell>INTERESTED</Table.HeaderCell>
-            <Table.HeaderCell>POINTS</Table.HeaderCell>
-            <Table.HeaderCell>% TO TARGET</Table.HeaderCell>
-            <Table.HeaderCell>+/-</Table.HeaderCell>
+            <Table.HeaderCell>ID</Table.HeaderCell>
+            <Table.HeaderCell>AGENT</Table.HeaderCell>
+            <Table.HeaderCell>CAMPAIGNS</Table.HeaderCell>
+            <Table.HeaderCell>RANKING MONTHLY</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           <Table.Row positive>
             <Table.Cell>
-              <Label color="#8CABA0" ribbon>
-                First
-              </Label>
+              <Label ribbon>First</Label>
             </Table.Cell>
             <Table.Cell>John Lilki</Table.Cell>
-            <Table.Cell>September 14, 2013</Table.Cell>
+            <Table.Cell>
+              <Link to="/agent-report">
+                <Label tag>Ninja Academy</Label>
+              </Link>
+              <Link to="/agent-report">
+                <Label tag>Air Vape</Label>
+              </Link>
+              <Link to="/agent-report">
+                <Label tag>Cisco </Label>
+              </Link>
+            </Table.Cell>
             <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-            <Table.Cell>No</Table.Cell>
           </Table.Row>
           <Table.Row positive>
             <Table.Cell>
@@ -53,7 +54,6 @@ function Agent() {
             <Table.Cell>Jamie Harington</Table.Cell>
             <Table.Cell>January 11, 2014</Table.Cell>
             <Table.Cell>jamieharingonton@yahoo.com</Table.Cell>
-            <Table.Cell>Yes</Table.Cell>
           </Table.Row>
           <Table.Row positive>
             <Table.Cell>
@@ -62,7 +62,6 @@ function Agent() {
             <Table.Cell>Jill Lewis</Table.Cell>
             <Table.Cell>May 11, 2014</Table.Cell>
             <Table.Cell>jilsewris22@yahoo.com</Table.Cell>
-            <Table.Cell>Yes</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>John Lilki</Table.Cell>
@@ -96,7 +95,8 @@ function Agent() {
           </Table.Row>
         </Table.Body>
       </Table>
-    </>
+      <PaginationLong />
+    </Segment>
   );
 }
 

@@ -1,3 +1,4 @@
+import "../Layout.css";
 import {
   Header,
   Image,
@@ -20,16 +21,25 @@ function Dashboard() {
   const [activeItem, setActiveItem] = useState("daily");
   const handle = useFullScreenHandle();
   return (
-    <Segment basic>
-      <div
-        style={
-          handle.active
-            ? { paddingLeft: "10%", paddingRight: "10%", paddingTop: "2%" }
-            : { width: "50vw" }
-        }
-      >
-        <FullScreen handle={handle}>
-          <Menu fluid widths={3} style={{ marginTop: "5vh" }}>
+    <Segment basic style={{ width: "50vw", height: "100vh" }}>
+      <div className="dFlex-sBetween">
+        <Header as="h2">Leaderboard</Header>
+        <Icon
+          name="expand arrows alternate"
+          color="grey"
+          size="large"
+          onClick={handle.enter}
+        />
+      </div>
+      <FullScreen handle={handle}>
+        <div
+          style={
+            handle.active
+              ? { paddingLeft: "10%", paddingRight: "10%", paddingTop: "5%" }
+              : null
+          }
+        >
+          <Menu fluid widths={3}>
             <Menu.Item
               name="daily"
               active={activeItem === "Daily"}
@@ -46,14 +56,6 @@ function Dashboard() {
               onClick={() => setActiveItem("monthly")}
             />
           </Menu>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Icon
-              name="expand arrows alternate"
-              color="grey"
-              size="large"
-              onClick={handle.enter}
-            />
-          </div>
 
           <Table striped style={{ marginTop: "2vh" }}>
             <Table.Header>
@@ -147,31 +149,31 @@ function Dashboard() {
             </Table.Body>
           </Table>
           <PaginationLong />
-        </FullScreen>
-        <Segment basic>
-          <Container text>
-            <Header size="small">TOTALS</Header>
-            <p>
-              lipsum textlipsum textlipsum textlipsum textlipsum textlipsum
-              textlipsum textlipsum text
-            </p>
-          </Container>
-        </Segment>
-        <Grid floated relaxed="very" columns={4}>
-          <Grid.Column>
-            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
-          </Grid.Column>
-          <Grid.Column>
-            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
-          </Grid.Column>
-          <Grid.Column>
-            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
-          </Grid.Column>
-          <Grid.Column>
-            <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
-          </Grid.Column>
-        </Grid>
-      </div>
+        </div>
+      </FullScreen>
+      <Segment basic>
+        <Container text style={{ marginTop: "-3%" }}>
+          <Header size="small">TOTALS</Header>
+          <p>
+            lipsum textlipsum textlipsum textlipsum textlipsum textlipsum
+            textlipsum textlipsum text
+          </p>
+        </Container>
+      </Segment>
+      <Grid floated relaxed="very" columns={4}>
+        <Grid.Column>
+          <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+        </Grid.Column>
+        <Grid.Column>
+          <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+        </Grid.Column>
+        <Grid.Column>
+          <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+        </Grid.Column>
+        <Grid.Column>
+          <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+        </Grid.Column>
+      </Grid>
     </Segment>
   );
 }

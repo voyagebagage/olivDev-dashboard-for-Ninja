@@ -1,4 +1,3 @@
-import "./index.css";
 import React, { useState } from "react";
 import {
   BrowserRouter as Switch,
@@ -9,12 +8,13 @@ import {
   Router,
   // useLocation,
 } from "react-router-dom";
-import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar, Header } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
   // let location = useLocation();
   let history = useHistory();
+  const [sidebarActive, setSidebarActive] = useState("LeaderBoard");
 
   return (
     <>
@@ -25,25 +25,35 @@ const SidebarComponent = ({ sidebarItem }) => {
           direction="left"
           icon="labeled"
           primary
-          // color="8CABA0"
           inverted
           vertical
           visible
-          width={sidebarItem ? "thin" : "big"}
+          width={sidebarItem ? "thin" : "large"}
           style={{ backgroundColor: "#8CABA0" }}
         >
           {Routes.map((view, index) => {
-            return (
-              <Menu.Item
-                key={index}
-                as={Link}
-                to={view.path}
-                className={view.cName}
-              >
-                <Icon name={view.iconName} />
-                {view.title}
-              </Menu.Item>
-            );
+            if (!view.iconName) {
+              return null;
+            } else {
+              return (
+                <Menu.Item
+                  key={index}
+                  name={view.title}
+                  as={Link}
+                  to={view.path}
+                  className={view.cName}
+                  active={sidebarActive === view.title}
+                  onClick={() => setSidebarActive(view.title)}
+                >
+                  <div
+                    className={sidebarItem ? null : "dFlex-sBetween-aCenter"}
+                  >
+                    <Icon size="big" name={view.iconName} />
+                    <h4>{view.title}</h4>
+                  </div>
+                </Menu.Item>
+              );
+            }
           })}
         </Sidebar>
 
@@ -57,10 +67,15 @@ const SidebarComponent = ({ sidebarItem }) => {
             }
           >
             {Routes.map((route, index) => (
+              // <Route
+              //   exact={route.exact}
+              //   path={route.path}
+              //   component={route.component}
+              // />
               <Route
                 exact={route.exact}
                 path={route.path}
-                component={route.component}
+                render={(props) => <route.component {...props} />}
               />
             ))}
           </Segment>
