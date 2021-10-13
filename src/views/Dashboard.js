@@ -1,4 +1,6 @@
 import "../Layout.css";
+import React, { useState, useEffect } from "react";
+
 import {
   Header,
   Image,
@@ -7,19 +9,29 @@ import {
   Table,
   Icon,
   Segment,
-  Pagination,
   Grid,
   Container,
 } from "semantic-ui-react";
 import { PaginationLong } from "../component/Pagination";
+import { API, graphqlOperation } from "aws-amplify";
 
+import { listAgents } from "../graphql/queries";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-
-import { useState } from "react";
 
 function Dashboard() {
   const [activeItem, setActiveItem] = useState("daily");
   const handle = useFullScreenHandle();
+  const [agents, setAgents] = useState([]);
+  const fetchAgent = async () => {
+    try {
+      const agentData = await API.graphql(graphqlOperation(listAgents));
+      setAgents(agentData.data.listAgents.items);
+      // console.log(agents);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => fetchAgent(), []);
   return (
     <Segment basic style={{ width: "50vw", height: "100vh" }}>
       <div className="dFlex-sBetween">
@@ -64,93 +76,36 @@ function Dashboard() {
                 <Table.HeaderCell>NINJA</Table.HeaderCell>
                 <Table.HeaderCell>POINTS</Table.HeaderCell>
                 {/* <Table.HeaderCell>% TO TARGET</Table.HeaderCell> */}
-                <Table.HeaderCell>+/-</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-
-            <Table.Body>
-              <Table.Row positive>
-                <Table.Cell>
-                  <Label color="#8CABA0" ribbon>
-                    <Icon
-                      name="first order"
-                      color="yellow"
-                      // size="large"
-                    />
-                    1st
-                  </Label>
-                </Table.Cell>
-                <Table.Cell>John Lilki</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  {/* <Icon name="level down alternate" color="red" /> */}-
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row positive>
-                <Table.Cell>
-                  <Label ribbon>2nd</Label>
-                </Table.Cell>
-                <Table.Cell>Jamie Harington</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level down alternate" color="red" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row positive>
-                <Table.Cell>
-                  <Label ribbon>3rd</Label>
-                </Table.Cell>
-                <Table.Cell>Jill Lewis</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level up alternate" color="green" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>John Lilki</Table.Cell>
-                <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level up alternate" color="green" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>John Lilki</Table.Cell>
-                <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level up alternate" color="green" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row negative>
-                <Table.Cell>Jamie Harington</Table.Cell>
-                <Table.Cell>jamieharingonton@yahoo.com</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level down alternate" color="red" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row negative>
-                <Table.Cell>Jill Lewis</Table.Cell>
-                <Table.Cell>May 11, 2014</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level down alternate" color="red" />
-                </Table.Cell>
-              </Table.Row>
-              <Table.Row negative>
-                <Table.Cell>John Lilki</Table.Cell>
-                <Table.Cell>September 14, 2013</Table.Cell>
-                <Table.Cell>pts</Table.Cell>
-                <Table.Cell>
-                  <Icon name="level down alternate" color="red" />
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
+            {agents.map((agent, idx) => (
+              <Table.Body>
+                <Table.Row
+                  positive={idx < 3 ? true : false}
+                  negative={idx >= agents.length - 3 ? true : false}
+                >
+                  <Table.Cell>
+                    {idx < 3 ? (
+                      <Label ribbon>
+                        <Icon name="first order" color="yellow" />
+                        {idx + 1}
+                      </Label>
+                    ) : (
+                      idx + 1
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>{agent.name}</Table.Cell>
+                  <Table.Cell>
+                    {agent.points ? agent.points : "-"}pts
+                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            ))}
           </Table>
           <PaginationLong />
         </div>
       </FullScreen>
+
       <Segment basic>
         <Container text style={{ marginTop: "-3%" }}>
           <Header size="small">TOTALS</Header>

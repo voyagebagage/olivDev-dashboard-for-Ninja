@@ -1,0 +1,18 @@
+projects:
+  graphqlapininja:
+    schemaPath: amplify/backend/api/graphqlapininja/build/schema.graphql
+    includes:
+      - ninjaQL
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: .
+        region: ap-southeast-1
+        apiId: null
+        maxDepth: 3
+extensions:
+  amplify:
+    version: 3

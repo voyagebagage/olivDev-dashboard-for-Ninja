@@ -1,5 +1,5 @@
 import { Icon } from "semantic-ui-react";
-import React, { useState } from "react";
+import React from "react";
 
 const AddIcon = ({ setVisible }) => (
   <Icon

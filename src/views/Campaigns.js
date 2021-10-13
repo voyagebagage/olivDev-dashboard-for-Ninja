@@ -4,18 +4,37 @@ import {
   Segment,
   Sidebar,
   List,
-  Menu,
   Form,
-  Container,
   Icon,
   Label,
 } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 import AddIcon from "../component/AddIcon";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useVisible } from "../context/Provider";
+import { API, graphqlOperation } from "aws-amplify";
+import { listCampaigns } from "../graphql/queries";
 
 function Campaigns() {
-  const [visible, setVisible] = useState(false);
+  const { visible, setVisible } = useVisible();
+  //---------------------States------------------------------
+  // const [activeCampaign, setActiveCampaign] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  // const [isLoading, setIsLoading] = useState(true);
+  //---------------------Functions------------------------------
+  const fetchCampaigns = async () => {
+    try {
+      const campaignData = await API.graphql(graphqlOperation(listCampaigns));
+      // setIsLoading(false);
+      setCampaigns(campaignData.data.listCampaigns.items);
+      console.log(campaignData.data.listCampaigns.items, "campaing");
+    } catch (error) {
+      console.log("error with get clients :", error);
+    }
+  };
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
   return (
     <>
       <Sidebar.Pushable as={List}>
@@ -23,6 +42,8 @@ function Campaigns() {
           <Header as="h2">Campaigns</Header>
           <AddIcon setVisible={setVisible} />
         </Segment>
+        {/* ---------------------TABLE HEADER---------------------------- */}
+
         <Table striped>
           <Table.Header>
             <Table.Row>
@@ -34,7 +55,23 @@ function Campaigns() {
               {/* <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
+          {/* ---------------------TABLE BODY---------------------------- */}
+          {campaigns.map((campaign, idx) => (
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>{campaign.name}</Table.Cell>
+                <Table.Cell>{campaign.name}</Table.Cell>
+                <Table.Cell>{campaign.length}</Table.Cell>
+                <Table.Cell>{campaign.startDate}</Table.Cell>
+                <Table.Cell>{campaign.endDate}</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          ))}
         </Table>
+
+        {/* ------------------------------------------------------------------
+        -                             SIDEBAR - FORM                        -
+        ------------------------------------------------------------------ */}
         <SidebarForm setVisible={setVisible} visible={visible}>
           <Segment
             as="h3"
@@ -47,6 +84,7 @@ function Campaigns() {
           >
             Setting up a new Campaign
           </Segment>
+
           <Segment
             style={{
               paddingRight: "7%",

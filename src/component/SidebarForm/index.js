@@ -1,11 +1,13 @@
-import React, { Children, useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 
-import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
+import { Menu, Sidebar } from "semantic-ui-react";
+import { useVisible } from "../../context/Provider";
 
-const SidebarForm = ({ children, setVisible, visible }) => {
+const SidebarForm = ({ children }) => {
   let location = useLocation();
-  console.log(location);
+  const { visible, setVisible } = useVisible();
+
   return (
     <Sidebar
       as={Menu}

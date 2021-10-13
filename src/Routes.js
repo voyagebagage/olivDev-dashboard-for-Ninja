@@ -12,7 +12,7 @@ import AgentReport from "./views/AgentReport";
 export const Routes = [
   {
     title: "Client",
-    path: "/client",
+    path: "/client/:id",
     component: ClientDetails,
     // iconName: "user",
     cName: "nav-text",

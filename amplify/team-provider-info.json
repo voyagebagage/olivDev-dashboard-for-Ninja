@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dashboardforninjagql-dev-190119-authRole",
+      "UnauthRoleArn": "arn:aws:iam::847054957517:role/amplify-dashboardforninjagql-dev-190119-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::847054957517:role/amplify-dashboardforninjagql-dev-190119-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
+      "UnauthRoleName": "amplify-dashboardforninjagql-dev-190119-unauthRole",
+      "StackName": "amplify-dashboardforninjagql-dev-190119",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:847054957517:stack/amplify-dashboardforninjagql-dev-190119/a1a9d9a0-2441-11ec-a8f6-068bdc3a7ec0",
+      "AmplifyAppId": "dcc5jfrf7panr"
+    }
+  }
+}

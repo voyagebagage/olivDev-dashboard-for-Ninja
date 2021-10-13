@@ -1,0 +1,58 @@
+type Client @model {
+  id: ID
+  firstName: String!
+  lastName: String!
+  email: AWSEmail!
+  phone: AWSPhone!
+  companyName: String!
+  website: AWSURL!
+  country: String!
+  campaigns: [Campaign]! @connection(name: "CampaignClient")
+  notes: String
+}
+
+type Agent @model {
+  id: ID
+  name: String!
+  email: AWSEmail!
+  team: Team @connection(name: "TeamAgent")
+  campaigns: [Campaign]! @connection(name: "CampaignAgent")
+  points: Int
+}
+
+type Team @model {
+  id: ID
+  name: String!
+  agents: [Agent]! @connection(name: "TeamAgent")
+}
+
+type Campaign @model {
+  id: ID
+  name: String!
+  type: String!
+  client: Client! @connection(name: "CampaignClient")
+  agent: Agent! @connection(name: "CampaignAgent")
+  startDate: AWSDate!
+  endDate: AWSDate!
+  length: Float!
+  notes: String
+  dailyReports: [KpiDailyReports]! @connection(name: "CampaignDailyReports")
+}
+
+type Kpi @model {
+  id: ID
+  name: String!
+  target: Int
+  dailyReports: [KpiDailyReports]! @connection(name: "DailyReportKpis")
+}
+type KpiDailyReports @model(queries: null) {
+  dailyReport: DailyReport! @connection(name: "KpiDailyReports")
+  kpi: Kpi! @connection(name: "DailyReportKpis")
+  campaign: Campaign! @connection(name: "CampaignDailyReports")
+}
+
+type DailyReport @model {
+  id: ID
+  date: AWSDate!
+  kpis: [KpiDailyReports!]! @connection(name: "KpiDailyReports")
+}

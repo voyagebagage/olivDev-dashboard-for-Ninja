@@ -25,7 +25,25 @@ html,
   justify-content: space-between;
   align-items: center;
 }
+.dFlex-aCenter {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+}
+.dFlex-center {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .dFlex-fEnd {
   display: flex;
   justify-content: flex-end;
+}
+.noDecoration {
+  text-decoration: none;
 }

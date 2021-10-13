@@ -1,19 +1,13 @@
-import {
-  Menu,
-  Segment,
-  Table,
-  Label,
-  Search,
-  Header,
-  Icon,
-} from "semantic-ui-react";
+import { Table, Header, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+
 export default function AgentReport() {
   return (
     <>
-      <Link to="/agent">
-        <Icon name="arrow left" />
-      </Link>{" "}
+      <Link to="/agent" style={{ color: "#566A63" }}>
+        <Icon name="arrow left" size="large" />
+        BACK
+      </Link>
       <Header as="h3">Agent:{"name"}</Header>
       <Table striped>
         <Table.Header>

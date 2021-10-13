@@ -1,19 +1,9 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  Router,
-  // useLocation,
-} from "react-router-dom";
-import { Icon, Menu, Segment, Sidebar, Header } from "semantic-ui-react";
+import { Route, Link } from "react-router-dom";
+import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
-  // let location = useLocation();
-  let history = useHistory();
   const [sidebarActive, setSidebarActive] = useState("LeaderBoard");
 
   return (

@@ -1,40 +1,59 @@
-import React, { useState } from "react";
-import { useHistory, Link, Route } from "react-router-dom";
-import { countries, toggleActive } from "../arrayLists/countries";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import AddIcon from "../component/AddIcon";
 import { PaginationShortCentered } from "../component/Pagination";
 import SidebarForm from "../component/SidebarForm";
 // import ClientDetails from "./views/ClientDetails";
+
+//------------------------graphQl----------------------
+import { API, graphqlOperation } from "aws-amplify";
+import { listClients } from "../graphql/queries";
+
 import {
-  Button,
-  Image,
   List,
   Segment,
   Sidebar,
-  Form,
-  Menu,
-  Icon,
   Table,
-  Pagination,
-  Radio,
-  Dropdown,
-  Message,
   Header,
+  Dimmer,
+  Loader,
+  Image,
 } from "semantic-ui-react";
+// import useForm from "../Forms/useForm";
+import NewClientForm from "../Forms/NewClientForm";
 
+//------------------------context & custom hooks----------------------
+import { useClient } from "../context/Provider";
+import { useVisible } from "../context/Provider";
+
+/* ------------------------------------------------------------------
+-                               Main function                       -
+------------------------------------------------------------------ */
 function Client() {
-  //---------------------States------------------------------
-  const [visible, setVisible] = useState(false);
-  const [activeCampaign, setActiveCampaign] = useState(false);
-  //---------------------Function------------------------------
-  // const handleMoreButton = () => setVisible(true);
-  const handleClickClient = () => {
-    // <Route path="/client" component={ClientDetails} />;
-    history.push("/client");
-  };
   let history = useHistory();
+  //------------------------context & custom hooks----------------------
+  const { clientDetails, setClientDetails } = useClient();
+  const { visible, setVisible } = useVisible();
+  //---------------------States------------------------------
+  // const [activeCampaign, setActiveCampaign] = useState(false);
+  const [clients, setClients] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  //---------------------Functions------------------------------
+  const fetchClients = async () => {
+    try {
+      const clientData = await API.graphql(graphqlOperation(listClients));
+      setClients(clientData.data.listClients.items);
+      console.log(clientData.data.listClients.items, "client");
+      setIsLoading(false);
+    } catch (error) {
+      console.log("error with get clients :", error);
+    }
+  };
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
-  return (
+  return !isLoading ? (
     <>
       <Sidebar.Pushable as={List}>
         <Segment basic className="dFlex-sBetween">
@@ -46,8 +65,7 @@ function Client() {
           {/* ---------------------TABLE HEADER---------------------------- */}
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-              <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
+              <Table.HeaderCell>NAME</Table.HeaderCell>
               <Table.HeaderCell collapsing>E-mail</Table.HeaderCell>
               <Table.HeaderCell collapsing>COMPANY</Table.HeaderCell>
               <Table.HeaderCell collapsing>WEBSITE</Table.HeaderCell>
@@ -55,62 +73,44 @@ function Client() {
               <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          <Table.Body>
-            {/* ---------------------TABLE BODY---------------------------- */}
-            <Table.Row
-              onClick={handleClickClient}
-              style={{ cursor: "pointer" }}
-            >
-              <Table.Cell>0123</Table.Cell>
-              <Table.Cell>Sameer</Table.Cell>
-              <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-              <Table.Cell>Nintendo</Table.Cell>
-              <Table.Cell>www.nintendo.in</Table.Cell>
-              <Table.Cell>India</Table.Cell>
-              <Table.Cell>
-                <Radio toggle />
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row onClick={handleClickClient}>
-              <Table.Cell>01234</Table.Cell>
-              <Table.Cell>Sonia</Table.Cell>
-              <Table.Cell>jhlfgfdilk22@yahoo.com</Table.Cell>
-              <Table.Cell>Arturia</Table.Cell>
-              <Table.Cell>www.Arturia.fr</Table.Cell>
-              <Table.Cell>France</Table.Cell>
-              <Table.Cell>
-                <Radio toggle />
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row onClick={handleClickClient}>
-              <Table.Cell>01235</Table.Cell>
-              <Table.Cell>Sameer</Table.Cell>
-              <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-              <Table.Cell>Nintendo</Table.Cell>
-              <Table.Cell>www.nintendo.in</Table.Cell>
-              <Table.Cell>India</Table.Cell>
-              <Table.Cell>
-                <Radio toggle />
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row onClick={handleClickClient}>
-              <Table.Cell>01236</Table.Cell>
-              <Table.Cell>Sameer</Table.Cell>
-              <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-              <Table.Cell>Nintendo</Table.Cell>
-              <Table.Cell>www.nintendo.in</Table.Cell>
-              <Table.Cell>India</Table.Cell>
-              <Table.Cell>
-                <Radio toggle />
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
+          {/* ---------------------TABLE BODY---------------------------- */}
+          {clients.map((client, idx) => (
+            <Table.Body>
+              <Table.Row
+                onClick={() => {
+                  setClientDetails(client);
+                  console.log(clientDetails, "client D");
+                  history.push(`/client/${client.firstName}`);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                {/* {console.log(client)} */}
+                <Table.Cell>
+                  {client.firstName} {client.lastName}
+                </Table.Cell>
+                <Table.Cell>{client.email}</Table.Cell>
+                <Table.Cell>{client.companyName}</Table.Cell>
+                <Table.Cell>
+                  <a href={client.website}>{client.website}</a>
+                </Table.Cell>
+                <Table.Cell>{client.country}</Table.Cell>
+                <Table.Cell>
+                  {client.campaigns.items?.map((campaign) => (
+                    <p key={campaign.id}>
+                      {campaign.endDate.split("-").reverse().join("-")}
+                    </p>
+                  ))}
+                  {/* <Radio toggle={client.status?true:false} /> */}
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          ))}
         </Table>
         <PaginationShortCentered />
         {/* ------------------------------------------------------------------
         -                                 SIDEBAR                        -
         ------------------------------------------------------------------ */}
-        <SidebarForm setVisible={setVisible} visible={visible}>
+        <SidebarForm>
           <Segment
             as="h3"
             padded
@@ -126,115 +126,29 @@ function Client() {
           {/* ------------------------------------------------------------------
         -                                 FORM                        -
       ------------------------------------------------------------------ */}
-          <Segment style={{ padding: "9%" }} padded basic>
-            <Form widths="equal">
-              <Form.Group>
-                <Form.Input
-                  type="text"
-                  label="First Name"
-                  placeholder="Matthew"
-                  // value={name}
-                />
-
-                <Form.Input
-                  type="text"
-                  label="Last Name"
-                  placeholder="Dunn"
-                  // value={name}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Input
-                  type="text"
-                  label="Email"
-                  // placeholder="Email"
-                  // value={email}
-                  // onChange={}
-                />
-                <Form.Input
-                  type="text"
-                  label="Phone"
-                  // placeholder="Email"
-                  // value={email}
-                  // onChange={}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Input
-                  type="text"
-                  label="Company Name"
-                  // placeholder="Company"
-                  // value={company}
-                  // onChange={}
-                />
-
-                <Form.Dropdown
-                  clearable
-                  search
-                  selection
-                  options={countries}
-                  label="Select Country"
-                />
-              </Form.Group>
-              <Form.Input
-                type="text"
-                label="Website"
-                // placeholder="Website"
-                // value={website}
-
-                // onChange={}
-              />
-
-              {/* <Form.Input
-                  type="text"
-                  label="Location"
-                  placeholder="Location"
-                  // value={location}
-
-                  // onChange={}
-                /> */}
-              <Form.Group>
-                <Form.Select
-                  label="Status"
-                  options={toggleActive}
-                  // value={notes}
-                />
-                OR
-                <Form.Radio
-                  toggle
-                  onClick={() => setActiveCampaign(!activeCampaign)}
-                  label={activeCampaign ? "on campaign" : "no campaign"}
-                  // style={!activeCampaign ? { label: "grey" } : null}
-                />
-              </Form.Group>
-
-              <Form.Button type="submit" primary fluid>
-                Add Client
-              </Form.Button>
-            </Form>
-          </Segment>
-          {/* <div
-            style={{
-              height: "100%",
-              // width: "100%",
-              display: "flex",
-              alignItems: "flex-end",
-              paddingBottom: 0,
-              backgroundColor: "blue",
-            }}
-          >
-            <Message
-              attached="bottom"
-              warning
-              style={{ backgroundColor: "red", justifySelf: "flex-end" }}
-            >
-              <Icon name="help" />
-              Already signed up?&nbsp;<a href="#">Login here</a>&nbsp;instead.
-            </Message>
-          </div> */}
+          <NewClientForm
+            // updateList={fetchClients}
+            setVisible={setVisible}
+            clients={clients}
+            setClients={setClients}
+          />
         </SidebarForm>
       </Sidebar.Pushable>
     </>
+  ) : (
+    <Segment>
+      <Dimmer active inverted>
+        <Loader size="massive">Loading</Loader>
+      </Dimmer>
+      <Image
+        size="massive"
+        src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
+      />
+      <Image
+        size="massive"
+        src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
+      />
+    </Segment>
   );
 }
 
