@@ -1,15 +1,17 @@
 import "semantic-ui-css/semantic.min.css";
 import "./Layout.css";
+//---------------------AWS------------------------------
 import Amplify from "aws-amplify";
 import config from "./aws-exports";
-
+//---------------------REACT------------------------------
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Login from "./views/Login";
 import SidebarComponent from "./component/Sidebar";
 import Header from "./component/Header";
-
+//---------------------Context------------------------------
 import { GlobalProvider } from "./context/Provider";
+//---------------------Plugin------------------------------
 import Cookies from "js-cookie";
 Amplify.configure(config);
 
@@ -17,7 +19,7 @@ function Layout() {
   //---------------------States------------------------------
   const [sidebarItem, setSidebarItem] = useState(false);
   const [token, setToken] = useState(Cookies.get("token") || null);
-  const [setUsername] = useState(Cookies.get("username") || "");
+  const [username, setUsername] = useState(Cookies.get("username") || "");
   //-------------------Functions---------------------------
   const setUser = (userToken, username) => {
     setToken(userToken);
@@ -29,13 +31,13 @@ function Layout() {
 
   return (
     <Router>
-      <GlobalProvider>
-        <Route path="/login">
-          <Login setUser={setUser} />
-        </Route>
-        {/* ------------------------------------------------------------------
+      <Route path="/login">
+        <Login setUser={setUser} />
+      </Route>
+      {/* ------------------------------------------------------------------
         -                                 LAYOUT                        -
-        ------------------------------------------------------------------    */}
+      ------------------------------------------------------------------    */}
+      <GlobalProvider>
         <Route
           render={() =>
             token ? (

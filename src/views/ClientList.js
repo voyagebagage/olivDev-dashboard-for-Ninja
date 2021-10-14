@@ -62,7 +62,7 @@ function Client() {
         </Segment>
 
         <Table striped>
-          {/* ---------------------TABLE HEADER---------------------------- */}
+          {/* ---------------------TABLE HEADER-------------------- */}
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>NAME</Table.HeaderCell>
@@ -73,7 +73,7 @@ function Client() {
               <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-          {/* ---------------------TABLE BODY---------------------------- */}
+          {/* ---------------------TABLE BODY------------------------ */}
           {clients.map((client, idx) => (
             <Table.Body>
               <Table.Row

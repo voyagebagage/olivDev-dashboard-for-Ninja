@@ -4,6 +4,7 @@ import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
+  //------the highlighted selection view-----
   const [sidebarActive, setSidebarActive] = useState("LeaderBoard");
 
   return (

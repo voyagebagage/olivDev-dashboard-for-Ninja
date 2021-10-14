@@ -18,7 +18,6 @@ export const GlobalProvider = ({ children }) => {
   //   contactsInitialState
   // );
   const [clientDetails, setClientDetails] = useState({});
-  // const [state, setstate] = useState(initialState)
   const [visible, setVisible] = useState(false);
 
   return (
