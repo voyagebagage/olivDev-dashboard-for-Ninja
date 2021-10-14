@@ -10,6 +10,8 @@ export const PaginationShortCentered = () => (
       lastItem={null}
       siblingRange={1}
       totalPages={10}
+      // nextItem
+      onPageChange={(event, data) => console.log(data)}
     />
   </div>
 );

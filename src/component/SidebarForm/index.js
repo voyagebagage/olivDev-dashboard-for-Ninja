@@ -17,7 +17,7 @@ const SidebarForm = ({ children }) => {
       visible={visible}
       onHide={() => setVisible(false)}
       style={{
-        width: location.pathname === "/client-list" ? "32vw" : "80vw",
+        width: location.pathname !== "/client-list" ? "80vw" : "32vw",
         height: "100%",
         borderRightWidth: 0,
         display: "flex",

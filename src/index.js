@@ -2,16 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import Layout from "./Layout";
-import { BrowserRouter } from "react-router-dom";
+// import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <BrowserRouter>
+  <React.StrictMode>
     <Layout />
-  </BrowserRouter>,
+  </React.StrictMode>,
   document.getElementById("root")
 );
-
-{
-  // <React.StrictMode>
-  /* </React.StrictMode>, */
-}

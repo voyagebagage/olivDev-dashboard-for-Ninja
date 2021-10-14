@@ -51,11 +51,14 @@ function Agent() {
               <Table.Cell>1</Table.Cell>
               <Table.Cell>{agent.name}</Table.Cell>
               <Table.Cell>
-                {agent.campaigns.items?.map((campaign, idx) => (
-                  <Link to="/agent-report" key={campaign.id}>
-                    <Label tag>{campaign.name}</Label>
-                  </Link>
-                ))}
+                {agent.campaigns.items?.map((campaign, idx) => {
+                  console.log(campaign);
+                  return (
+                    <Link to="/agent-report" key={campaign.id}>
+                      <Label tag>{campaign.name}</Label>
+                    </Link>
+                  );
+                })}
               </Table.Cell>
               <Table.Cell>{agent.points}</Table.Cell>
             </Table.Row>

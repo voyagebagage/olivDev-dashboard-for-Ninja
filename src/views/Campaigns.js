@@ -8,7 +8,7 @@ import { listCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
 
 function Campaigns() {
-  const { visible, setVisible } = useVisible();
+  const { setVisible } = useVisible();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
@@ -65,7 +65,7 @@ function Campaigns() {
         -                             SIDEBAR - FORM                        -
         ------------------------------------------------------------------ */}
         <SidebarForm>
-          <CampaignForm setVisible={setVisible} />
+          <CampaignForm />
         </SidebarForm>
       </Sidebar.Pushable>
     </>

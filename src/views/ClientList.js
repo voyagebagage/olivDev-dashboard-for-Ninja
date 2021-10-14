@@ -31,19 +31,38 @@ import { useVisible } from "../context/Provider";
 ------------------------------------------------------------------ */
 function Client() {
   let history = useHistory();
+  const SORT = {
+    ASC: "ASC",
+    DESC: "DESC",
+  };
+  const limit = 12;
+
   //------------------------context & custom hooks----------------------
   const { clientDetails, setClientDetails } = useClient();
-  const { visible, setVisible } = useVisible();
+  const { setVisible } = useVisible();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [clients, setClients] = useState([]);
+  const [nextToken, setNextToken] = useState(undefined);
+  const [nextNextToken, setNextNextToken] = useState();
+  const [sortDirection, setSortDirection] = useState(SORT.DESC);
   const [isLoading, setIsLoading] = useState(true);
   //---------------------Functions------------------------------
   const fetchClients = async () => {
     try {
-      const clientData = await API.graphql(graphqlOperation(listClients));
+      const variables = {
+        nextToken,
+        limit,
+        sortDirection,
+      };
+      const clientData = await API.graphql(
+        graphqlOperation(listClients, variables)
+      );
       setClients(clientData.data.listClients.items);
+      setNextNextToken(clientData.data.listClients.nextToken);
       console.log(clientData.data.listClients.items, "client");
+      console.log(clientData.data.listClients, "nextToken");
+      console.log(clientData.data.listClients.items.length, "length");
       setIsLoading(false);
     } catch (error) {
       console.log("error with get clients :", error);
@@ -51,7 +70,7 @@ function Client() {
   };
   useEffect(() => {
     fetchClients();
-  }, []);
+  }, [nextToken]);
 
   return !isLoading ? (
     <>
@@ -65,12 +84,12 @@ function Client() {
           {/* ---------------------TABLE HEADER-------------------- */}
           <Table.Header>
             <Table.Row>
+              <Table.HeaderCell>COMPANY</Table.HeaderCell>
               <Table.HeaderCell>NAME</Table.HeaderCell>
-              <Table.HeaderCell collapsing>E-mail</Table.HeaderCell>
-              <Table.HeaderCell collapsing>COMPANY</Table.HeaderCell>
-              <Table.HeaderCell collapsing>WEBSITE</Table.HeaderCell>
-              <Table.HeaderCell collapsing>LOCATION</Table.HeaderCell>
-              <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell>
+              <Table.HeaderCell>E-mail</Table.HeaderCell>
+              <Table.HeaderCell>WEBSITE</Table.HeaderCell>
+              <Table.HeaderCell>LOCATION</Table.HeaderCell>
+              <Table.HeaderCell>ON CAMPAIGN</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {/* ---------------------TABLE BODY------------------------ */}
@@ -85,13 +104,15 @@ function Client() {
                 style={{ cursor: "pointer" }}
               >
                 {/* {console.log(client)} */}
+                <Table.Cell>{client.companyName}</Table.Cell>
                 <Table.Cell>
                   {client.firstName} {client.lastName}
                 </Table.Cell>
                 <Table.Cell>{client.email}</Table.Cell>
-                <Table.Cell>{client.companyName}</Table.Cell>
                 <Table.Cell>
-                  <a href={client.website}>{client.website}</a>
+                  <a href={client.website} className="clientListLink">
+                    {client.website}
+                  </a>
                 </Table.Cell>
                 <Table.Cell>{client.country}</Table.Cell>
                 <Table.Cell>

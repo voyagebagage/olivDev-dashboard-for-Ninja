@@ -47,3 +47,12 @@ html,
 .noDecoration {
   text-decoration: none;
 }
+
+.clientListLink {
+  display: -webkit-box;
+  overflow: hidden;
+  width: 15vw;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}

@@ -123,6 +123,17 @@ export const listAgents = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            name
+            # type
+            # startDate
+            # endDate
+            # length
+            # notes
+            # createdAt
+            # updatedAt
+          }
           nextToken
         }
         points

@@ -1,6 +1,9 @@
 import { Header, Segment, Form, Icon, Label } from "semantic-ui-react";
+import { useVisible } from "../context/Provider";
 
-const CampaignForm = ({ setVisible }) => {
+const CampaignForm = () => {
+  const { setVisible } = useVisible();
+
   return (
     <>
       <Segment
@@ -119,7 +122,7 @@ const CampaignForm = ({ setVisible }) => {
           >
             {/* <Form> */}
             <Segment basic as={Header}>
-              KPI Configuration
+              Daily Report Configuration
             </Segment>
 
             <Segment

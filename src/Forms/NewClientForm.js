@@ -33,14 +33,13 @@ const NewClientForm = ({ setVisible, clients, setClients }) => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
-      console.log(form, "form in create client");
       const newClient = await API.graphql(
         graphqlOperation(createClient, { input: form })
       );
       setIsSubmitting(false);
       setErrors("");
+      console.log(newClient, "newClient");
       setForm({});
-      console.log(form, "after setform");
       setVisible(false);
       console.log("succes");
     } catch (error) {

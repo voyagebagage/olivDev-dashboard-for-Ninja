@@ -10,7 +10,7 @@ type Client @model {
   campaigns: [Campaign]! @connection(name: "CampaignClient")
   notes: String
 }
-
+# add campaigns together
 type Agent @model {
   id: ID
   name: String!

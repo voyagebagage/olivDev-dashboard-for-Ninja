@@ -6,9 +6,7 @@ export default () => {
   const onChange = (e, { name, value }) => {
     setForm({ ...form, [name]: value });
   };
-  // const onUpdate = (e, { name, value }) => {
-  //   setForm({ ...form, [name]: value===""? });
-  // };
+
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
   // if (error) {
