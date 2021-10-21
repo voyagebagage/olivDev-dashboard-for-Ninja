@@ -6,9 +6,14 @@ import { useVisible } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
 import { listCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
-
+import { fetchClients } from "../fetch/FetchClients";
+//#################################################
+//           FUNCTION
+//################################################
 function Campaigns() {
   const { setVisible } = useVisible();
+  const { isLoading, setIsLoading } = fetchClients();
+
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
@@ -17,8 +22,8 @@ function Campaigns() {
   const fetchCampaigns = async () => {
     try {
       const campaignData = await API.graphql(graphqlOperation(listCampaigns));
-      // setIsLoading(false);
       setCampaigns(campaignData.data.listCampaigns.items);
+      setIsLoading(false);
       console.log(campaignData.data.listCampaigns.items, "campaing");
     } catch (error) {
       console.log("error with get clients :", error);
@@ -27,7 +32,10 @@ function Campaigns() {
   useEffect(() => {
     fetchCampaigns();
   }, []);
-  return (
+  //#################################################
+  //           RENDER
+  //################################################
+  return !isLoading ? (
     <>
       <Sidebar.Pushable as={List}>
         <Segment basic className="dFlex-sBetween">
@@ -69,6 +77,8 @@ function Campaigns() {
         </SidebarForm>
       </Sidebar.Pushable>
     </>
+  ) : (
+    <h1>Loading</h1>
   );
 }
 

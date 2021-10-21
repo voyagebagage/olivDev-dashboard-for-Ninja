@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route, Link, useLocation } from "react-router-dom";
 import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
   //------the highlighted selection view-----
-  const [sidebarActive, setSidebarActive] = useState("LeaderBoard");
+  let location = useLocation();
+  const [sidebarActive, setSidebarActive] = useState(location.pathname);
 
   return (
     <>
-      <Sidebar.Pushable as={Segment}>
+      <Sidebar.Pushable as={Segment} className="sidebar-pushable">
         <Sidebar
           as={Menu}
           animation="uncover"
@@ -20,6 +21,7 @@ const SidebarComponent = ({ sidebarItem }) => {
           vertical
           visible
           width={sidebarItem ? "thin" : "large"}
+          // className="sidebar-menu"
           style={{ backgroundColor: "#8CABA0" }}
         >
           {Routes.map((view, index) => {
@@ -33,8 +35,8 @@ const SidebarComponent = ({ sidebarItem }) => {
                   as={Link}
                   to={view.path}
                   className={view.cName}
-                  active={sidebarActive === view.title}
-                  onClick={() => setSidebarActive(view.title)}
+                  active={sidebarActive === view.path}
+                  onClick={() => setSidebarActive(view.path)}
                 >
                   <div
                     className={sidebarItem ? null : "dFlex-sBetween-aCenter"}
@@ -53,8 +55,16 @@ const SidebarComponent = ({ sidebarItem }) => {
             basic
             style={
               sidebarItem
-                ? { width: "85vw", minWidth: "35vw", height: "92vh" }
-                : { width: "80vw", minWidth: "35vw", height: "92vh" }
+                ? {
+                    width: "85vw",
+                    minWidth: "35vw",
+                    height: location.pathname === "/" ? "100%" : "92vh",
+                  }
+                : {
+                    width: "80vw",
+                    minWidth: "35vw",
+                    height: location.pathname === "/" ? 3000 : "92vh",
+                  }
             }
           >
             {Routes.map((route, index) => (

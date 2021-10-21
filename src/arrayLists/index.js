@@ -2,6 +2,17 @@ export const toggleActive = [
   { key: "0", text: "active", value: "active" },
   { key: "1", text: "inactive", value: "inactive" },
 ];
+export const sortDirection = [
+  { key: "0", text: "A-Z", value: "asc" },
+  { key: "1", text: "Z-A", value: "desc" },
+];
+export const filterClientList = [
+  { key: "0", text: "First Name", value: "firstName" },
+  { key: "1", text: "Last Name", value: "lastName" },
+  { key: "2", text: "Company", value: "company" },
+  { key: "3", text: "Email", value: "email" },
+  { key: "4", text: "Country", value: "country" },
+];
 
 export const countries = [
   { text: "Afghanistan", key: "af", value: "Afghanistan", flag: "af" },

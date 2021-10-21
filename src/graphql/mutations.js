@@ -22,6 +22,7 @@ export const createClient = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -56,6 +57,7 @@ export const updateClient = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -90,6 +92,7 @@ export const deleteClient = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -110,6 +113,7 @@ export const createAgent = /* GraphQL */ `
   ) {
     createAgent(input: $input, condition: $condition) {
       id
+      category
       name
       email
       team {
@@ -118,6 +122,10 @@ export const createAgent = /* GraphQL */ `
         agents {
           nextToken
         }
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
@@ -128,6 +136,7 @@ export const createAgent = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -135,7 +144,10 @@ export const createAgent = /* GraphQL */ `
         }
         nextToken
       }
-      points
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -148,6 +160,7 @@ export const updateAgent = /* GraphQL */ `
   ) {
     updateAgent(input: $input, condition: $condition) {
       id
+      category
       name
       email
       team {
@@ -156,6 +169,10 @@ export const updateAgent = /* GraphQL */ `
         agents {
           nextToken
         }
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
@@ -166,6 +183,7 @@ export const updateAgent = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -173,7 +191,10 @@ export const updateAgent = /* GraphQL */ `
         }
         nextToken
       }
-      points
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -186,6 +207,7 @@ export const deleteAgent = /* GraphQL */ `
   ) {
     deleteAgent(input: $input, condition: $condition) {
       id
+      category
       name
       email
       team {
@@ -194,6 +216,10 @@ export const deleteAgent = /* GraphQL */ `
         agents {
           nextToken
         }
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
@@ -204,6 +230,7 @@ export const deleteAgent = /* GraphQL */ `
           type
           startDate
           endDate
+          status
           length
           notes
           createdAt
@@ -211,7 +238,10 @@ export const deleteAgent = /* GraphQL */ `
         }
         nextToken
       }
-      points
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -228,14 +258,22 @@ export const createTeam = /* GraphQL */ `
       agents {
         items {
           id
+          category
           name
           email
-          points
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         nextToken
       }
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -252,14 +290,22 @@ export const updateTeam = /* GraphQL */ `
       agents {
         items {
           id
+          category
           name
           email
-          points
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         nextToken
       }
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -276,14 +322,22 @@ export const deleteTeam = /* GraphQL */ `
       agents {
         items {
           id
+          category
           name
           email
-          points
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         nextToken
       }
+      dailyPoints
+      weeklyPoints
+      monthlyPoint
+      totalPoints
       createdAt
       updatedAt
     }
@@ -316,28 +370,40 @@ export const createCampaign = /* GraphQL */ `
       }
       agent {
         id
+        category
         name
         email
         team {
           id
           name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         campaigns {
           nextToken
         }
-        points
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
       startDate
       endDate
+      status
       length
       notes
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -375,28 +441,40 @@ export const updateCampaign = /* GraphQL */ `
       }
       agent {
         id
+        category
         name
         email
         team {
           id
           name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         campaigns {
           nextToken
         }
-        points
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
       startDate
       endDate
+      status
       length
       notes
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -434,28 +512,40 @@ export const deleteCampaign = /* GraphQL */ `
       }
       agent {
         id
+        category
         name
         email
         team {
           id
           name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         campaigns {
           nextToken
         }
-        points
+        dailyPoints
+        weeklyPoints
+        monthlyPoint
+        totalPoints
         createdAt
         updatedAt
       }
       startDate
       endDate
+      status
       length
       notes
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -474,7 +564,6 @@ export const createKpi = /* GraphQL */ `
     createKpi(input: $input, condition: $condition) {
       id
       name
-      target
       dailyReports {
         items {
           id
@@ -496,7 +585,6 @@ export const updateKpi = /* GraphQL */ `
     updateKpi(input: $input, condition: $condition) {
       id
       name
-      target
       dailyReports {
         items {
           id
@@ -518,7 +606,6 @@ export const deleteKpi = /* GraphQL */ `
     deleteKpi(input: $input, condition: $condition) {
       id
       name
-      target
       dailyReports {
         items {
           id
@@ -541,52 +628,30 @@ export const createKpiDailyReports = /* GraphQL */ `
       id
       dailyReport {
         id
+        campaignName
         date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
         kpis {
           nextToken
         }
+        target
         createdAt
         updatedAt
       }
       kpi {
         id
         name
-        target
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      campaign {
-        id
-        name
-        type
-        client {
-          id
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          name
-          email
-          points
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        length
-        notes
         dailyReports {
           nextToken
         }
@@ -607,52 +672,30 @@ export const updateKpiDailyReports = /* GraphQL */ `
       id
       dailyReport {
         id
+        campaignName
         date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
         kpis {
           nextToken
         }
+        target
         createdAt
         updatedAt
       }
       kpi {
         id
         name
-        target
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      campaign {
-        id
-        name
-        type
-        client {
-          id
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          name
-          email
-          points
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        length
-        notes
         dailyReports {
           nextToken
         }
@@ -673,23 +716,50 @@ export const deleteKpiDailyReports = /* GraphQL */ `
       id
       dailyReport {
         id
+        campaignName
         date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
         kpis {
           nextToken
         }
+        target
         createdAt
         updatedAt
       }
       kpi {
         id
         name
-        target
         dailyReports {
           nextToken
         }
         createdAt
         updatedAt
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDailyReport = /* GraphQL */ `
+  mutation CreateDailyReport(
+    $input: CreateDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    createDailyReport(input: $input, condition: $condition) {
+      id
+      campaignName
+      date
       campaign {
         id
         name
@@ -709,14 +779,19 @@ export const deleteKpiDailyReports = /* GraphQL */ `
         }
         agent {
           id
+          category
           name
           email
-          points
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
           createdAt
           updatedAt
         }
         startDate
         endDate
+        status
         length
         notes
         dailyReports {
@@ -725,19 +800,6 @@ export const deleteKpiDailyReports = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createDailyReport = /* GraphQL */ `
-  mutation CreateDailyReport(
-    $input: CreateDailyReportInput!
-    $condition: ModelDailyReportConditionInput
-  ) {
-    createDailyReport(input: $input, condition: $condition) {
-      id
-      date
       kpis {
         items {
           id
@@ -746,6 +808,7 @@ export const createDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      target
       createdAt
       updatedAt
     }
@@ -758,7 +821,48 @@ export const updateDailyReport = /* GraphQL */ `
   ) {
     updateDailyReport(input: $input, condition: $condition) {
       id
+      campaignName
       date
+      campaign {
+        id
+        name
+        type
+        client {
+          id
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       kpis {
         items {
           id
@@ -767,6 +871,7 @@ export const updateDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      target
       createdAt
       updatedAt
     }
@@ -779,7 +884,48 @@ export const deleteDailyReport = /* GraphQL */ `
   ) {
     deleteDailyReport(input: $input, condition: $condition) {
       id
+      campaignName
       date
+      campaign {
+        id
+        name
+        type
+        client {
+          id
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       kpis {
         items {
           id
@@ -788,6 +934,7 @@ export const deleteDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      target
       createdAt
       updatedAt
     }

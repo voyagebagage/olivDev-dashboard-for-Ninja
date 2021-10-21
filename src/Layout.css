@@ -56,3 +56,12 @@ html,
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
+.sidebar-menu {
+  background-color: #8caba0;
+}
+/* .nav-text:after {
+  background-color: #566a63;
+} */
+body.sidebar-pushable > .pusher {
+  background-color: #566a63;
+}

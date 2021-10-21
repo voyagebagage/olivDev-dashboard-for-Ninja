@@ -9,13 +9,29 @@ import { listAgents } from "../graphql/queries";
 -                               Main function                       -
 ------------------------------------------------------------------ */
 function Agent() {
+  const SORT = {
+    ASC: "ASC",
+    DESC: "DESC",
+  };
+  const limit = 20;
   //---------------------States------------------------------
   const [agents, setAgents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortDirection, setSortDirection] = useState(SORT.DESC);
+
+  const variables = {
+    // nextToken,
+    limit,
+    // filter,
+    sortDirection,
+  };
   //---------------------Functions-------------------------------
   const fetchAgents = async () => {
     try {
-      const agentData = await API.graphql(graphqlOperation(listAgents));
+      const agentData = await API.graphql(
+        // graphqlOperation(searchAgents)
+        graphqlOperation(listAgents, variables)
+      );
       setAgents(agentData.data.listAgents.items);
       console.log(agentData.data.listAgents.items, "client");
       setIsLoading(false);
@@ -60,7 +76,7 @@ function Agent() {
                   );
                 })}
               </Table.Cell>
-              <Table.Cell>{agent.points}</Table.Cell>
+              <Table.Cell>{idx + 1}</Table.Cell>
             </Table.Row>
           </Table.Body>
         ))}

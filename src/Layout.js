@@ -28,7 +28,7 @@ function Layout() {
     Cookies.set("username", username, { expires: 1 });
   };
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
-
+  // console.log(window.location.origin);
   return (
     <Router>
       <Route path="/login">
@@ -41,7 +41,14 @@ function Layout() {
         <Route
           render={() =>
             token ? (
-              <div style={{ height: "100vh" }}>
+              <div
+                style={
+                  //this will need to change
+                  window.location.origin !== "http://localhost:3000"
+                    ? { height: "100vh" }
+                    : { height: "100%" }
+                }
+              >
                 <Header handleSidebarItem={handleSidebarItem} />
                 <div>
                   <SidebarComponent sidebarItem={sidebarItem} />

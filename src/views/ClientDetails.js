@@ -29,6 +29,7 @@ function ClientDetails() {
   const { onChange, form, setForm } = useForm();
   const { setVisible } = useVisible();
   let history = useHistory();
+  // let location= useLocation();
   //---------------------States---------------------------------
   const [textArea, setTextArea] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -134,7 +135,11 @@ function ClientDetails() {
     <>
       <Sidebar.Pushable as={List}>
         <Segment basic>
-          <Link to="/client-list" style={{ color: "#566A63" }}>
+          <Link
+            to={!edit ? "/client-list" : `/client/${firstName}`}
+            onClick={edit ? () => setEdit(false) : null}
+            style={{ color: "#566A63" }}
+          >
             <Icon name="arrow left" size="large" />
             BACK
           </Link>

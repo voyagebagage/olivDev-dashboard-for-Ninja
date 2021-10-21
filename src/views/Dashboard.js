@@ -15,25 +15,68 @@ import {
 import { PaginationLong } from "../component/Pagination";
 import { API, graphqlOperation } from "aws-amplify";
 
-import { listAgents } from "../graphql/queries";
+import {
+  listAgents,
+  // searchAgents,
+  agentByTotalPoints,
+  agentByMonthlyPoints,
+  agentByWeeklyPoints,
+  agentByDailyPoints,
+} from "../graphql/queries";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-
+//#################################################
+//           FUNCTION
+//################################################
 function Dashboard() {
-  const [activeItem, setActiveItem] = useState("daily");
+  const SORT = {
+    ASC: "ASC",
+    DESC: "DESC",
+  };
+  const QUERY = {
+    TOTAL: agentByTotalPoints,
+    MONTH: agentByMonthlyPoints,
+    WEEK: agentByWeeklyPoints,
+    DAY: agentByDailyPoints,
+  };
+
+  const limit = 12;
+  const [activeItem, setActiveItem] = useState("");
+
   const handle = useFullScreenHandle();
   const [agents, setAgents] = useState([]);
+  const [sortDirection, setSortDirection] = useState(SORT.DESC);
+  const [query, setQuery] = useState(QUERY.TOTAL);
+  const [isLoading, setIsLoading] = useState(true);
+  // const queryValue = QUERY.TOTAL.value;
+  // const queryText = query.text;
   const fetchAgent = async () => {
     try {
-      const agentData = await API.graphql(graphqlOperation(listAgents));
-      setAgents(agentData.data.listAgents.items);
-      // console.log(agents);
+      const agentData = await API.graphql(
+        graphqlOperation(
+          query,
+          // variables
+          { category: "agent", sortDirection: sortDirection }
+        )
+      );
+      //   graphqlOperation(listAgents, variables)
+      const agentDataPath = await (agentData.data?.agentByTotalPoints.items ||
+        agentData.data?.agentByMonthlyPoints.items ||
+        agentData.data?.agentByWeeklyPoints.items ||
+        agentData.data?.agentByDailyPoints.items);
+
+      setAgents(agentDataPath);
+      setIsLoading(false);
+      console.log(agents, "agents");
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => fetchAgent(), []);
-  return (
-    <Segment basic style={{ width: "50vw", height: "100vh" }}>
+  useEffect(() => fetchAgent(), [activeItem, query]);
+  //#################################################
+  //           RENDER
+  //################################################
+  return !isLoading ? (
+    <Segment basic style={{ width: "50vw", height: "100%" }}>
       <div className="dFlex-sBetween">
         <Header as="h2">Leaderboard</Header>
         <Icon
@@ -53,19 +96,28 @@ function Dashboard() {
         >
           <Menu fluid widths={3}>
             <Menu.Item
-              name="daily"
-              active={activeItem === "Daily"}
-              onClick={() => setActiveItem("daily")}
+              name="Daily"
+              active={activeItem === "daily"}
+              onClick={() => {
+                setActiveItem("daily");
+                setQuery(QUERY.DAY);
+              }}
             />
             <Menu.Item
-              name="weekly"
-              active={activeItem === "Weekly"}
-              onClick={() => setActiveItem("weekly")}
+              name="Weekly"
+              active={activeItem === "weekly"}
+              onClick={() => {
+                setActiveItem("weekly");
+                setQuery(QUERY.WEEK);
+              }}
             />
             <Menu.Item
-              name="monthly"
-              active={activeItem === "Monthly"}
-              onClick={() => setActiveItem("monthly")}
+              name="Monthly"
+              active={activeItem === "monthly"}
+              onClick={() => {
+                setActiveItem("monthly");
+                setQuery(QUERY.MONTH);
+              }}
             />
           </Menu>
 
@@ -96,13 +148,22 @@ function Dashboard() {
                   </Table.Cell>
                   <Table.Cell>{agent.name}</Table.Cell>
                   <Table.Cell>
-                    {agent.points ? agent.points : "-"}pts
+                    {activeItem === "" && agent.totalPoints
+                      ? agent.totalPoints
+                      : activeItem === "daily" && agent.dailyPoints
+                      ? agent.dailyPoints
+                      : activeItem === "weekly" && agent.weeklyPoints
+                      ? agent.weeklyPoints
+                      : activeItem === "monthly" && agent.monthlyPoints
+                      ? agent.monthlyPoints
+                      : "-"}
+                    pts
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
             ))}
           </Table>
-          <PaginationLong />
+          {/* <PaginationLong /> */}
         </div>
       </FullScreen>
 
@@ -130,6 +191,8 @@ function Dashboard() {
         </Grid.Column>
       </Grid>
     </Segment>
+  ) : (
+    <h2>Loading</h2>
   );
 }
 
