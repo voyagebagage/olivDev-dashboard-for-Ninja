@@ -146,7 +146,17 @@ export const createAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
       createdAt
       updatedAt
@@ -193,7 +203,17 @@ export const updateAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
       createdAt
       updatedAt
@@ -240,8 +260,144 @@ export const deleteAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createYearPoints = /* GraphQL */ `
+  mutation CreateYearPoints(
+    $input: CreateYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    createYearPoints(input: $input, condition: $condition) {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateYearPoints = /* GraphQL */ `
+  mutation UpdateYearPoints(
+    $input: UpdateYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    updateYearPoints(input: $input, condition: $condition) {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteYearPoints = /* GraphQL */ `
+  mutation DeleteYearPoints(
+    $input: DeleteYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    deleteYearPoints(input: $input, condition: $condition) {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
       createdAt
       updatedAt
     }
@@ -263,7 +419,7 @@ export const createTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -295,7 +451,7 @@ export const updateTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -327,7 +483,7 @@ export const deleteTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -388,7 +544,10 @@ export const createCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -459,7 +618,10 @@ export const updateCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -530,7 +692,10 @@ export const deleteCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -784,7 +949,7 @@ export const createDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -847,7 +1012,7 @@ export const updateDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -910,7 +1075,7 @@ export const deleteDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt

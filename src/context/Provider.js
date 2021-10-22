@@ -1,7 +1,8 @@
 import { createContext, useContext, useState } from "react";
 
 //----------------------------------
-const FetchClientsContext = createContext();
+const FetchContext = createContext();
+const DropDownContext = createContext();
 const SingleClientContext = createContext();
 const SidebarVisibleContext = createContext();
 //----------------------------------
@@ -11,8 +12,11 @@ export function useClient() {
 export function useVisible() {
   return useContext(SidebarVisibleContext);
 }
-export function useFetchClients() {
-  return useContext(FetchClientsContext);
+export function useFetch() {
+  return useContext(FetchContext);
+}
+export function useDropDownFilter() {
+  return useContext(DropDownContext);
 }
 //----------------------------------
 export const GlobalProvider = ({ children }) => {
@@ -22,6 +26,8 @@ export const GlobalProvider = ({ children }) => {
   //   contactsInitialState
   // );
   //----------
+  const [fieldDropDown, setFieldDropDown] = useState("companyName");
+  const [directionDropDown, setDirectionDropDown] = useState("asc");
   //----------
   const [nextToken, setNextToken] = useState(undefined);
   const [nextNextToken, setNextNextToken] = useState();
@@ -35,25 +41,34 @@ export const GlobalProvider = ({ children }) => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <FetchClientsContext.Provider
+    <DropDownContext.Provider
       value={{
-        nextToken,
-        setNextToken,
-        nextNextToken,
-        setNextNextToken,
-        previousTokens,
-        setPreviousTokens,
-        isLoading,
-        setIsLoading,
+        fieldDropDown,
+        setFieldDropDown,
+        directionDropDown,
+        setDirectionDropDown,
       }}
     >
-      <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
-        <SingleClientContext.Provider
-          value={{ clientDetails, setClientDetails }}
-        >
-          {children}
-        </SingleClientContext.Provider>
-      </SidebarVisibleContext.Provider>
-    </FetchClientsContext.Provider>
+      <FetchContext.Provider
+        value={{
+          nextToken,
+          setNextToken,
+          nextNextToken,
+          setNextNextToken,
+          previousTokens,
+          setPreviousTokens,
+          isLoading,
+          setIsLoading,
+        }}
+      >
+        <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
+          <SingleClientContext.Provider
+            value={{ clientDetails, setClientDetails }}
+          >
+            {children}
+          </SingleClientContext.Provider>
+        </SidebarVisibleContext.Provider>
+      </FetchContext.Provider>
+    </DropDownContext.Provider>
   );
 };

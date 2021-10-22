@@ -2,13 +2,18 @@ import { Menu, Icon, Search, Dropdown } from "semantic-ui-react";
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { filterClientList, sortDirection } from "../../arrayLists/index";
-import { useClient, useFetchClients } from "../../context/Provider";
-import { fetchClients } from "../../fetch/FetchClients";
-// import {useClient} from  ;
+import { useClient, useDropDownFilter, useFetch } from "../../context/Provider";
+import SearchBar from "../SearchBar";
+
 function Header({ handleSidebarItem }) {
   const { setClients } = useClient();
   const [filterChoice, setFilterChoice] = useState(false);
-  const [valueDropDown, setValueDropDown] = useState("Filter By:");
+  const {
+    fieldDropDown,
+    setFieldDropDown,
+    directionDropDown,
+    setDirectionDropDown,
+  } = useDropDownFilter();
   let location = useLocation();
   // console.log(location);
   const {
@@ -20,7 +25,7 @@ function Header({ handleSidebarItem }) {
     // disabledPrev,
     // next,
     // prev,
-  } = useFetchClients();
+  } = useFetch();
 
   // const SORT = {
   //   ASC: "ASC",
@@ -42,26 +47,25 @@ function Header({ handleSidebarItem }) {
             <Menu.Item>
               {/* // <Menu.Item vertical> */}
               <Dropdown
-                // onChange={() => setValueDropDown(value)}
                 basic
                 fluid
                 button
                 selectedLabel
                 selection
-                // onChange={(e) => setValueDropDown(options)}
+                onChange={(e, value) => setFieldDropDown(value.value)}
                 options={filterClientList}
+                // value={filterClientList.value}
                 text={filterClientList.text || ""}
                 placeholder="Sort By:"
                 style={{ minWidth: "11vw", maxHeight: "4vh" }}
               />
               <Dropdown
-                // onChange={() => setValueDropDown(value)}
                 basic
                 fluid
                 button
                 selectedLabel
                 selection
-                // onChange={(e) => setValueDropDown(options)}
+                onChange={(e, value) => setDirectionDropDown(value.value)}
                 options={sortDirection}
                 text={sortDirection.text || ""}
                 placeholder="Way: A-Z"
@@ -84,11 +88,7 @@ function Header({ handleSidebarItem }) {
           // </Menu.Item>
           null}
           <Menu.Item>
-            <Search
-              icon="search"
-              placeholder="Search..."
-              style={{ borderRadius: "50%" }}
-            />
+            <SearchBar />
           </Menu.Item>
           <Menu.Item style={{ color: "#566A63" }}>
             <Icon name="user circle" size="big" />

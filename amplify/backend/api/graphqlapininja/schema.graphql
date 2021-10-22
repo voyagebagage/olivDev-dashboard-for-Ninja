@@ -27,7 +27,7 @@ type Agent
   )
   @key(
     name: "agentByMonthlyPoints"
-    fields: ["category", "monthlyPoint"]
+    fields: ["category", "monthlyPoints"]
     queryField: "agentByMonthlyPoints"
   )
   @key(

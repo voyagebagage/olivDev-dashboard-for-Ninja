@@ -2,18 +2,17 @@ import { Table, Header, Segment, Sidebar, List } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 import AddIcon from "../component/AddIcon";
 import React, { useState, useEffect } from "react";
-import { useVisible } from "../context/Provider";
+import { useVisible, useFetch } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
 import { listCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
-import { fetchClients } from "../fetch/FetchClients";
+// import { fetchClients } from "../fetch/FetchClients";
 //#################################################
 //           FUNCTION
 //################################################
 function Campaigns() {
   const { setVisible } = useVisible();
-  const { isLoading, setIsLoading } = fetchClients();
-
+  const { isLoading, setIsLoading } = useFetch();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [campaigns, setCampaigns] = useState([]);

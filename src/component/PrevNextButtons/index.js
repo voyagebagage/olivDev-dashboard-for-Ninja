@@ -1,9 +1,9 @@
 import { Button } from "semantic-ui-react";
-import { useFetchClients } from "../../context/Provider";
+import { useFetch } from "../../context/Provider";
 
 const PrevNextButtons = ({ nextNextToken, previousTokens, isLoading }) => {
   const { nextToken, setNextNextToken, setPreviousTokens, setNextToken } =
-    useFetchClients();
+    useFetch();
   //----------------------
   const hasNext = !!nextNextToken;
   const hasPrev = previousTokens.length;

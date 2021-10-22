@@ -134,7 +134,17 @@ export const onCreateAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
       createdAt
       updatedAt
@@ -178,7 +188,17 @@ export const onUpdateAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
       createdAt
       updatedAt
@@ -222,8 +242,135 @@ export const onDeleteAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateYearPoints = /* GraphQL */ `
+  subscription OnCreateYearPoints {
+    onCreateYearPoints {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateYearPoints = /* GraphQL */ `
+  subscription OnUpdateYearPoints {
+    onUpdateYearPoints {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteYearPoints = /* GraphQL */ `
+  subscription OnDeleteYearPoints {
+    onDeleteYearPoints {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
       createdAt
       updatedAt
     }
@@ -242,7 +389,7 @@ export const onCreateTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -271,7 +418,7 @@ export const onUpdateTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -300,7 +447,7 @@ export const onDeleteTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -358,7 +505,10 @@ export const onCreateCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -426,7 +576,10 @@ export const onUpdateCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -494,7 +647,10 @@ export const onDeleteCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -727,7 +883,7 @@ export const onCreateDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -787,7 +943,7 @@ export const onUpdateDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -847,7 +1003,7 @@ export const onDeleteDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt

@@ -12,11 +12,11 @@ import {
   Grid,
   Container,
 } from "semantic-ui-react";
-import { PaginationLong } from "../component/Pagination";
+// import { PaginationLong } from "../component/Pagination";
 import { API, graphqlOperation } from "aws-amplify";
 
 import {
-  listAgents,
+  // listAgents,
   // searchAgents,
   agentByTotalPoints,
   agentByMonthlyPoints,
@@ -47,10 +47,13 @@ function Dashboard() {
   const [sortDirection, setSortDirection] = useState(SORT.DESC);
   const [query, setQuery] = useState(QUERY.TOTAL);
   const [isLoading, setIsLoading] = useState(true);
-  // const queryValue = QUERY.TOTAL.value;
-  // const queryText = query.text;
+  //##
+  //##
+  //--------------------------------Fetch-----------------
   const fetchAgent = async () => {
     try {
+      console.log("-------FETCH------");
+      // console.log(query, "query");
       const agentData = await API.graphql(
         graphqlOperation(
           query,
@@ -58,13 +61,15 @@ function Dashboard() {
           { category: "agent", sortDirection: sortDirection }
         )
       );
-      //   graphqlOperation(listAgents, variables)
-      const agentDataPath = await (agentData.data?.agentByTotalPoints.items ||
-        agentData.data?.agentByMonthlyPoints.items ||
-        agentData.data?.agentByWeeklyPoints.items ||
-        agentData.data?.agentByDailyPoints.items);
 
-      setAgents(agentDataPath);
+      if (activeItem === "") setAgents(agentData.data.agentByTotalPoints.items);
+      if (activeItem === "monthly")
+        setAgents(agentData.data.agentByMonthlyPoints.items);
+      if (activeItem === "weekly")
+        setAgents(agentData.data.agentByWeeklyPoints.items);
+      if (activeItem === "daily")
+        setAgents(agentData.data.agentByDailyPoints.items);
+
       setIsLoading(false);
       console.log(agents, "agents");
     } catch (error) {

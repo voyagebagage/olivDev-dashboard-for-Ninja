@@ -9,7 +9,7 @@ export const sortDirection = [
 export const filterClientList = [
   { key: "0", text: "First Name", value: "firstName" },
   { key: "1", text: "Last Name", value: "lastName" },
-  { key: "2", text: "Company", value: "company" },
+  { key: "2", text: "Company", value: "companyName" },
   { key: "3", text: "Email", value: "email" },
   { key: "4", text: "Country", value: "country" },
 ];

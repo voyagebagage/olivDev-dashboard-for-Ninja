@@ -8,7 +8,12 @@ import SidebarForm from "../component/SidebarForm";
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
 import { listClients, searchClients } from "../graphql/queries";
-
+import {
+  useClient,
+  useVisible,
+  useFetch,
+  useDropDownFilter,
+} from "../context/Provider";
 import {
   List,
   Segment,
@@ -24,11 +29,10 @@ import {
 import NewClientForm from "../Forms/NewClientForm";
 import PrevNextButtons from "../component/PrevNextButtons/index.js";
 //------------------------context & custom hooks----------------------
-import { useClient, useVisible, useFetchClients } from "../context/Provider";
 
-/* ------------------------------------------------------------------
--                               Main function                       -
------------------------------------------------------------------- */
+/* -----------------------------------------------------------
+-                      Main FUNCTION                      -
+------------------------------------------------------------- */
 function Client() {
   let history = useHistory();
   const sort = {
@@ -51,24 +55,28 @@ function Client() {
   const { setVisible } = useVisible();
   const {
     nextToken,
-    setNextNextToken,
+    // setNextNextToken,
     isLoading,
     setIsLoading,
-    nextNextToken,
-    previousTokens,
-  } = useFetchClients();
-  let activePage = 1;
+    // nextNextToken,
+    // previousTokens,
+  } = useFetch();
+  const {
+    fieldDropDown,
+    setFieldDropDown,
+    directionDropDown,
+    setDirectionDropDown,
+  } = useDropDownFilter();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [clients, setClients] = useState([]);
   const [totalClients, setTotalClients] = useState(0);
-  const [targetPage, setTargetPage] = useState(activePage);
+  const [targetPage, setTargetPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [from, setFrom] = useState(0);
 
   // const [activePage, setPage] = useState(0);
   const [maxPages, setMaxPages] = useState(0);
-  console.log(maxPages, "max PAGES");
   // const [nextToken, setNextToken] = useState(undefined);
   // const [nextNextToken, setNextNextToken] = useState();
   // const [sortDirection, setSortDirection] = useState(SORT.ASC);
@@ -77,38 +85,19 @@ function Client() {
   // const hasPrev = previousTokens.length;
   // const disabledNext = !hasNext || isLoading;
   // const disabledPrev = !hasPrev || isLoading;
-
-  //---------------------Functions------------------------------
-
-  // //--------------------
-  // const next = () => {
-  //   setPreviousTokens((prev) => [...prev, nextToken]);
-  //   setNextToken(nextNextToken);
-  //   setNextNextToken(null);
-  // };
-  // //--------------------
-  // const prev = () => {
-  //   setNextToken(previousTokens.pop());
-  //   setPreviousTokens([...previousTokens]);
-  //   setNextNextToken(null);
-  // };
+  console.log(fieldDropDown, "fieldDropDown");
   const variables = {
     // filter,
-    from,
-    limit,
-    nextToken,
-    sort,
+    from: from,
+    limit: limit,
+    sort: { direction: directionDropDown, field: fieldDropDown },
   };
   //-------------------
   const fetchClients = async () => {
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       const clientData = await API.graphql(
-        graphqlOperation(searchClients, {
-          from: from,
-          limit: limit,
-          sort: { direction: sort.direction, field: sort.field },
-        })
+        graphqlOperation(searchClients, variables)
         // listClients, variables)
       );
       setClients(clientData.data.searchClients.items);
@@ -116,25 +105,17 @@ function Client() {
       setMaxPages(Math.ceil(clientData.data.searchClients.total / limit));
       // setNextNextToken(clientData.data.searchClients.nextToken);
       // const maxPages = Math.ceil(totalClients / limit);
-      console.log(targetPage, "targetPPPP");
       console.log("=========USEEFFECT==========");
+      console.log(clients);
       setFrom(limit * (targetPage - 1));
       setIsLoading(false);
-
-      // console.log(from, "---from---");
-      console.log(clients.length, "page");
-      // console.log(clientData.data.searchClients.total, "searchclients");
-      console.log(totalClients, "totalClients");
-      console.log(maxPages, "------maxPages-----");
-      // console.log(clientData.data.searchClients.items.length, "length");
-      // setIsLoading(false);
     } catch (error) {
       console.log("error with get clients :", error);
     }
   };
   useEffect(() => {
     fetchClients();
-  }, [nextToken, from, targetPage, activePage, maxPages]);
+  }, [from, targetPage, fieldDropDown, directionDropDown]);
   //#################################################
   //           RENDER
   //################################################
@@ -166,23 +147,39 @@ function Client() {
                 onClick={() => {
                   setClientDetails(client);
                   console.log(clientDetails, "client D");
-                  history.push(`/client/${client.firstName}`);
                 }}
                 style={{ cursor: "pointer" }}
               >
                 {/* {console.log(client)} */}
-                <Table.Cell>{client.companyName}</Table.Cell>
-                <Table.Cell collapsing>
+                <Table.Cell
+                  onClick={() => history.push(`/client/${client.firstName}`)}
+                >
+                  {client.companyName}
+                </Table.Cell>
+                <Table.Cell
+                  collapsing
+                  onClick={() => history.push(`/client/${client.firstName}`)}
+                >
                   {client.firstName} {client.lastName}
                 </Table.Cell>
-                <Table.Cell>{client.email}</Table.Cell>
+                <Table.Cell
+                  onClick={() => history.push(`/client/${client.firstName}`)}
+                >
+                  {client.email}
+                </Table.Cell>
                 <Table.Cell>
                   <a href={client.website} className="clientListLink">
                     {client.website}
                   </a>
                 </Table.Cell>
-                <Table.Cell>{client.country}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell
+                  onClick={() => history.push(`/client/${client.firstName}`)}
+                >
+                  {client.country}
+                </Table.Cell>
+                <Table.Cell
+                  onClick={() => history.push(`/client/${client.firstName}`)}
+                >
                   {client.campaigns.items?.map((campaign) => (
                     <p key={campaign.id}>
                       {campaign.endDate.split("-").reverse().join("-")}
@@ -213,9 +210,7 @@ function Client() {
           limit={limit}
           targetPage={targetPage}
           setTargetPage={setTargetPage}
-          activePage={activePage}
         />
-        {/* {console.log(from, "from")} */}
         {/* ------------------------------------------------------------------
         -                                 SIDEBAR                        -
         ------------------------------------------------------------------ */}

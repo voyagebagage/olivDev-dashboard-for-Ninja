@@ -97,7 +97,17 @@ export const getAgent = /* GraphQL */ `
       }
       dailyPoints
       weeklyPoints
-      monthlyPoint
+      monthlyPoints
+      yearPoints {
+        items {
+          id
+          month
+          date
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       totalPoints
       createdAt
       updatedAt
@@ -131,8 +141,80 @@ export const listAgents = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getYearPoints = /* GraphQL */ `
+  query GetYearPoints($id: ID!) {
+    getYearPoints(id: $id) {
+      id
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
+      month
+      date
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listYearPoints = /* GraphQL */ `
+  query ListYearPoints(
+    $filter: ModelYearPointsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listYearPoints(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        month
+        date
         createdAt
         updatedAt
       }
@@ -153,7 +235,7 @@ export const getTeam = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -235,7 +317,10 @@ export const getCampaign = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -292,7 +377,7 @@ export const listCampaigns = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -380,7 +465,7 @@ export const getDailyReport = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
@@ -481,7 +566,10 @@ export const agentByDailyPoints = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -527,7 +615,10 @@ export const agentByWeeklyPoints = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -539,7 +630,7 @@ export const agentByWeeklyPoints = /* GraphQL */ `
 export const agentByMonthlyPoints = /* GraphQL */ `
   query AgentByMonthlyPoints(
     $category: String
-    $monthlyPoint: ModelIntKeyConditionInput
+    $monthlyPoints: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAgentFilterInput
     $limit: Int
@@ -547,7 +638,7 @@ export const agentByMonthlyPoints = /* GraphQL */ `
   ) {
     agentByMonthlyPoints(
       category: $category
-      monthlyPoint: $monthlyPoint
+      monthlyPoints: $monthlyPoints
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -573,7 +664,10 @@ export const agentByMonthlyPoints = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -619,7 +713,10 @@ export const agentByTotalPoints = /* GraphQL */ `
         }
         dailyPoints
         weeklyPoints
-        monthlyPoint
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
         totalPoints
         createdAt
         updatedAt
@@ -703,7 +800,7 @@ export const searchCampaigns = /* GraphQL */ `
           email
           dailyPoints
           weeklyPoints
-          monthlyPoint
+          monthlyPoints
           totalPoints
           createdAt
           updatedAt
