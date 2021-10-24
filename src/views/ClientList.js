@@ -51,7 +51,14 @@ function Client() {
     ],
   };
   //------------------------context & custom hooks----------------------
-  const { clientDetails, setClientDetails } = useClient();
+  const {
+    clientDetails,
+    setClientDetails,
+    clients,
+    setClients,
+    filteredResults,
+    setFilteredResults,
+  } = useClient();
   const { setVisible } = useVisible();
   const {
     nextToken,
@@ -69,7 +76,7 @@ function Client() {
   } = useDropDownFilter();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
-  const [clients, setClients] = useState([]);
+  // const [clients, setClients] = useState([]);
   const [totalClients, setTotalClients] = useState(0);
   const [targetPage, setTargetPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -100,13 +107,21 @@ function Client() {
         graphqlOperation(searchClients, variables)
         // listClients, variables)
       );
+      //----------------------setStates---
       setClients(clientData.data.searchClients.items);
-      setTotalClients(clientData.data.searchClients.total);
-      setMaxPages(Math.ceil(clientData.data.searchClients.total / limit));
+      //----onKeyPress === "Enter"-------------
+      if (filteredResults) {
+        setTotalClients(clients.length);
+        setMaxPages(Math.ceil(totalClients / limit));
+      } else {
+        //----Default fetch------------------------
+        setTotalClients(clientData.data.searchClients.total);
+        setMaxPages(Math.ceil(clientData.data.searchClients.total / limit));
+      }
       // setNextNextToken(clientData.data.searchClients.nextToken);
       // const maxPages = Math.ceil(totalClients / limit);
       console.log("=========USEEFFECT==========");
-      console.log(clients);
+      console.log(clients, "CLIENT USEEFFECT");
       setFrom(limit * (targetPage - 1));
       setIsLoading(false);
     } catch (error) {
@@ -115,7 +130,15 @@ function Client() {
   };
   useEffect(() => {
     fetchClients();
-  }, [from, targetPage, fieldDropDown, directionDropDown]);
+  }, [
+    from,
+    targetPage,
+    fieldDropDown,
+    directionDropDown,
+    filteredResults,
+    maxPages,
+    // clients.length,
+  ]);
   //#################################################
   //           RENDER
   //################################################

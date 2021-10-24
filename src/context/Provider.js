@@ -37,6 +37,9 @@ export const GlobalProvider = ({ children }) => {
   //-----------------
   //-----------------
   const [clientDetails, setClientDetails] = useState({});
+  const [clients, setClients] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
+
   //----------
   const [visible, setVisible] = useState(false);
 
@@ -63,7 +66,14 @@ export const GlobalProvider = ({ children }) => {
       >
         <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
           <SingleClientContext.Provider
-            value={{ clientDetails, setClientDetails }}
+            value={{
+              clientDetails,
+              setClientDetails,
+              clients,
+              setClients,
+              filteredResults,
+              setFilteredResults,
+            }}
           >
             {children}
           </SingleClientContext.Provider>

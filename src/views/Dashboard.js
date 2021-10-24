@@ -61,6 +61,7 @@ function Dashboard() {
           { category: "agent", sortDirection: sortDirection }
         )
       );
+      setIsLoading(false);
 
       if (activeItem === "") setAgents(agentData.data.agentByTotalPoints.items);
       if (activeItem === "monthly")
@@ -70,7 +71,6 @@ function Dashboard() {
       if (activeItem === "daily")
         setAgents(agentData.data.agentByDailyPoints.items);
 
-      setIsLoading(false);
       console.log(agents, "agents");
     } catch (error) {
       console.log(error);

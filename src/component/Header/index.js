@@ -72,21 +72,7 @@ function Header({ handleSidebarItem }) {
                 style={{ minWidth: "3vw" }}
               />
             </Menu.Item>
-          ) : // <Menu.Item>
-          //   <Button
-          //     content="filter"
-          //     onClick={() => setFilterChoice(!filterChoice)}
-          //   />
-          //   {filterChoice ? (
-          //     <>
-          //       <Button content="First Name" size="very small" />
-          //       <Button content="Last Name" size="very small" />
-          //       <Button content="Company" size="very small" />
-          //       <Button content="Email" size="very small" />
-          //     </>
-          //   ) : null}
-          // </Menu.Item>
-          null}
+          ) : null}
           <Menu.Item>
             <SearchBar />
           </Menu.Item>
