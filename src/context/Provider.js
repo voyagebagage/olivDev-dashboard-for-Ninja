@@ -33,7 +33,8 @@ export const GlobalProvider = ({ children }) => {
   const [nextNextToken, setNextNextToken] = useState();
   const [previousTokens, setPreviousTokens] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  // const [onEnter, setOnEnter] = useState(false);
+  // const [limit, setLimit] = useState(10);
   //-----------------
   //-----------------
   const [clientDetails, setClientDetails] = useState({});
@@ -62,6 +63,8 @@ export const GlobalProvider = ({ children }) => {
           setPreviousTokens,
           isLoading,
           setIsLoading,
+          // limit,
+          // setLimit,
         }}
       >
         <SidebarVisibleContext.Provider value={{ visible, setVisible }}>

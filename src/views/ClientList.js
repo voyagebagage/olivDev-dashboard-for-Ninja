@@ -23,7 +23,6 @@ import {
   Dimmer,
   Loader,
   Image,
-  Button,
 } from "semantic-ui-react";
 // import useForm from "../Forms/useForm";
 import NewClientForm from "../Forms/NewClientForm";
@@ -41,15 +40,6 @@ function Client() {
     // ASC: "asc",
     // DESC: "desc",
   };
-  // const limit = 8;
-  let contains = "capital";
-  let filter = {
-    or: [
-      { lastName: { contains: contains } },
-      { firstName: { contains: contains } },
-      { companyName: { contains: contains } },
-    ],
-  };
   //------------------------context & custom hooks----------------------
   const {
     clientDetails,
@@ -57,44 +47,32 @@ function Client() {
     clients,
     setClients,
     filteredResults,
-    setFilteredResults,
   } = useClient();
+  //xxxxxxxxxxxxxxxxxxxx
   const { setVisible } = useVisible();
+  //xxxxxxxxxxxxxxxxxxxx
   const {
-    nextToken,
-    // setNextNextToken,
     isLoading,
     setIsLoading,
-    // nextNextToken,
-    // previousTokens,
+    // limit,
+    // setLimit,
   } = useFetch();
+  //xxxxxxxxxxxxxxxxxxxx
   const {
     fieldDropDown,
     setFieldDropDown,
     directionDropDown,
     setDirectionDropDown,
   } = useDropDownFilter();
-  //---------------------States------------------------------
-  // const [activeCampaign, setActiveCampaign] = useState(false);
-  // const [clients, setClients] = useState([]);
+  //------------------------States------------------------------
   const [totalClients, setTotalClients] = useState(0);
   const [targetPage, setTargetPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [from, setFrom] = useState(0);
-
-  // const [activePage, setPage] = useState(0);
   const [maxPages, setMaxPages] = useState(0);
-  // const [nextToken, setNextToken] = useState(undefined);
-  // const [nextNextToken, setNextNextToken] = useState();
-  // const [sortDirection, setSortDirection] = useState(SORT.ASC);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const hasNext = !!nextNextToken;
-  // const hasPrev = previousTokens.length;
-  // const disabledNext = !hasNext || isLoading;
-  // const disabledPrev = !hasPrev || isLoading;
-  console.log(fieldDropDown, "fieldDropDown");
+
   const variables = {
-    // filter,
+    //filter
     from: from,
     limit: limit,
     sort: { direction: directionDropDown, field: fieldDropDown },
@@ -103,23 +81,24 @@ function Client() {
   const fetchClients = async () => {
     try {
       setIsLoading(true);
+      // setLimit(10);
       const clientData = await API.graphql(
         graphqlOperation(searchClients, variables)
         // listClients, variables)
       );
-      //----------------------setStates---
+      //----------------------setStates-----------
       setClients(clientData.data.searchClients.items);
-      //----onKeyPress === "Enter"-------------
-      if (filteredResults) {
-        setTotalClients(clients.length);
-        setMaxPages(Math.ceil(totalClients / limit));
-      } else {
-        //----Default fetch------------------------
+      //----onKeyPress === "Enter"---------------
+      if (filteredResults.length) {
+        setTotalClients(filteredResults.length);
+        setMaxPages(Math.ceil(filteredResults.length / limit));
+      }
+      //----Default fetch------------------------
+      if (!filteredResults.length) {
         setTotalClients(clientData.data.searchClients.total);
         setMaxPages(Math.ceil(clientData.data.searchClients.total / limit));
       }
-      // setNextNextToken(clientData.data.searchClients.nextToken);
-      // const maxPages = Math.ceil(totalClients / limit);
+
       console.log("=========USEEFFECT==========");
       console.log(clients, "CLIENT USEEFFECT");
       setFrom(limit * (targetPage - 1));
@@ -137,7 +116,6 @@ function Client() {
     directionDropDown,
     filteredResults,
     maxPages,
-    // clients.length,
   ]);
   //#################################################
   //           RENDER
@@ -214,18 +192,6 @@ function Client() {
             ))}
           </Table.Body>
         </Table>
-        {/* <PrevNextButtons
-          nextNextToken={nextNextToken}
-          previousTokens={previousTokens}
-          isLoading={isLoading}
-        /> */}
-        {/* <Button content="Previous" disabled={disabledPrev} onClick={prev} />
-        <Button
-          content="Next"
-          disabled={disabledNext}
-          style={{ minWidth: "8%" }}
-          onClick={next}
-        /> */}
         <PaginationShortCentered
           maxPages={maxPages}
           setFrom={setFrom}

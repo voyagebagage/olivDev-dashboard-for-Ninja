@@ -3,6 +3,7 @@ body {
 }
 * {
   box-sizing: border-box;
+  /* border: coral 0.1px solid; */
 }
 body,
 html,
@@ -39,6 +40,14 @@ html,
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+.centerSized {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 .dFlex-fEnd {
   display: flex;
@@ -64,4 +73,7 @@ html,
 } */
 body.sidebar-pushable > .pusher {
   background-color: #566a63;
+}
+.kpi-header {
+  padding-left: 10%;
 }

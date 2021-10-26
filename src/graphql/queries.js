@@ -50,6 +50,18 @@ export const listClients = /* GraphQL */ `
         website
         country
         campaigns {
+          items {
+            id
+            name
+            type
+            startDate
+            endDate
+            status
+            length
+            notes
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         notes
@@ -750,6 +762,18 @@ export const searchClients = /* GraphQL */ `
         website
         country
         campaigns {
+          items {
+            id
+            name
+            type
+            startDate
+            endDate
+            status
+            length
+            notes
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         notes

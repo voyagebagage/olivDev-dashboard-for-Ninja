@@ -14,7 +14,6 @@ type Client @model @searchable {
 # add campaigns together
 type Agent
   @model
-  # @searchable
   @key(
     name: "agentByDailyPoints"
     fields: ["category", "dailyPoints"]
@@ -85,15 +84,15 @@ type Kpi @model @searchable {
   dailyReports: [KpiDailyReports]! @connection(name: "DailyReportKpis")
 }
 type KpiDailyReports @model(queries: null) {
-  dailyReport: DailyReport! @connection(name: "KpiDailyReports")
-  kpi: Kpi! @connection(name: "DailyReportKpis")
+  dailyReport: DailyReport! @connection(name: "KpiDailyReports") #kpiDailyReportsDailyReportId
+  kpi: Kpi! @connection(name: "DailyReportKpis") #kpiDailyReportsKpiId
 }
 
 type DailyReport @model @searchable {
   id: ID
-  campaignName: String!
+  campaignName: String
   date: AWSDate!
-  campaign: Campaign! @connection(name: "CampaignDailyReports")
-  kpis: [KpiDailyReports!]! @connection(name: "KpiDailyReports")
+  campaign: Campaign! @connection(name: "CampaignDailyReports") #dailyReportCampaignId
+  kpis: [KpiDailyReports]! @connection(name: "KpiDailyReports")
   target: Int
 }
