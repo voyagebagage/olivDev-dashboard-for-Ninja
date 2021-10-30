@@ -101,7 +101,7 @@ function ClientDetails() {
     try {
       setIsSubmitting(true);
       let campaigns = clientDetails.campaigns;
-      //-I really should use a reducer!--------
+      //--I really should use a reducer!--------
       clientDetails.firstName = form.firstName;
       clientDetails.lastName = form.lastName;
       clientDetails.phone = form.phone;
@@ -109,12 +109,12 @@ function ClientDetails() {
       clientDetails.email = form.email;
       clientDetails.companyName = form.companyName;
       clientDetails.country = form.country;
-      //---removing fields
+      //------removing fields
       delete clientDetails.createdAt;
       delete clientDetails.updatedAt;
       delete clientDetails.campaigns;
 
-      //-----update
+      //----------update
       const clientUpdate = await API.graphql(
         graphqlOperation(updateClient, { input: clientDetails })
       );

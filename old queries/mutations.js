@@ -1,11 +1,13 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateClient = /* GraphQL */ `
-  subscription OnCreateClient {
-    onCreateClient {
+export const createClient = /* GraphQL */ `
+  mutation CreateClient(
+    $input: CreateClientInput!
+    $condition: ModelClientConditionInput
+  ) {
+    createClient(input: $input, condition: $condition) {
       id
-      category
       firstName
       lastName
       email
@@ -34,11 +36,13 @@ export const onCreateClient = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateClient = /* GraphQL */ `
-  subscription OnUpdateClient {
-    onUpdateClient {
+export const updateClient = /* GraphQL */ `
+  mutation UpdateClient(
+    $input: UpdateClientInput!
+    $condition: ModelClientConditionInput
+  ) {
+    updateClient(input: $input, condition: $condition) {
       id
-      category
       firstName
       lastName
       email
@@ -67,11 +71,13 @@ export const onUpdateClient = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteClient = /* GraphQL */ `
-  subscription OnDeleteClient {
-    onDeleteClient {
+export const deleteClient = /* GraphQL */ `
+  mutation DeleteClient(
+    $input: DeleteClientInput!
+    $condition: ModelClientConditionInput
+  ) {
+    deleteClient(input: $input, condition: $condition) {
       id
-      category
       firstName
       lastName
       email
@@ -100,9 +106,12 @@ export const onDeleteClient = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAgent = /* GraphQL */ `
-  subscription OnCreateAgent {
-    onCreateAgent {
+export const createAgent = /* GraphQL */ `
+  mutation CreateAgent(
+    $input: CreateAgentInput!
+    $condition: ModelAgentConditionInput
+  ) {
+    createAgent(input: $input, condition: $condition) {
       id
       category
       name
@@ -135,17 +144,6 @@ export const onCreateAgent = /* GraphQL */ `
         }
         nextToken
       }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -165,9 +163,12 @@ export const onCreateAgent = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateAgent = /* GraphQL */ `
-  subscription OnUpdateAgent {
-    onUpdateAgent {
+export const updateAgent = /* GraphQL */ `
+  mutation UpdateAgent(
+    $input: UpdateAgentInput!
+    $condition: ModelAgentConditionInput
+  ) {
+    updateAgent(input: $input, condition: $condition) {
       id
       category
       name
@@ -200,17 +201,6 @@ export const onUpdateAgent = /* GraphQL */ `
         }
         nextToken
       }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -230,9 +220,12 @@ export const onUpdateAgent = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteAgent = /* GraphQL */ `
-  subscription OnDeleteAgent {
-    onDeleteAgent {
+export const deleteAgent = /* GraphQL */ `
+  mutation DeleteAgent(
+    $input: DeleteAgentInput!
+    $condition: ModelAgentConditionInput
+  ) {
+    deleteAgent(input: $input, condition: $condition) {
       id
       category
       name
@@ -265,17 +258,6 @@ export const onDeleteAgent = /* GraphQL */ `
         }
         nextToken
       }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -295,9 +277,12 @@ export const onDeleteAgent = /* GraphQL */ `
     }
   }
 `;
-export const onCreateYearPoints = /* GraphQL */ `
-  subscription OnCreateYearPoints {
-    onCreateYearPoints {
+export const createYearPoints = /* GraphQL */ `
+  mutation CreateYearPoints(
+    $input: CreateYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    createYearPoints(input: $input, condition: $condition) {
       id
       agent {
         id
@@ -317,9 +302,6 @@ export const onCreateYearPoints = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -337,9 +319,12 @@ export const onCreateYearPoints = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateYearPoints = /* GraphQL */ `
-  subscription OnUpdateYearPoints {
-    onUpdateYearPoints {
+export const updateYearPoints = /* GraphQL */ `
+  mutation UpdateYearPoints(
+    $input: UpdateYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    updateYearPoints(input: $input, condition: $condition) {
       id
       agent {
         id
@@ -359,9 +344,6 @@ export const onUpdateYearPoints = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -379,9 +361,12 @@ export const onUpdateYearPoints = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteYearPoints = /* GraphQL */ `
-  subscription OnDeleteYearPoints {
-    onDeleteYearPoints {
+export const deleteYearPoints = /* GraphQL */ `
+  mutation DeleteYearPoints(
+    $input: DeleteYearPointsInput!
+    $condition: ModelYearPointsConditionInput
+  ) {
+    deleteYearPoints(input: $input, condition: $condition) {
       id
       agent {
         id
@@ -401,9 +386,6 @@ export const onDeleteYearPoints = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -421,9 +403,12 @@ export const onDeleteYearPoints = /* GraphQL */ `
     }
   }
 `;
-export const onCreateTeam = /* GraphQL */ `
-  subscription OnCreateTeam {
-    onCreateTeam {
+export const createTeam = /* GraphQL */ `
+  mutation CreateTeam(
+    $input: CreateTeamInput!
+    $condition: ModelTeamConditionInput
+  ) {
+    createTeam(input: $input, condition: $condition) {
       id
       name
       agents {
@@ -450,9 +435,12 @@ export const onCreateTeam = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateTeam = /* GraphQL */ `
-  subscription OnUpdateTeam {
-    onUpdateTeam {
+export const updateTeam = /* GraphQL */ `
+  mutation UpdateTeam(
+    $input: UpdateTeamInput!
+    $condition: ModelTeamConditionInput
+  ) {
+    updateTeam(input: $input, condition: $condition) {
       id
       name
       agents {
@@ -479,9 +467,12 @@ export const onUpdateTeam = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTeam = /* GraphQL */ `
-  subscription OnDeleteTeam {
-    onDeleteTeam {
+export const deleteTeam = /* GraphQL */ `
+  mutation DeleteTeam(
+    $input: DeleteTeamInput!
+    $condition: ModelTeamConditionInput
+  ) {
+    deleteTeam(input: $input, condition: $condition) {
       id
       name
       agents {
@@ -508,15 +499,17 @@ export const onDeleteTeam = /* GraphQL */ `
     }
   }
 `;
-export const onCreateCampaign = /* GraphQL */ `
-  subscription OnCreateCampaign {
-    onCreateCampaign {
+export const createCampaign = /* GraphQL */ `
+  mutation CreateCampaign(
+    $input: CreateCampaignInput!
+    $condition: ModelCampaignConditionInput
+  ) {
+    createCampaign(input: $input, condition: $condition) {
       id
       name
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -549,9 +542,6 @@ export const onCreateCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -570,6 +560,9 @@ export const onCreateCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -580,15 +573,17 @@ export const onCreateCampaign = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateCampaign = /* GraphQL */ `
-  subscription OnUpdateCampaign {
-    onUpdateCampaign {
+export const updateCampaign = /* GraphQL */ `
+  mutation UpdateCampaign(
+    $input: UpdateCampaignInput!
+    $condition: ModelCampaignConditionInput
+  ) {
+    updateCampaign(input: $input, condition: $condition) {
       id
       name
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -621,9 +616,6 @@ export const onUpdateCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -642,6 +634,9 @@ export const onUpdateCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -652,15 +647,17 @@ export const onUpdateCampaign = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteCampaign = /* GraphQL */ `
-  subscription OnDeleteCampaign {
-    onDeleteCampaign {
+export const deleteCampaign = /* GraphQL */ `
+  mutation DeleteCampaign(
+    $input: DeleteCampaignInput!
+    $condition: ModelCampaignConditionInput
+  ) {
+    deleteCampaign(input: $input, condition: $condition) {
       id
       name
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -693,9 +690,6 @@ export const onDeleteCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -714,6 +708,9 @@ export const onDeleteCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -724,17 +721,216 @@ export const onDeleteCampaign = /* GraphQL */ `
     }
   }
 `;
-export const onCreateDailyReport = /* GraphQL */ `
-  subscription OnCreateDailyReport {
-    onCreateDailyReport {
+export const createKpi = /* GraphQL */ `
+  mutation CreateKpi(
+    $input: CreateKpiInput!
+    $condition: ModelKpiConditionInput
+  ) {
+    createKpi(input: $input, condition: $condition) {
       id
+      name
+      dailyReports {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateKpi = /* GraphQL */ `
+  mutation UpdateKpi(
+    $input: UpdateKpiInput!
+    $condition: ModelKpiConditionInput
+  ) {
+    updateKpi(input: $input, condition: $condition) {
+      id
+      name
+      dailyReports {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteKpi = /* GraphQL */ `
+  mutation DeleteKpi(
+    $input: DeleteKpiInput!
+    $condition: ModelKpiConditionInput
+  ) {
+    deleteKpi(input: $input, condition: $condition) {
+      id
+      name
+      dailyReports {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createKpiDailyReports = /* GraphQL */ `
+  mutation CreateKpiDailyReports(
+    $input: CreateKpiDailyReportsInput!
+    $condition: ModelKpiDailyReportsConditionInput
+  ) {
+    createKpiDailyReports(input: $input, condition: $condition) {
+      id
+      dailyReport {
+        id
+        campaignName
+        date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
+        kpis {
+          nextToken
+        }
+        target
+        createdAt
+        updatedAt
+      }
+      kpi {
+        id
+        name
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateKpiDailyReports = /* GraphQL */ `
+  mutation UpdateKpiDailyReports(
+    $input: UpdateKpiDailyReportsInput!
+    $condition: ModelKpiDailyReportsConditionInput
+  ) {
+    updateKpiDailyReports(input: $input, condition: $condition) {
+      id
+      dailyReport {
+        id
+        campaignName
+        date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
+        kpis {
+          nextToken
+        }
+        target
+        createdAt
+        updatedAt
+      }
+      kpi {
+        id
+        name
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteKpiDailyReports = /* GraphQL */ `
+  mutation DeleteKpiDailyReports(
+    $input: DeleteKpiDailyReportsInput!
+    $condition: ModelKpiDailyReportsConditionInput
+  ) {
+    deleteKpiDailyReports(input: $input, condition: $condition) {
+      id
+      dailyReport {
+        id
+        campaignName
+        date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
+        kpis {
+          nextToken
+        }
+        target
+        createdAt
+        updatedAt
+      }
+      kpi {
+        id
+        name
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createDailyReport = /* GraphQL */ `
+  mutation CreateDailyReport(
+    $input: CreateDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    createDailyReport(input: $input, condition: $condition) {
+      id
+      campaignName
+      date
       campaign {
         id
         name
         type
         client {
           id
-          category
           firstName
           lastName
           email
@@ -772,30 +968,32 @@ export const onCreateDailyReport = /* GraphQL */ `
       kpis {
         items {
           id
-          name
-          target
-          coeff
           createdAt
           updatedAt
         }
         nextToken
       }
+      target
       createdAt
       updatedAt
     }
   }
 `;
-export const onUpdateDailyReport = /* GraphQL */ `
-  subscription OnUpdateDailyReport {
-    onUpdateDailyReport {
+export const updateDailyReport = /* GraphQL */ `
+  mutation UpdateDailyReport(
+    $input: UpdateDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    updateDailyReport(input: $input, condition: $condition) {
       id
+      campaignName
+      date
       campaign {
         id
         name
         type
         client {
           id
-          category
           firstName
           lastName
           email
@@ -833,30 +1031,32 @@ export const onUpdateDailyReport = /* GraphQL */ `
       kpis {
         items {
           id
-          name
-          target
-          coeff
           createdAt
           updatedAt
         }
         nextToken
       }
+      target
       createdAt
       updatedAt
     }
   }
 `;
-export const onDeleteDailyReport = /* GraphQL */ `
-  subscription OnDeleteDailyReport {
-    onDeleteDailyReport {
+export const deleteDailyReport = /* GraphQL */ `
+  mutation DeleteDailyReport(
+    $input: DeleteDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    deleteDailyReport(input: $input, condition: $condition) {
       id
+      campaignName
+      date
       campaign {
         id
         name
         type
         client {
           id
-          category
           firstName
           lastName
           email
@@ -894,203 +1094,12 @@ export const onDeleteDailyReport = /* GraphQL */ `
       kpis {
         items {
           id
-          name
-          target
-          coeff
           createdAt
           updatedAt
         }
         nextToken
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateKpi = /* GraphQL */ `
-  subscription OnCreateKpi {
-    onCreateKpi {
-      id
-      name
       target
-      coeff
-      dailyReport {
-        id
-        campaign {
-          id
-          name
-          type
-          startDate
-          endDate
-          status
-          length
-          notes
-          createdAt
-          updatedAt
-        }
-        kpis {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      agent {
-        id
-        category
-        name
-        email
-        team {
-          id
-          name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        campaigns {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateKpi = /* GraphQL */ `
-  subscription OnUpdateKpi {
-    onUpdateKpi {
-      id
-      name
-      target
-      coeff
-      dailyReport {
-        id
-        campaign {
-          id
-          name
-          type
-          startDate
-          endDate
-          status
-          length
-          notes
-          createdAt
-          updatedAt
-        }
-        kpis {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      agent {
-        id
-        category
-        name
-        email
-        team {
-          id
-          name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        campaigns {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteKpi = /* GraphQL */ `
-  subscription OnDeleteKpi {
-    onDeleteKpi {
-      id
-      name
-      target
-      coeff
-      dailyReport {
-        id
-        campaign {
-          id
-          name
-          type
-          startDate
-          endDate
-          status
-          length
-          notes
-          createdAt
-          updatedAt
-        }
-        kpis {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      agent {
-        id
-        category
-        name
-        email
-        team {
-          id
-          name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        campaigns {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }

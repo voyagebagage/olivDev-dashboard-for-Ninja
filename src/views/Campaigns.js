@@ -1,4 +1,11 @@
-import { Table, Header, Segment, Sidebar, List } from "semantic-ui-react";
+import {
+  Table,
+  Header,
+  Segment,
+  Sidebar,
+  List,
+  Label,
+} from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 import AddIcon from "../component/AddIcon";
 import React, { useState, useEffect } from "react";
@@ -6,6 +13,8 @@ import { useVisible, useFetch } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
 import { listCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
+import { getYYYYMMDD } from "../lib/function";
+
 // import { fetchClients } from "../fetch/FetchClients";
 //#################################################
 //           FUNCTION
@@ -47,10 +56,10 @@ function Campaigns() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing>CLIENT</Table.HeaderCell>
-              <Table.HeaderCell collapsing>CAMPAIGN</Table.HeaderCell>
-              <Table.HeaderCell collapsing>AGENT</Table.HeaderCell>
-              <Table.HeaderCell collapsing>START</Table.HeaderCell>
-              <Table.HeaderCell collapsing>END</Table.HeaderCell>
+              <Table.HeaderCell>CAMPAIGN</Table.HeaderCell>
+              <Table.HeaderCell>AGENT</Table.HeaderCell>
+              <Table.HeaderCell>START</Table.HeaderCell>
+              <Table.HeaderCell>END</Table.HeaderCell>
               {/* <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
@@ -58,11 +67,27 @@ function Campaigns() {
           {campaigns.map((campaign, idx) => (
             <Table.Body>
               <Table.Row>
+                <Table.Cell>
+                  {campaign.client.firstName}&nbsp;&nbsp;
+                  {campaign.client.lastName}
+                </Table.Cell>
                 <Table.Cell>{campaign.name}</Table.Cell>
-                <Table.Cell>{campaign.name}</Table.Cell>
-                <Table.Cell>{campaign.length}</Table.Cell>
-                <Table.Cell>{campaign.startDate}</Table.Cell>
-                <Table.Cell>{campaign.endDate}</Table.Cell>
+                <Table.Cell>{campaign.agent.name}</Table.Cell>
+                <Table.Cell>
+                  {campaign.startDate.split("-").reverse().join("-")}
+                </Table.Cell>
+                <Table.Cell>
+                  {campaign.endDate.split("-").reverse().join("-")}
+                </Table.Cell>
+                {/* <Table.Cell>
+                  {
+                    console.log(let a= new Date(campaign.startDate); .getTime())
+                    // <= getYYYYMMDD().getTime() &&
+                    // campaign.endDate.getTime() >= getYYYYMMDD().getTime() ? (
+                    //   <Label content="coucou" />
+                    // ) : null
+                  }
+                </Table.Cell> */}
               </Table.Row>
             </Table.Body>
           ))}

@@ -1,5 +1,18 @@
-type Client @model @searchable {
+type Client
+  @model
+  @searchable
+  @key(
+    name: "clientByfirstName"
+    fields: ["category", "firstName"]
+    queryField: "clientByfirstName"
+  )
+  @key(
+    name: "clientBylastName"
+    fields: ["category", "lastName"]
+    queryField: "clientBylastName"
+  ) {
   id: ID
+  category: String
   firstName: String!
   lastName: String!
   email: AWSEmail!
@@ -33,6 +46,11 @@ type Agent
     name: "agentByTotalPoints"
     fields: ["category", "totalPoints"]
     queryField: "agentByTotalPoints"
+  )
+  @key(
+    name: "agentByName"
+    fields: ["category", "name"]
+    queryField: "agentByName"
   ) {
   id: ID
   category: String
@@ -40,6 +58,7 @@ type Agent
   email: AWSEmail!
   team: Team @connection(name: "TeamAgent")
   campaigns: [Campaign]! @connection(name: "CampaignAgent")
+  kpis: [Kpi]! @connection(name: "AgentKpis", sortField: "target")
   dailyPoints: Int
   weeklyPoints: Int
   monthlyPoints: Int
@@ -64,6 +83,11 @@ type Team @model {
 }
 
 type Campaign @model @searchable {
+  # @key(
+  #   name: "campaignByType"
+  #   fields: ["type", "length"]
+  #   queryField: "campaignTypeByLength"
+  # )
   id: ID
   name: String!
   type: String!
@@ -74,25 +98,54 @@ type Campaign @model @searchable {
   status: String #cannot put Boolean for sorting, will be "true"/"false"
   length: Float!
   notes: String
-  dailyReports: [DailyReport]!
-    @connection(name: "CampaignDailyReports", sortField: "date")
-}
-
-type Kpi @model @searchable {
-  id: ID
-  name: String!
-  dailyReports: [KpiDailyReports]! @connection(name: "DailyReportKpis")
-}
-type KpiDailyReports @model(queries: null) {
-  dailyReport: DailyReport! @connection(name: "KpiDailyReports") #kpiDailyReportsDailyReportId
-  kpi: Kpi! @connection(name: "DailyReportKpis") #kpiDailyReportsKpiId
+  dailyReports: [DailyReport!]!
+    @connection(name: "CampaignDailyReports", sortField: "createdAt")
 }
 
 type DailyReport @model @searchable {
   id: ID
-  campaignName: String
-  date: AWSDate!
-  campaign: Campaign! @connection(name: "CampaignDailyReports") #dailyReportCampaignId
-  kpis: [KpiDailyReports]! @connection(name: "KpiDailyReports")
-  target: Int
+  campaign: Campaign! @connection(name: "CampaignDailyReports")
+  kpis: [Kpi!]! @connection(name: "DailyReportKpis")
+  createdAt: AWSDateTime
 }
+#   date: AWSDate!
+
+type Kpi
+  @model
+  @searchable
+  @key(
+    name: "kpiByTarget"
+    fields: ["name", "target"]
+    queryField: "kpiByTarget"
+  ) {
+  id: ID
+  name: String! #category
+  target: Int!
+  coeff: Int!
+  dailyReport: DailyReport! @connection(name: "DailyReportKpis")
+  agent: Agent! @connection(name: "AgentKpis", sortField: "name")
+}
+#------------------------------------------------------------------------------------------------
+
+# -                                                                                              -
+
+#------------------------------------------------------------------------------------------------
+# type Kpi @model @searchable {
+#   id: ID
+#   name: String!
+#   dailyReports: [KpiDailyReports]! @connection(name: "DailyReportKpis")
+# }
+# type KpiDailyReports @model(queries: null) {
+#   dailyReport: DailyReport! @connection(name: "KpiDailyReports") #kpiDailyReportsDailyReportId
+#   kpi: Kpi! @connection(name: "DailyReportKpis") #kpiDailyReportsKpiId
+#   target: Int!
+#   coeff: Int!
+# }
+
+# type DailyReport @model @searchable {
+#   id: ID
+#   campaignName: String
+#   date: AWSDate!
+#   campaign: Campaign @connection(name: "CampaignDailyReports") #dailyReportCampaignId
+#   kpis: [KpiDailyReports]! @connection(name: "KpiDailyReports")
+# }

@@ -5,7 +5,6 @@ export const onCreateClient = /* GraphQL */ `
   subscription OnCreateClient {
     onCreateClient {
       id
-      category
       firstName
       lastName
       email
@@ -38,7 +37,6 @@ export const onUpdateClient = /* GraphQL */ `
   subscription OnUpdateClient {
     onUpdateClient {
       id
-      category
       firstName
       lastName
       email
@@ -71,7 +69,6 @@ export const onDeleteClient = /* GraphQL */ `
   subscription OnDeleteClient {
     onDeleteClient {
       id
-      category
       firstName
       lastName
       email
@@ -135,17 +132,6 @@ export const onCreateAgent = /* GraphQL */ `
         }
         nextToken
       }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -195,17 +181,6 @@ export const onUpdateAgent = /* GraphQL */ `
           status
           length
           notes
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
           createdAt
           updatedAt
         }
@@ -265,17 +240,6 @@ export const onDeleteAgent = /* GraphQL */ `
         }
         nextToken
       }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -317,9 +281,6 @@ export const onCreateYearPoints = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -359,9 +320,6 @@ export const onUpdateYearPoints = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -399,9 +357,6 @@ export const onDeleteYearPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
-          nextToken
-        }
-        kpis {
           nextToken
         }
         dailyPoints
@@ -516,7 +471,6 @@ export const onCreateCampaign = /* GraphQL */ `
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -549,9 +503,6 @@ export const onCreateCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -570,6 +521,9 @@ export const onCreateCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -588,7 +542,6 @@ export const onUpdateCampaign = /* GraphQL */ `
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -621,9 +574,6 @@ export const onUpdateCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -642,6 +592,9 @@ export const onUpdateCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          campaignName
+          date
+          target
           createdAt
           updatedAt
         }
@@ -660,7 +613,6 @@ export const onDeleteCampaign = /* GraphQL */ `
       type
       client {
         id
-        category
         firstName
         lastName
         email
@@ -693,9 +645,6 @@ export const onDeleteCampaign = /* GraphQL */ `
         campaigns {
           nextToken
         }
-        kpis {
-          nextToken
-        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -714,189 +663,9 @@ export const onDeleteCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateDailyReport = /* GraphQL */ `
-  subscription OnCreateDailyReport {
-    onCreateDailyReport {
-      id
-      campaign {
-        id
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
+          campaignName
+          date
           target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateDailyReport = /* GraphQL */ `
-  subscription OnUpdateDailyReport {
-    onUpdateDailyReport {
-      id
-      campaign {
-        id
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteDailyReport = /* GraphQL */ `
-  subscription OnDeleteDailyReport {
-    onDeleteDailyReport {
-      id
-      campaign {
-        id
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
-          target
-          coeff
           createdAt
           updatedAt
         }
@@ -912,58 +681,13 @@ export const onCreateKpi = /* GraphQL */ `
     onCreateKpi {
       id
       name
-      target
-      coeff
-      dailyReport {
-        id
-        campaign {
+      dailyReports {
+        items {
           id
-          name
-          type
-          startDate
-          endDate
-          status
-          length
-          notes
           createdAt
           updatedAt
         }
-        kpis {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      agent {
-        id
-        category
-        name
-        email
-        team {
-          id
-          name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        campaigns {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -975,58 +699,13 @@ export const onUpdateKpi = /* GraphQL */ `
     onUpdateKpi {
       id
       name
-      target
-      coeff
-      dailyReport {
-        id
-        campaign {
+      dailyReports {
+        items {
           id
-          name
-          type
-          startDate
-          endDate
-          status
-          length
-          notes
           createdAt
           updatedAt
         }
-        kpis {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      agent {
-        id
-        category
-        name
-        email
-        team {
-          id
-          name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        campaigns {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
-        createdAt
-        updatedAt
+        nextToken
       }
       createdAt
       updatedAt
@@ -1038,10 +717,27 @@ export const onDeleteKpi = /* GraphQL */ `
     onDeleteKpi {
       id
       name
-      target
-      coeff
+      dailyReports {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateKpiDailyReports = /* GraphQL */ `
+  subscription OnCreateKpiDailyReports {
+    onCreateKpiDailyReports {
+      id
       dailyReport {
         id
+        campaignName
+        date
         campaign {
           id
           name
@@ -1057,40 +753,281 @@ export const onDeleteKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        target
         createdAt
         updatedAt
       }
-      agent {
+      kpi {
         id
-        category
         name
-        email
-        team {
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateKpiDailyReports = /* GraphQL */ `
+  subscription OnUpdateKpiDailyReports {
+    onUpdateKpiDailyReports {
+      id
+      dailyReport {
+        id
+        campaignName
+        date
+        campaign {
           id
           name
-          dailyPoints
-          weeklyPoints
-          monthlyPoint
-          totalPoints
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
           createdAt
           updatedAt
-        }
-        campaigns {
-          nextToken
         }
         kpis {
           nextToken
         }
-        dailyPoints
-        weeklyPoints
-        monthlyPoints
-        yearPoints {
-          nextToken
-        }
-        totalPoints
+        target
         createdAt
         updatedAt
       }
+      kpi {
+        id
+        name
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteKpiDailyReports = /* GraphQL */ `
+  subscription OnDeleteKpiDailyReports {
+    onDeleteKpiDailyReports {
+      id
+      dailyReport {
+        id
+        campaignName
+        date
+        campaign {
+          id
+          name
+          type
+          startDate
+          endDate
+          status
+          length
+          notes
+          createdAt
+          updatedAt
+        }
+        kpis {
+          nextToken
+        }
+        target
+        createdAt
+        updatedAt
+      }
+      kpi {
+        id
+        name
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateDailyReport = /* GraphQL */ `
+  subscription OnCreateDailyReport {
+    onCreateDailyReport {
+      id
+      campaignName
+      date
+      campaign {
+        id
+        name
+        type
+        client {
+          id
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      target
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateDailyReport = /* GraphQL */ `
+  subscription OnUpdateDailyReport {
+    onUpdateDailyReport {
+      id
+      campaignName
+      date
+      campaign {
+        id
+        name
+        type
+        client {
+          id
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      target
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteDailyReport = /* GraphQL */ `
+  subscription OnDeleteDailyReport {
+    onDeleteDailyReport {
+      id
+      campaignName
+      date
+      campaign {
+        id
+        name
+        type
+        client {
+          id
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      target
       createdAt
       updatedAt
     }

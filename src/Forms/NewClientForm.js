@@ -10,10 +10,19 @@ import useForm from "../Forms/useForm";
 //------------------------Main Component----------------------
 
 const NewClientForm = ({ setVisible, clients, setClients }) => {
-  const { onChange, form, setForm, clientFormValid } = useForm();
+  const {
+    onChange,
+    form,
+    setForm,
+    clientFormValid,
+    isSubmitting,
+    setIsSubmitting,
+    errors,
+    setErrors,
+  } = useForm();
   //---------------------States------------------------------
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState("");
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [errors, setErrors] = useState("");
 
   //----to update whenever someone-call-createClient-instead of the --------------useEffect array--------------------
   useEffect(() => {

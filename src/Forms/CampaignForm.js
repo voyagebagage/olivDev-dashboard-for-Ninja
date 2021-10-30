@@ -9,27 +9,242 @@ import {
   Grid,
   Button,
 } from "semantic-ui-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useVisible } from "../context/Provider";
+import { API, graphqlOperation } from "aws-amplify";
+import {
+  createDailyReport,
+  createKpi,
+  createCampaign,
+  updateCampaign,
+  deleteKpi,
+  updateAgent,
+  updateClient,
+} from "../graphql/mutations";
+import {
+  agentByName,
+  clientByfirstName,
+  agentByNameLight,
+  listClients,
+  searchClients,
+} from "../graphql/queries";
+
+import { getYYYYMMDD } from "../lib/function";
 import { v4 as uuidv4 } from "uuid";
+import useForm from "./useForm";
 
 const CampaignForm = () => {
+  const {
+    onChange,
+    form,
+    setForm,
+    addKpiButtonValid,
+    isSubmitting,
+    setIsSubmitting,
+    errors,
+    setErrors,
+    campaignFormValid,
+    campaignFormUpdateValid,
+  } = useForm();
   const { setVisible } = useVisible();
   const [step2, setStep2] = useState(false);
+  const [backButton, setBackButton] = useState(false);
   const [newKpi, setNewKpi] = useState(false);
-  const initialState = {
-    listKpi: [],
-    valueName: "",
-    valueCoeff: 0,
-    valuePercent: 0,
-    idClient: uuidv4(),
+  const [editKpi, setEditKpi] = useState(false);
+  const [dailyReport, setDailyReport] = useState({});
+  const [listKpi, setListKpi] = useState([]);
+  const [agentName, setAgentName] = useState([]);
+  const [clientName, setClientName] = useState([]);
+  const [newCampaign, setNewCampaign] = useState({});
+  const disabledStep2Button = !backButton
+    ? campaignFormValid || step2
+    : campaignFormUpdateValid;
+  //-------------------Functions------------------------------
+
+  //#########################################################
+  //                     DROPDOWN
+  //#########################################################
+  const selectClient = async () => {
+    // console.log(form.campaignClientId, "campaignClientId");
+    try {
+      const filteredClientNames = await API.graphql(
+        graphqlOperation(clientByfirstName, {
+          category: "client",
+          //getting ID as value because it is the required key to create Campaign
+          firstName: { beginsWith: form.campaignClientId },
+          sortDirection: "ASC",
+          // limit: 5000,
+        })
+      );
+      setClientName(filteredClientNames.data.clientByfirstName.items);
+      console.log(
+        filteredClientNames.data.clientByfirstName.items,
+        "filteredClientNames"
+      );
+    } catch (error) {
+      console.log("Error with select ClientByFirstName", error);
+    }
   };
-  const [kpi, setKpi] = useState(initialState);
-  const addKpiButtonValid =
-    !kpi.valueCoeff?.length ||
-    !kpi.valueName?.length ||
-    !kpi.valuePercent?.length;
-  console.log(kpi, "KPI");
+  //----------------------------------------------------------
+  const selectAgent = async (e) => {
+    try {
+      const filteredAgentNames = await API.graphql(
+        graphqlOperation(agentByName, {
+          category: "agent",
+          name: { beginsWith: form.campaignAgentId },
+          sortDirection: "ASC",
+        })
+      );
+
+      setAgentName(filteredAgentNames.data.agentByName.items);
+
+      console.log(
+        filteredAgentNames.data.agentByName.items,
+        "filteredAgentNames"
+      );
+    } catch (error) {
+      console.log("Error with select AgentByName", error);
+    }
+  };
+  //#########################################################
+  //                     CAMPAIGN
+  //#########################################################
+  //-
+  //-----------------===========Add============------------------
+  const addCampaign = async () => {
+    setStep2(true);
+    setIsSubmitting(true);
+    console.log(backButton, "backButton -OUT");
+
+    if (!backButton) {
+      console.log(backButton, "!backButton ");
+
+      let idDailyReport = "";
+      try {
+        const newCampaignData = await API.graphql(
+          graphqlOperation(createCampaign, {
+            input: form,
+          })
+        );
+        setIsSubmitting(false);
+        setErrors("");
+        setForm({});
+        setNewCampaign(newCampaignData.data.createCampaign);
+        idDailyReport = newCampaignData.data.createCampaign.id;
+        console.log(newCampaignData.data.createCampaign, "newCampaignData");
+        console.log(newCampaign, "newCampaign");
+        console.log("succes createCampaign");
+      } catch (error) {
+        console.log("Error with create new Campaign", error);
+        setErrors(error.errors[0].message);
+        setIsSubmitting(false);
+      }
+      //------------createDailyReport---~~~~~~~~~~~~~-----------
+      try {
+        // setIsSubmitting(true);
+        // console.log(newCampaignData.data.createCampaign.id, "campaign ID");
+        const newDailyReport = await API.graphql(
+          graphqlOperation(createDailyReport, {
+            input: {
+              dailyReportCampaignId: idDailyReport,
+            },
+          })
+        );
+        setDailyReport(newDailyReport.data.createDailyReport);
+        console.log("success daily report");
+        console.log(newDailyReport.data.createDailyReport, "newDailyReport");
+      } catch (error) {
+        console.log("error creating a DailyReport", error);
+      }
+    }
+    //------~~~~~~~~~~~~~--if BACK BUTTON---~~~~~~~~~~~~~--------
+
+    if (backButton) {
+      console.log(backButton, "backButton");
+      // setForm({ ...newCampaign });
+      // console.log(form, " fom back button");
+      //----------------------==========Update============------
+      try {
+        let dailyReports = form.dailyReports;
+        //------removing fields
+        delete form.agent;
+        delete form.client;
+        delete form.dailyReports;
+        delete form.createdAt;
+        delete form.updatedAt;
+        const campaignUpdate = await API.graphql(
+          graphqlOperation(updateCampaign, { input: form })
+        );
+        setNewCampaign(campaignUpdate.data.updateCampaign);
+        newCampaign.dailyReports = dailyReports;
+        setForm({});
+        setIsSubmitting(false);
+        console.log(campaignUpdate.data.updateCampaign, "campaignUpdate");
+        console.log("succes update");
+        setBackButton(false);
+      } catch (error) {
+        console.log("error updating a campaign", error);
+      }
+    }
+  };
+  //#########################################################
+  //                     KPI
+  //#########################################################
+  //-
+  //-----------------===========Add============---------------------
+  const handleAddKpi = async () => {
+    setNewKpi(true);
+    try {
+      // setIsSubmitting(true);
+      form.kpiDailyReportId = dailyReport.id;
+      form.kpiAgentId = dailyReport.campaign.agent.id;
+      const newKpi = await API.graphql(
+        graphqlOperation(createKpi, { input: form })
+      );
+      setNewKpi(newKpi.data.createKpi);
+      console.log("success kpi");
+      console.log(newKpi.data.createKpi, "newKpi");
+      console.log(listKpi, "listKpi");
+      const newKpiAdd = [...listKpi];
+      // setForm({ ...form });
+      console.log(newKpiAdd, "newKpiAddw");
+      newKpiAdd.push(newKpi.data.createKpi);
+      console.log(newKpiAdd, "newKpiAdd2**");
+      const newArr = [...newKpiAdd];
+      console.log(newArr, "newArr1");
+      setListKpi(newArr);
+      setForm({});
+    } catch (error) {
+      console.log("error creating a KPI", error);
+    }
+    //----------------------~~~~~~~~~~~~~----------------
+  };
+  //----------------===========Del============---------------------
+  const handleDeleteKpi = async (oneKpi, idx) => {
+    // setNewKpi(false);
+    try {
+      console.log(oneKpi, "oneKpi");
+      console.log(listKpi[idx], "listKpi");
+      const inputDel = { id: listKpi[idx].id };
+      const kpiDelete = await API.graphql(
+        graphqlOperation(deleteKpi, {
+          input: inputDel,
+        })
+      );
+      console.log(kpiDelete, "kpiDelete");
+      console.log("succes");
+      //removing
+      const newKpiDelete = [...listKpi];
+      newKpiDelete.splice(idx, 1); //spotting the elem to remove
+      setListKpi(newKpiDelete); //updating
+    } catch (error) {
+      console.log("there is a Error with Deleting KPI", error);
+    }
+  };
+  console.log(clientName, "clientName");
+  console.log(listKpi, "listKpi--OUT");
+  console.log(form, "FORM");
+  //-
   return (
     <>
       <Segment
@@ -47,11 +262,14 @@ const CampaignForm = () => {
         basic
         // size="massive"
 
-        style={{ backgroundColor: "pink", paddingRight: 0 }}
+        style={{
+          // backgroundColor: "pink",
+          paddingRight: 0,
+        }}
       >
         <Grid
           columns={2}
-          padded
+          // padded
           divided
           // stretched
           // relaxed="very"
@@ -59,120 +277,170 @@ const CampaignForm = () => {
           <Grid.Column
             stretched
             // width={8}
-            style={{ backgroundColor: "yellow" }}
+            // style={{ backgroundColor: "yellow" }}
           >
             <Segment
               style={{
                 paddingRight: "7%",
                 paddingLeft: "7%",
                 paddingTop: "3%",
-                backgroundColor: "green",
+                // backgroundColor: "green",
                 // backgroundColor: "grey",
               }}
               disabled={step2 ? true : false}
               padded
               basic
             >
-              <Segment basic style={{ backgroundColor: "olive" }}>
+              <Segment
+                basic
+                disabled={step2 ? true : false}
+                // style={{ backgroundColor: "olive" }}
+              >
                 <Header>Campaign Information</Header>
               </Segment>
-              <Form widths="equal" style={{ backgroundColor: "cyan" }}>
+              <Form
+                // disabled={step2 ? true : false}
+                onSubmit={addCampaign}
+                // style={{ backgroundColor: "cyan" }}
+              >
                 <Grid
                   relaxed="very"
                   // padded
                 >
                   {/* //################################
                   //################################ 
-                  //######## COLUMN 1
-                  FORM######### 
+                  //######## COLUMN 1 FORM ######### 
                   //################################
                   //################################ */}
+                  {/* ------------------------name-------------------------- */}
                   <Grid.Row columns={2}>
-                    <Grid.Column>
-                      {/* <Form.Group> */}
+                    <Grid.Column stretched>
                       <Form.Input
                         type="text"
                         label="Campaign Name"
-                        // value={name}
+                        name="name"
+                        placeholder="a name"
+                        value={form.name || ""}
+                        onChange={onChange}
+                        disabled={step2}
                       />
-
-                      {/* </Form.Group> */}
+                      {/* -----------------client name----------------------- */}
                       <Form.Dropdown
+                        clearable
                         search
                         selection
-                        // options={countries}
+                        compact
+                        options={clientName.map((item) => {
+                          return {
+                            key: item.id,
+                            value: item.id,
+                            text: `${item.firstName}(${item.companyName})`,
+                            // clientName: `${item.firstName} ${item.lastName}`,
+                          };
+                        })}
                         label="Client Name"
                         placeholder="Select Client"
-                        // value={email}
-                        // onChange={}
+                        name="campaignClientId"
+                        value={form.campaignClientId || ""}
+                        onChange={onChange}
+                        onFocus={selectClient}
+                        disabled={step2}
                       />
-                      <Grid columns={2}>
-                        <Grid.Column>
-                          <Form.Input
-                            type="text"
-                            label="Start date"
-                            // placeholder="Company"
-                            // value={company}
-                            // onChange={}
-                          />
-                        </Grid.Column>
-                        <Grid.Column>
-                          <Form.Input
-                            type="text"
-                            label="End date"
-                            // placeholder="Website"
-                            // value={website}
-                            // onChange={}
-                          />
-                        </Grid.Column>
-                      </Grid>
+                      {/* ------------------startDate------------------------- */}
+                      <Form.Input
+                        fluid
+                        type="date"
+                        name="startDate"
+                        label="Start date"
+                        placeholder="15-09-2021"
+                        value={form.startDate || ""}
+                        onChange={onChange}
+                        disabled={step2}
+                      />
                     </Grid.Column>
-                    {/* //################################
+                    {/* //########################
                   //################################ 
-                  //######## COLUMN 2
-                  FORM#########
+                  //######## COLUMN 2 FORM #########
                    //################################
                   //################################ */}
-                    <Grid.Column>
-                      <Form.Input
-                        type="text"
-                        label="Campaign Type"
-                        // value={name}
-                      />
+                    <Grid.Column stretched>
+                      <Form.Group widths="equal" fluid>
+                        {/* ------------Campaign-Type------------------------- */}
+                        <Form.Input
+                          fluid
+                          type="text"
+                          label="Campaign Type"
+                          name="type"
+                          value={form.type || ""}
+                          onChange={onChange}
+                          disabled={step2}
+                        />
+                        {/* ------------Campaign-Length------------------------ */}
+                        <Form.Input
+                          fluid
+                          type="text"
+                          label="Campaign Length"
+                          name="length"
+                          value={form.length || ""}
+                          onChange={onChange}
+                          disabled={step2}
+                        />
+                      </Form.Group>
+                      {/* ---------------CampaignAgent------------------------- */}
                       <Form.Dropdown
+                        clearable
                         search
                         selection
-                        // options={countries}
+                        compact
+                        options={agentName.map((item) => {
+                          return {
+                            key: item.id,
+                            value: item.id,
+                            text: item.name,
+                          };
+                        })}
                         label="Assign Agent"
                         placeholder="Select Agent"
-                        // value={email}
-                        // onChange={}
+                        onFocus={selectAgent}
+                        name="campaignAgentId"
+                        value={form.campaignAgentId || ""}
+                        onChange={onChange}
+                        disabled={step2}
                       />
+                      {/* ---------------endDate------------------------- */}
                       <Form.Input
-                        type="text"
-                        label="Campaign Length"
-                        // placeholder="Website"
-                        // value={website}
-                        // onChange={}
+                        type="date"
+                        label="End date"
+                        placeholder="15-09-2021"
+                        name="endDate"
+                        value={form.endDate || ""}
+                        onChange={onChange}
+                        disabled={step2}
                       />
                     </Grid.Column>
                   </Grid.Row>
                   {/* ---------------------------------------------- */}
                   <Grid.Row>
                     <Grid.Column stretched>
-                      <Form.TextArea label="Notes" />
+                      {/* -----------------notes--------------------------- */}
+                      <Form.TextArea
+                        label="Notes"
+                        name="notes"
+                        value={form.notes || ""}
+                        onChange={onChange}
+                        disabled={step2}
+                      />
                     </Grid.Column>
                   </Grid.Row>
-                  {/* ---------------------------------------------- */}
-
+                  {/* -----------------STEP2-BUTTON----------------------- */}
                   <Grid.Row>
                     <Grid.Column>
                       <div className="dFlex-fEnd">
                         <Form.Button
                           type="submit"
                           primary
-                          style={{ justifyContent: "flex-end" }}
-                          onClick={() => setStep2(true)}
+                          disabled={disabledStep2Button}
+                          loading={isSubmitting}
                         >
                           Step 2
                         </Form.Button>
@@ -213,11 +481,6 @@ const CampaignForm = () => {
                 basic
                 padded
                 style={{
-                  // paddingRight: "7%",
-                  // paddingLeft: 0,
-                  // marginLeft: 0,
-                  // paddingTop: "3%",
-                  // height: "100%",
                   backgroundColor: "green",
                 }}
               >
@@ -241,7 +504,11 @@ const CampaignForm = () => {
                   >
                     {/* ---------------------------------------------- */}
                     {/* //============ROW================= */}
-                    <Grid.Row columns={3} stretched>
+                    <Grid.Row
+                      columns={4}
+                      // stretched
+                      // centered
+                    >
                       {/* <Grid.Row> */}
                       <Grid.Column>
                         <h4 className="kpi-header">KPI's</h4>
@@ -254,56 +521,94 @@ const CampaignForm = () => {
                       </Grid.Column>
                     </Grid.Row>
                     {/* //=============ROW================ */}
-                    {kpi.listKpi?.length ? (
-                      <Grid.Row>
-                        {kpi.listKpi.map((oneKpi, idx) => (
-                          <List
-                            key={oneKpi.idClient}
-                            style={{ backgroundColor: "beige" }}
-                          ></List>
-                        ))}
-                      </Grid.Row>
-                    ) : null}
+                    {listKpi?.length
+                      ? listKpi.map((oneKpi, idx) => (
+                          <>
+                            <Grid.Row
+                              columns={4}
+                              stretched
+                              // centered
+                              style={{
+                                backgroundColor: "olive",
+                              }}
+                            >
+                              <Grid.Column key={idx}>
+                                <strong className="kpi-header">
+                                  {oneKpi.name}
+                                </strong>
+                              </Grid.Column>
+                              <Grid.Column>
+                                <strong className="kpi-header">
+                                  {oneKpi.coeff}
+                                </strong>
+                              </Grid.Column>
+                              <Grid.Column>
+                                <strong className="kpi-header">
+                                  {oneKpi.target}
+                                </strong>
+                              </Grid.Column>
+                              <Grid.Column width={1}>
+                                <div className="centerSized">
+                                  <Icon
+                                    inverted
+                                    name="remove circle"
+                                    fitted
+                                    link
+                                    size="large"
+                                    onClick={() => handleDeleteKpi(oneKpi, idx)}
+                                  />
+                                </div>
+                              </Grid.Column>
+                            </Grid.Row>
+                          </>
+                        ))
+                      : null}
 
                     {newKpi && step2 ? (
                       <>
                         {/* //=============ROW================ */}
-                        <Grid.Row>
-                          <Grid.Column>
+                        <Grid.Row columns={4}>
+                          <Grid.Column style={{ padding: "1%" }}>
                             <Form.Input
                               placeholder="a name"
-                              value={kpi.valueName}
-                              onChange={(e, { value }) =>
-                                setKpi({ ...kpi, valueName: value })
-                              }
+                              name="name"
+                              value={form.name || ""}
+                              onChange={onChange}
                             />
                           </Grid.Column>
-                          <Grid.Column>
+                          <Grid.Column
+                            style={{
+                              paddingTop: "1%",
+                              paddingRight: "6%",
+                              paddingLeft: "6%",
+                            }}
+                          >
                             <Form.Input
-                              placeholder="a number"
-                              value={kpi.valueCoeff}
-                              onChange={(e, { value }) =>
-                                setKpi({ ...kpi, valueCoeff: value })
-                              }
+                              placeholder="ex:10"
+                              name="coeff"
+                              value={Number(form.coeff) || ""}
+                              onChange={onChange}
                             />
                           </Grid.Column>
-                          <Grid.Column>
-                            <Grid columns={2}>
-                              <Grid.Column>
-                                <Form.Input
-                                  placeholder="a Percentage"
-                                  value={kpi.valuePercent}
-                                  onChange={(e, { value }) =>
-                                    setKpi({ ...kpi, valuePercent: value })
-                                  }
-                                />
-                              </Grid.Column>
-                              <Grid.Column>
-                                <div className="centerSized">
-                                  <Icon name="percent" fitted size="large" />
-                                </div>
-                              </Grid.Column>
-                            </Grid>
+                          <Grid.Column
+                            style={{
+                              paddingTop: "1%",
+                              paddingRight: "5%",
+                              paddingLeft: "6%",
+                            }}
+                          >
+                            <Form.Input
+                              placeholder="1-100"
+                              name="target"
+                              value={Number(form.target) || ""}
+                              onChange={onChange}
+                              fluid
+                            />
+                          </Grid.Column>
+                          <Grid.Column width={1}>
+                            <div className="centerSized">
+                              <Icon name="percent" fitted size="large" />
+                            </div>
                           </Grid.Column>
                         </Grid.Row>
                       </>
@@ -311,77 +616,44 @@ const CampaignForm = () => {
                     <>
                       {/* //=============ROW================ */}
                       <Grid.Row stretched>
-                        {kpi.listKpi.length ? (
+                        {!listKpi.length && !newKpi ? (
                           <>
                             <div className="center">
-                              <Label attapched="bottom">Add a new KPI's</Label>
+                              <Label labelPosition="left">Add a new KPI</Label>
                               <Icon
                                 size="big"
                                 name="add circle"
                                 link
+                                // labelPosition="left"
                                 inverted
                                 onClick={() => setNewKpi(true)}
                               />
                             </div>
                           </>
-                        ) : (
+                        ) : newKpi ? (
                           <>
                             <div className="center">
-                              <Button
-                                as="div"
-                                labelPosition="left"
+                              <Form.Button
+                                basic
+                                icon
+                                type="submit"
                                 disabled={addKpiButtonValid}
-                                compact
+                                style={{ borderWidth: 0 }}
                               >
-                                <Button icon>
-                                  <Icon
-                                    size="large"
-                                    name="add circle"
-                                    link
-                                    // inverted
-                                    onClick={() => setNewKpi(true)}
-                                  />
-                                </Button>
-                                <Label as="div" basic pointing="left">
-                                  Add a new KPI's
-                                </Label>
-                                {/* Add a new KPI's */}
-                              </Button>
-                              {/* <Label pointing="left">Add a new KPI's</Label> */}
+                                <Icon
+                                  // disabled={addKpiButtonValid}
+                                  size="large"
+                                  name="add circle"
+                                  link
+                                  style={{ borderWidth: 0 }}
+                                  onClick={handleAddKpi}
+                                />
+                              </Form.Button>
                             </div>
                           </>
-                        )}
+                        ) : null}
                       </Grid.Row>
                     </>
-
-                    {/* </Grid.Row> */}
-                    {/* <Segment disabled={!step2} basic>
-                      <Form.Group>
-                        <Form.Checkbox label="Meeting" />
-                        <Form.Input />
-                        <Icon size="big" name="remove circle" inverted />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Checkbox label="Demo" />
-                        <Form.Input />
-                        <Icon size="big" name="remove circle" inverted />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Checkbox label="Interested" />
-                        <Form.Input />
-                        <Icon size="big" name="remove circle" inverted />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Checkbox label="LinkedIn outreach" />
-                        <Form.Input />
-                        <Icon size="big" name="remove circle" inverted />
-                      </Form.Group>
-                      <Form.Group>
-                        <Form.Checkbox label="Sales" />
-                        <Form.Input />
-                        <Icon size="big" name="remove circle" inverted />
-                      </Form.Group>
-                    </Segment> */}
                     {/* //=============ROW================ */}
                     {step2 ? (
                       <Grid.Row
@@ -394,7 +666,12 @@ const CampaignForm = () => {
                             inverted
                             onClick={() => {
                               setStep2(false);
+                              setBackButton(true);
                               setNewKpi(false);
+                              form.campaignAgentId = newCampaign.agent.id;
+                              form.campaignClientId = newCampaign.client.id;
+                              setForm({ ...newCampaign, ...form });
+                              setIsSubmitting(false);
                             }}
                             // style={{ justifyContent: "flex-end" }}
                           >
@@ -404,10 +681,11 @@ const CampaignForm = () => {
                         <Grid.Column style={{ backgroundColor: "orange" }}>
                           <Form.Button
                             type="submit"
-                            disabled={kpi.listKpi?.length > 0 ? null : true}
+                            disabled={listKpi?.length > 0 ? null : true}
                             primary
                             style={{ justifyContent: "flex-end" }}
                             // onClick={() => setStep2(true)}
+                            //setBackButton(false)
                           >
                             Submit
                           </Form.Button>
