@@ -2,17 +2,17 @@ import { useState } from "react";
 
 export default () => {
   const [form, setForm] = useState({});
-  const [form2, setForm2] = useState({});
+  // const [form2, setForm2] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState("");
-  const [errors2, setErrors2] = useState("");
+  // const [errors2, setErrors2] = useState("");
   // const [fieldErrors, setFieldErrors] = useState({});
   const onChange = (e, { name, value }) => {
     setForm({ ...form, [name]: value });
   };
-  const onChange2 = (e, { name, value }) => {
-    setForm({ ...form, [name]: value });
-  };
+  // const onChange2 = (e, { name, value }) => {
+  //   setForm({ ...form, [name]: value });
+  // };
 
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
@@ -40,8 +40,8 @@ export default () => {
     !form.endDate?.length ||
     !form.startDate?.length;
 
-  const campaignFormUpdateValid =
-    !form.campaignAgentId?.length || !form.campaignClientId?.length;
+  // const campaignFormUpdateValid =
+  //   !form.campaignAgentId?.length || !form.campaignClientId?.length;
 
   //******************KPI-Dailyreport******************** */
   const addKpiButtonValid =

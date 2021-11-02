@@ -138,8 +138,10 @@ function Dashboard() {
             {agents.map((agent, idx) => (
               <Table.Body>
                 <Table.Row
-                  positive={idx < 3 ? true : false}
-                  negative={idx >= agents.length - 3 ? true : false}
+                  positive={idx < 3 && agents.length > 3 ? true : false}
+                  negative={
+                    idx >= agents.length - 3 && agents.length > 3 ? true : false
+                  }
                 >
                   <Table.Cell>
                     {idx < 3 ? (

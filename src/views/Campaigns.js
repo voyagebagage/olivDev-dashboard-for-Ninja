@@ -7,11 +7,17 @@ import {
   Label,
 } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
+import { PaginationShortCentered } from "../component/Pagination";
 import AddIcon from "../component/AddIcon";
 import React, { useState, useEffect } from "react";
-import { useVisible, useFetch } from "../context/Provider";
+import {
+  useVisible,
+  useFetch,
+  useDropDownFilter,
+  useCampaign,
+} from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
-import { listCampaigns } from "../graphql/queries";
+import { searchCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
 import { getYYYYMMDD } from "../lib/function";
 
@@ -21,31 +27,81 @@ import { getYYYYMMDD } from "../lib/function";
 //################################################
 function Campaigns() {
   const { setVisible } = useVisible();
-  const { isLoading, setIsLoading } = useFetch();
+  //xxxxxxxxxxxxxxxxxxxx
+  const {
+    isLoading,
+    setIsLoading,
+    limit,
+    setLimit,
+    from,
+    setFrom,
+    totalClients,
+    setTotalClients,
+    targetPage,
+    setTargetPage,
+    maxPages,
+    setMaxPages,
+  } = useFetch();
+  //xxxxxxxxxxxxxxxxxxxx
+  const { filteredCampaigns } = useCampaign();
+  //xxxxxxxxxxxxxxxxxxxx
+  const { fieldDropDown, directionDropDown } = useDropDownFilter();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
   // const [isLoading, setIsLoading] = useState(true);
+  //---------------------~~~~~~~~~~~----------------------------
+  const variables = {
+    //filter
+    from: from,
+    limit: limit,
+    sort: { direction: directionDropDown, field: fieldDropDown.campaign },
+  };
   //---------------------Functions------------------------------
   const fetchCampaigns = async () => {
     try {
-      const campaignData = await API.graphql(graphqlOperation(listCampaigns));
-      setCampaigns(campaignData.data.listCampaigns.items);
+      // setFieldDropDown("name");
+      const campaignData = await API.graphql(
+        graphqlOperation(searchCampaigns, variables)
+      );
+      //----------------------setStates-----------
+      setCampaigns(campaignData.data.searchCampaigns.items);
+      console.log(campaignData.data.searchCampaigns, "campaing");
+      //----onKeyPress === "Enter"---------------
+      if (filteredCampaigns.length) {
+        setTotalClients(filteredCampaigns.length);
+        setMaxPages(Math.ceil(filteredCampaigns.length / limit));
+      }
+      //----Default fetch------------------------
+      if (!filteredCampaigns.length) {
+        setTotalClients(campaignData.data.searchCampaigns.total);
+        setMaxPages(Math.ceil(campaignData.data.searchCampaigns.total / limit));
+      }
+
+      console.log("=========USEEFFECT==========");
+      console.log(campaigns, "CLIENT USEEFFECT");
+      setFrom(limit * (targetPage - 1));
       setIsLoading(false);
-      console.log(campaignData.data.listCampaigns.items, "campaing");
     } catch (error) {
       console.log("error with get clients :", error);
     }
   };
   useEffect(() => {
     fetchCampaigns();
-  }, []);
+  }, [
+    from,
+    targetPage,
+    directionDropDown,
+    fieldDropDown,
+    filteredCampaigns,
+    maxPages,
+  ]);
   //#################################################
   //           RENDER
   //################################################
   return !isLoading ? (
-    <>
-      <Sidebar.Pushable as={List}>
+    <Sidebar.Pushable as={List}>
+      <div style={{ width: "83%" }}>
         <Segment basic className="dFlex-sBetween">
           <Header as="h2">Campaigns</Header>
           <AddIcon setVisible={setVisible} />
@@ -92,15 +148,24 @@ function Campaigns() {
             </Table.Body>
           ))}
         </Table>
-
+        <div className="dFlex-fEnd">
+          <PaginationShortCentered
+            maxPages={maxPages}
+            setFrom={setFrom}
+            from={from}
+            limit={limit}
+            targetPage={targetPage}
+            setTargetPage={setTargetPage}
+          />
+        </div>
         {/* ------------------------------------------------------------------
         -                             SIDEBAR - FORM                        -
         ------------------------------------------------------------------ */}
         <SidebarForm>
           <CampaignForm />
         </SidebarForm>
-      </Sidebar.Pushable>
-    </>
+      </div>
+    </Sidebar.Pushable>
   ) : (
     <h1>Loading</h1>
   );

@@ -13,7 +13,7 @@ html,
   height: 100%;
   /* font-family: "Roboto", sans-serif; */
 }
-
+/*  DISPLAY FLEX   */
 .dFlex {
   display: flex;
 }
@@ -56,7 +56,7 @@ html,
 .noDecoration {
   text-decoration: none;
 }
-
+/*        OTHER ONES     */
 .clientListLink {
   display: -webkit-box;
   overflow: hidden;
@@ -64,6 +64,19 @@ html,
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+}
+.campaignsTags {
+  /* display: -webkit-box; */
+  /* overflow: hidden; */
+  max-width: 10vw;
+  text-overflow: ellipsis;
+  overflow-x: scroll;
+  list-style: none;
+  /* flex-shrink: 0; */
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: horizontal;
+  /* -webkit-scrollbar-width: 0;
+  -webkit-scrollbar-height: 0; */
 }
 .sidebar-menu {
   background-color: #8caba0;

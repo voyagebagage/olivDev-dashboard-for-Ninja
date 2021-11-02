@@ -7,7 +7,7 @@ import SidebarForm from "../component/SidebarForm";
 // import { fetchClients } from "../fetch/FetchClients";
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
-import { listClients, searchClients } from "../graphql/queries";
+import { searchClients } from "../graphql/queries";
 import {
   useClient,
   useVisible,
@@ -26,7 +26,6 @@ import {
 } from "semantic-ui-react";
 // import useForm from "../Forms/useForm";
 import NewClientForm from "../Forms/NewClientForm";
-import PrevNextButtons from "../component/PrevNextButtons/index.js";
 //------------------------context & custom hooks----------------------
 
 /* -----------------------------------------------------------
@@ -41,47 +40,46 @@ function Client() {
     // DESC: "desc",
   };
   //------------------------context & custom hooks----------------------
-  const {
-    clientDetails,
-    setClientDetails,
-    clients,
-    setClients,
-    filteredResults,
-  } = useClient();
+  const { clients, setClients, filteredResults } = useClient();
   //xxxxxxxxxxxxxxxxxxxx
   const { setVisible } = useVisible();
   //xxxxxxxxxxxxxxxxxxxx
   const {
     isLoading,
     setIsLoading,
-    // limit,
+    limit,
     // setLimit,
+    from,
+    setFrom,
+    // totalClients,
+    setTotalClients,
+    targetPage,
+    setTargetPage,
+    maxPages,
+    setMaxPages,
   } = useFetch();
   //xxxxxxxxxxxxxxxxxxxx
-  const {
-    fieldDropDown,
-    setFieldDropDown,
-    directionDropDown,
-    setDirectionDropDown,
-  } = useDropDownFilter();
+  const { fieldDropDown, directionDropDown } = useDropDownFilter();
   //------------------------States------------------------------
-  const [totalClients, setTotalClients] = useState(0);
-  const [targetPage, setTargetPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [from, setFrom] = useState(0);
-  const [maxPages, setMaxPages] = useState(0);
+  // const [totalClients, setTotalClients] = useState(0);
+  // const [targetPage, setTargetPage] = useState(1);
+  // const [maxPages, setMaxPages] = useState(0);
 
   const variables = {
     //filter
     from: from,
     limit: limit,
-    sort: { direction: directionDropDown, field: fieldDropDown },
+    sort: {
+      direction: directionDropDown,
+      field: fieldDropDown.clientList,
+    },
   };
   //-------------------
   const fetchClients = async () => {
     try {
       setIsLoading(true);
       // setLimit(10);
+      // setFieldDropDown("companyName");
       const clientData = await API.graphql(
         graphqlOperation(searchClients, variables)
         // listClients, variables)
@@ -107,21 +105,22 @@ function Client() {
       console.log("error with get clients :", error);
     }
   };
-  useEffect(() => {
-    fetchClients();
-  }, [
-    from,
-    targetPage,
-    fieldDropDown,
-    directionDropDown,
-    filteredResults,
-    maxPages,
-  ]);
+  useEffect(
+    () => fetchClients(),
+    [
+      from,
+      targetPage,
+      fieldDropDown,
+      directionDropDown,
+      filteredResults,
+      maxPages,
+    ]
+  );
   //#################################################
   //           RENDER
   //################################################
   return !isLoading ? (
-    <>
+    <div style={{ width: "83%" }}>
       <Sidebar.Pushable as={List}>
         <Segment basic className="dFlex-sBetween">
           <Header as="h2">Clients</Header>
@@ -143,43 +142,58 @@ function Client() {
           {/* ---------------------TABLE BODY------------------------ */}
           <Table.Body>
             {clients.map((client, idx) => (
-              <Table.Row
-                key={client.id}
-                onClick={() => {
-                  setClientDetails(client);
-                  console.log(clientDetails, "client D");
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                {/* {console.log(client)} */}
+              <Table.Row key={client.id} style={{ cursor: "pointer" }}>
                 <Table.Cell
-                  onClick={() => history.push(`/client/${client.firstName}`)}
+                  singleLine
+                  onClick={() =>
+                    history.push(
+                      `/client/${client.firstName}/${client.companyName}/${client.id}`
+                    )
+                  }
                 >
                   {client.companyName}
                 </Table.Cell>
                 <Table.Cell
                   collapsing
-                  onClick={() => history.push(`/client/${client.firstName}`)}
+                  singleLine
+                  onClick={() =>
+                    history.push(
+                      `/client/${client.firstName}/${client.companyName}/${client.id}`
+                    )
+                  }
                 >
                   {client.firstName} {client.lastName}
                 </Table.Cell>
                 <Table.Cell
-                  onClick={() => history.push(`/client/${client.firstName}`)}
+                  singleLine
+                  onClick={() =>
+                    history.push(
+                      `/client/${client.firstName}/${client.companyName}/${client.id}`
+                    )
+                  }
                 >
                   {client.email}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell singleLine>
                   <a href={client.website} className="clientListLink">
                     {client.website}
                   </a>
                 </Table.Cell>
                 <Table.Cell
-                  onClick={() => history.push(`/client/${client.firstName}`)}
+                  onClick={() =>
+                    history.push(
+                      `/client/${client.firstName}/${client.companyName}/${client.id}`
+                    )
+                  }
                 >
                   {client.country}
                 </Table.Cell>
                 <Table.Cell
-                  onClick={() => history.push(`/client/${client.firstName}`)}
+                  onClick={() =>
+                    history.push(
+                      `/client/${client.firstName}/${client.companyName}/${client.id}`
+                    )
+                  }
                 >
                   {client.campaigns.items?.map((campaign) => (
                     <p key={campaign.id}>
@@ -192,14 +206,16 @@ function Client() {
             ))}
           </Table.Body>
         </Table>
-        <PaginationShortCentered
-          maxPages={maxPages}
-          setFrom={setFrom}
-          from={from}
-          limit={limit}
-          targetPage={targetPage}
-          setTargetPage={setTargetPage}
-        />
+        <div className="dFlex-fEnd">
+          <PaginationShortCentered
+            maxPages={maxPages}
+            setFrom={setFrom}
+            from={from}
+            limit={limit}
+            targetPage={targetPage}
+            setTargetPage={setTargetPage}
+          />
+        </div>
         {/* ------------------------------------------------------------------
         -                                 SIDEBAR                        -
         ------------------------------------------------------------------ */}
@@ -227,7 +243,7 @@ function Client() {
           />
         </SidebarForm>
       </Sidebar.Pushable>
-    </>
+    </div>
   ) : (
     <Segment>
       <Dimmer active inverted>

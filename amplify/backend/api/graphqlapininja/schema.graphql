@@ -82,13 +82,21 @@ type Team @model {
   totalPoints: Int
 }
 
-type Campaign @model @searchable {
-  # @key(
-  #   name: "campaignByType"
-  #   fields: ["type", "length"]
-  #   queryField: "campaignTypeByLength"
-  # )
+type Campaign
+  @model
+  @searchable
+  @key(
+    name: "campaignByType"
+    fields: ["type", "length"]
+    queryField: "campaignTypeByLength"
+  )
+  @key(
+    name: "campaignByCreatedAt"
+    fields: ["category", "createdAt"]
+    queryField: "campaignByCreatedAt"
+  ) {
   id: ID
+  category: String
   name: String!
   type: String!
   client: Client! @connection(name: "CampaignClient")

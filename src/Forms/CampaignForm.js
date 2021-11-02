@@ -4,12 +4,11 @@ import {
   Form,
   Icon,
   Label,
-  Divider,
-  List,
+  // Divider,
   Grid,
   Button,
 } from "semantic-ui-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useVisible } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
 import {
@@ -18,19 +17,19 @@ import {
   createCampaign,
   updateCampaign,
   deleteKpi,
-  updateAgent,
-  updateClient,
+  // updateAgent,
+  // updateClient,
 } from "../graphql/mutations";
 import {
   agentByName,
   clientByfirstName,
-  agentByNameLight,
-  listClients,
-  searchClients,
+  // agentByNameLight,
+  // listClients,
+  // searchClients,
 } from "../graphql/queries";
 
-import { getYYYYMMDD } from "../lib/function";
-import { v4 as uuidv4 } from "uuid";
+// import { getYYYYMMDD } from "../lib/function";
+// import { v4 as uuidv4 } from "uuid";
 import useForm from "./useForm";
 
 const CampaignForm = () => {
@@ -41,7 +40,7 @@ const CampaignForm = () => {
     addKpiButtonValid,
     isSubmitting,
     setIsSubmitting,
-    errors,
+    // errors,
     setErrors,
     campaignFormValid,
     campaignFormUpdateValid,
@@ -50,7 +49,7 @@ const CampaignForm = () => {
   const [step2, setStep2] = useState(false);
   const [backButton, setBackButton] = useState(false);
   const [newKpi, setNewKpi] = useState(false);
-  const [editKpi, setEditKpi] = useState(false);
+  // const [editKpi, setEditKpi] = useState(false);
   const [dailyReport, setDailyReport] = useState({});
   const [listKpi, setListKpi] = useState([]);
   const [agentName, setAgentName] = useState([]);
@@ -62,7 +61,7 @@ const CampaignForm = () => {
   //-------------------Functions------------------------------
 
   //#########################################################
-  //                     DROPDOWN
+  //                     DROPDOWNs
   //#########################################################
   const selectClient = async () => {
     // console.log(form.campaignClientId, "campaignClientId");
@@ -163,12 +162,13 @@ const CampaignForm = () => {
       console.log(backButton, "backButton");
       // setForm({ ...newCampaign });
       // console.log(form, " fom back button");
-      //----------------------==========Update============------
+      //----------------------========== Update ============------
       try {
+        //to be successful we need to remove and add after
         let dailyReports = form.dailyReports;
         //------removing fields
-        delete form.agent;
-        delete form.client;
+        delete form.agent; //update will regenerate the agent
+        delete form.client; //update will regenerate the client
         delete form.dailyReports;
         delete form.createdAt;
         delete form.updatedAt;
@@ -191,7 +191,7 @@ const CampaignForm = () => {
   //                     KPI
   //#########################################################
   //-
-  //-----------------===========Add============---------------------
+  //-----------------=========== Add ============---------------------
   const handleAddKpi = async () => {
     setNewKpi(true);
     try {
@@ -219,13 +219,12 @@ const CampaignForm = () => {
     }
     //----------------------~~~~~~~~~~~~~----------------
   };
-  //----------------===========Del============---------------------
-  const handleDeleteKpi = async (oneKpi, idx) => {
-    // setNewKpi(false);
+  //----------------=========== Del ============---------------------
+  const handleDeleteKpi = async (idx) => {
     try {
-      console.log(oneKpi, "oneKpi");
-      console.log(listKpi[idx], "listKpi");
+      console.log(listKpi[idx], "listKpi[idx]");
       const inputDel = { id: listKpi[idx].id };
+      console.log(inputDel, "inputDel");
       const kpiDelete = await API.graphql(
         graphqlOperation(deleteKpi, {
           input: inputDel,
@@ -235,7 +234,7 @@ const CampaignForm = () => {
       console.log("succes");
       //removing
       const newKpiDelete = [...listKpi];
-      newKpiDelete.splice(idx, 1); //spotting the elem to remove
+      newKpiDelete.splice(idx, 1); //spotting the kpi to remove
       setListKpi(newKpiDelete); //updating
     } catch (error) {
       console.log("there is a Error with Deleting KPI", error);
@@ -245,6 +244,33 @@ const CampaignForm = () => {
   console.log(listKpi, "listKpi--OUT");
   console.log(form, "FORM");
   //-
+  //#########################################################
+  //                FINAL SUBMIT CAMPAIGN
+  //#########################################################
+  const onSubmitCampaign = async () => {
+    setIsSubmitting(true);
+    if (newKpi) {
+      await handleAddKpi();
+    }
+    setForm({});
+    setListKpi([]);
+    setBackButton(false);
+    setIsSubmitting(false);
+    setStep2(false);
+    setVisible(false);
+    console.log("succes FINAL SUBMIT CAMPAIGN");
+  };
+  console.log([
+    isSubmitting,
+    form,
+    listKpi,
+    backButton,
+    "isSubmitting",
+    "form",
+    "listKpi",
+    "backbutton",
+  ]);
+
   return (
     <>
       <Segment
@@ -258,15 +284,7 @@ const CampaignForm = () => {
       >
         Setting up a new Campaign
       </Segment>
-      <Segment
-        basic
-        // size="massive"
-
-        style={{
-          // backgroundColor: "pink",
-          paddingRight: 0,
-        }}
-      >
+      <Segment basic style={{ paddingRight: 0 }}>
         <Grid
           columns={2}
           // padded
@@ -277,32 +295,21 @@ const CampaignForm = () => {
           <Grid.Column
             stretched
             // width={8}
-            // style={{ backgroundColor: "yellow" }}
           >
             <Segment
               style={{
                 paddingRight: "7%",
                 paddingLeft: "7%",
                 paddingTop: "3%",
-                // backgroundColor: "green",
-                // backgroundColor: "grey",
               }}
               disabled={step2 ? true : false}
               padded
               basic
             >
-              <Segment
-                basic
-                disabled={step2 ? true : false}
-                // style={{ backgroundColor: "olive" }}
-              >
+              <Segment basic disabled={step2 ? true : false}>
                 <Header>Campaign Information</Header>
               </Segment>
-              <Form
-                // disabled={step2 ? true : false}
-                onSubmit={addCampaign}
-                // style={{ backgroundColor: "cyan" }}
-              >
+              <Form onSubmit={addCampaign}>
                 <Grid
                   relaxed="very"
                   // padded
@@ -460,47 +467,23 @@ const CampaignForm = () => {
           //####################################################
           //####################################################
           //#################################################### */}
-          {/* <Divider vertical section>
-            Then
-          </Divider> */}
+
           <Grid.Column
             // width={8}
             stretched
-            style={{ backgroundColor: "purple" }}
           >
-            <Segment
-              disabled={!step2 ? true : false}
-              fluid
-              style={{ backgroundColor: "red" }}
-            >
-              <Segment basic as={Header} style={{ backgroundColor: "crimson" }}>
+            <Segment disabled={!step2 ? true : false} fluid basic>
+              <Segment basic as={Header}>
                 Daily Report Configuration
               </Segment>
               {/* ################################################################################ */}
-              <Segment
-                basic
-                padded
-                style={{
-                  backgroundColor: "green",
-                }}
-              >
-                <Form
-                  // widths="equal"
-                  style={{
-                    backgroundColor: "cyan",
-                    // height: "37vh",
-                  }}
-                  // size="wide"
-                >
+              <Segment basic padded>
+                <Form onSubmit={onSubmitCampaign}>
                   <Grid
                     relaxed="very"
                     // padded
                     columns={3}
                     // stretched
-                    style={{
-                      backgroundColor: "orange",
-                      //  opacity: 0.7
-                    }}
                   >
                     {/* ---------------------------------------------- */}
                     {/* //============ROW================= */}
@@ -509,7 +492,6 @@ const CampaignForm = () => {
                       // stretched
                       // centered
                     >
-                      {/* <Grid.Row> */}
                       <Grid.Column>
                         <h4 className="kpi-header">KPI's</h4>
                       </Grid.Column>
@@ -528,9 +510,6 @@ const CampaignForm = () => {
                               columns={4}
                               stretched
                               // centered
-                              style={{
-                                backgroundColor: "olive",
-                              }}
                             >
                               <Grid.Column key={idx}>
                                 <strong className="kpi-header">
@@ -555,7 +534,7 @@ const CampaignForm = () => {
                                     fitted
                                     link
                                     size="large"
-                                    onClick={() => handleDeleteKpi(oneKpi, idx)}
+                                    onClick={() => handleDeleteKpi(idx)}
                                   />
                                 </div>
                               </Grid.Column>
@@ -616,7 +595,20 @@ const CampaignForm = () => {
                     <>
                       {/* //=============ROW================ */}
                       <Grid.Row stretched>
-                        {!listKpi.length && !newKpi ? (
+                        {newKpi ? (
+                          <>
+                            <div className="center">
+                              <Icon
+                                size="large"
+                                name="add circle"
+                                link
+                                disabled={addKpiButtonValid}
+                                style={{ borderWidth: 0 }}
+                                onClick={handleAddKpi}
+                              />
+                            </div>
+                          </>
+                        ) : (
                           <>
                             <div className="center">
                               <Label labelPosition="left">Add a new KPI</Label>
@@ -630,65 +622,52 @@ const CampaignForm = () => {
                               />
                             </div>
                           </>
-                        ) : newKpi ? (
-                          <>
-                            <div className="center">
-                              <Form.Button
-                                basic
-                                icon
-                                type="submit"
-                                disabled={addKpiButtonValid}
-                                style={{ borderWidth: 0 }}
-                              >
-                                <Icon
-                                  // disabled={addKpiButtonValid}
-                                  size="large"
-                                  name="add circle"
-                                  link
-                                  style={{ borderWidth: 0 }}
-                                  onClick={handleAddKpi}
-                                />
-                              </Form.Button>
-                            </div>
-                          </>
-                        ) : null}
+                        )}
                       </Grid.Row>
                     </>
                     {/* //=============ROW================ */}
                     {step2 ? (
-                      <Grid.Row
-                        columns={2}
-                        style={{ backgroundColor: "brown" }}
-                      >
-                        <Grid.Column style={{ backgroundColor: "purple" }}>
-                          <Button
-                            secondary
-                            inverted
-                            onClick={() => {
-                              setStep2(false);
-                              setBackButton(true);
-                              setNewKpi(false);
-                              form.campaignAgentId = newCampaign.agent.id;
-                              form.campaignClientId = newCampaign.client.id;
-                              setForm({ ...newCampaign, ...form });
-                              setIsSubmitting(false);
-                            }}
-                            // style={{ justifyContent: "flex-end" }}
+                      <Grid.Row columns={1}>
+                        <Grid.Column stretched>
+                          <Form.Group
+                            widths="equal"
+                            fluid
+                            className="dFlex-sBetween-aCenter"
                           >
-                            Back
-                          </Button>
-                        </Grid.Column>
-                        <Grid.Column style={{ backgroundColor: "orange" }}>
-                          <Form.Button
-                            type="submit"
-                            disabled={listKpi?.length > 0 ? null : true}
-                            primary
-                            style={{ justifyContent: "flex-end" }}
-                            // onClick={() => setStep2(true)}
-                            //setBackButton(false)
-                          >
-                            Submit
-                          </Form.Button>
+                            <Form.Button
+                              secondary
+                              inverted
+                              fluid
+                              size="large"
+                              onClick={() => {
+                                setStep2(false);
+                                setBackButton(true);
+                                setNewKpi(false);
+                                form.campaignAgentId = newCampaign.agent.id;
+                                form.campaignClientId = newCampaign.client.id;
+                                setForm({ ...newCampaign, ...form });
+                                setIsSubmitting(false);
+                              }}
+                              style={{ maxWidth: "80%" }}
+                            >
+                              Back
+                            </Form.Button>
+                            <Form.Button
+                              type="submit"
+                              fluid
+                              size="large"
+                              disabled={
+                                listKpi.length
+                                  ? !step2
+                                  : addKpiButtonValid && step2
+                              }
+                              primary
+                              loading={isSubmitting}
+                              style={{ maxWidth: "80%" }}
+                            >
+                              Submit
+                            </Form.Button>
+                          </Form.Group>
                         </Grid.Column>
                       </Grid.Row>
                     ) : null}

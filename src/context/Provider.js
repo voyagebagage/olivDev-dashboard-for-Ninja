@@ -1,13 +1,17 @@
 import { createContext, useContext, useState } from "react";
-
+import { useLocation } from "react-router-dom";
 //----------------------------------
 const FetchContext = createContext();
 const DropDownContext = createContext();
 const SingleClientContext = createContext();
+const CampaignContext = createContext();
 const SidebarVisibleContext = createContext();
 //----------------------------------
 export function useClient() {
   return useContext(SingleClientContext);
+}
+export function useCampaign() {
+  return useContext(CampaignContext);
 }
 export function useVisible() {
   return useContext(SidebarVisibleContext);
@@ -20,21 +24,27 @@ export function useDropDownFilter() {
 }
 //----------------------------------
 export const GlobalProvider = ({ children }) => {
+  let location = useLocation();
   // const [authState, authDispatch] = useReducer(auth, authInitialState);
   // const [contactsState, contactsDispatch] = useReducer(
   //   contacts,
   //   contactsInitialState
   // );
   //----------
-  const [fieldDropDown, setFieldDropDown] = useState("companyName");
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  //----------
+  const initialStateDD = { clientList: "companyName", campaign: "name" };
+  const [fieldDropDown, setFieldDropDown] = useState(initialStateDD);
   const [directionDropDown, setDirectionDropDown] = useState("asc");
   //----------
-  const [nextToken, setNextToken] = useState(undefined);
-  const [nextNextToken, setNextNextToken] = useState();
-  const [previousTokens, setPreviousTokens] = useState([]);
+  const [totalClients, setTotalClients] = useState(0);
+  const [targetPage, setTargetPage] = useState(1);
+  const [maxPages, setMaxPages] = useState(0);
+  //----------
   const [isLoading, setIsLoading] = useState(true);
-  // const [onEnter, setOnEnter] = useState(false);
-  // const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [from, setFrom] = useState(0);
+
   //-----------------
   //-----------------
   const [clientDetails, setClientDetails] = useState({});
@@ -55,32 +65,38 @@ export const GlobalProvider = ({ children }) => {
     >
       <FetchContext.Provider
         value={{
-          nextToken,
-          setNextToken,
-          nextNextToken,
-          setNextNextToken,
-          previousTokens,
-          setPreviousTokens,
           isLoading,
           setIsLoading,
-          // limit,
-          // setLimit,
+          limit,
+          setLimit,
+          from,
+          setFrom,
+          totalClients,
+          setTotalClients,
+          targetPage,
+          setTargetPage,
+          maxPages,
+          setMaxPages,
         }}
       >
-        <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
-          <SingleClientContext.Provider
-            value={{
-              clientDetails,
-              setClientDetails,
-              clients,
-              setClients,
-              filteredResults,
-              setFilteredResults,
-            }}
-          >
-            {children}
-          </SingleClientContext.Provider>
-        </SidebarVisibleContext.Provider>
+        <CampaignContext.Provider
+          value={{ filteredCampaigns, setFilteredCampaigns }}
+        >
+          <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
+            <SingleClientContext.Provider
+              value={{
+                clientDetails,
+                setClientDetails,
+                clients,
+                setClients,
+                filteredResults,
+                setFilteredResults,
+              }}
+            >
+              {children}
+            </SingleClientContext.Provider>
+          </SidebarVisibleContext.Provider>
+        </CampaignContext.Provider>
       </FetchContext.Provider>
     </DropDownContext.Provider>
   );

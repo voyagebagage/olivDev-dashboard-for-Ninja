@@ -13,6 +13,16 @@ export const filterClientList = [
   { key: "3", text: "Email", value: "email" },
   { key: "4", text: "Country", value: "country" },
 ];
+export const filterCampaignList = [
+  { key: "00", text: "Name", value: "name" },
+  { key: "01", text: "Type", value: "type" },
+  { key: "02", text: "Start", value: "startDate" },
+  { key: "03", text: "End", value: "endDate" },
+  { key: "04", text: "Status", value: "status" },
+  // { key: "05", text: "Client", value: "client" },
+  // { key: "06", text: "Agent", value: "agent" },
+  { key: "07", text: "Length", value: "length" },
+];
 
 export const countries = [
   { text: "Afghanistan", key: "af", value: "Afghanistan", flag: "af" },

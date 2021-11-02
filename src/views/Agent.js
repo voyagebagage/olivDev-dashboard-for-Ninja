@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { PaginationLong } from "../component/Pagination";
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
-import { listAgents } from "../graphql/queries";
+import { listAgents, agentByTotalPoints } from "../graphql/queries";
 /* ------------------------------------------------------------------
 -                               Main function                       -
 ------------------------------------------------------------------ */
@@ -23,17 +23,20 @@ function Agent() {
     // nextToken,
     limit,
     // filter,
-    sortDirection,
+    // sortDirection,
+    // sort: { direction: directionDropDown, field: fieldDropDown.campaign },
+    category: "agent",
+    sortDirection: "DESC",
   };
   //---------------------Functions-------------------------------
   const fetchAgents = async () => {
     try {
       const agentData = await API.graphql(
         // graphqlOperation(searchAgents)
-        graphqlOperation(listAgents, variables)
+        graphqlOperation(agentByTotalPoints, variables)
       );
-      setAgents(agentData.data.listAgents.items);
-      console.log(agentData.data.listAgents.items, "client");
+      setAgents(agentData.data.agentByTotalPoints.items);
+      console.log(agentData.data.agentByTotalPoints.items, "client");
       setIsLoading(false);
     } catch (error) {
       console.log("error with get clients :", error);
@@ -51,35 +54,61 @@ function Agent() {
         <Search />
       </div>
       <Table striped>
-        {/* ---------------------TABLE HEADER---------------------------- */}
+        {/* ----------------TABLE HEADER---------------- */}
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>ID</Table.HeaderCell>
+            {/* <Table.HeaderCell>ID</Table.HeaderCell> */}
             <Table.HeaderCell>AGENT</Table.HeaderCell>
-            <Table.HeaderCell width={7}>CAMPAIGNS</Table.HeaderCell>
-            <Table.HeaderCell>RANKING MONTHLY</Table.HeaderCell>
+            <Table.HeaderCell collapsing width={7}>
+              CAMPAIGNS
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">
+              RANK (MONTHLY)
+            </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        {/* ---------------------TABLE BODY---------------------------- */}
-        {agents.map((agent, idx) => (
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>1</Table.Cell>
-              <Table.Cell>{agent.name}</Table.Cell>
-              <Table.Cell>
-                {agent.campaigns.items?.map((campaign, idx) => {
-                  console.log(campaign);
-                  return (
-                    <Link to="/agent-report" key={campaign.id}>
-                      <Label tag>{campaign.name}</Label>
-                    </Link>
-                  );
-                })}
-              </Table.Cell>
-              <Table.Cell>{idx + 1}</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        ))}
+        {/* -----------------TABLE BODY----------------- */}
+        {agents.map((agent, idx) => {
+          return (
+            <Table.Body>
+              <Table.Row>
+                {/* <Table.Cell>1</Table.Cell> */}
+                <Table.Cell>{agent.name}</Table.Cell>
+                <Table.Cell
+                  singleLine
+                  collapsing
+                  // className="campaignsTags"
+                >
+                  {agent.campaigns.items
+                    .slice(0)
+                    .reverse()
+                    .map((campaign, idx) => {
+                      console.log(campaign);
+                      console.log(
+                        agent.campaigns.items,
+                        "agent.campaigns.items"
+                      );
+                      return (
+                        <Link
+                          to={`/agent-report/${agent.name}/${campaign.name}/${campaign.id}`}
+                          key={campaign.id}
+                        >
+                          <Label
+                            basic
+                            color="black"
+                            style={{ marginRight: "1.5%" }}
+                          >
+                            {campaign.name}
+                          </Label>
+                        </Link>
+                      );
+                    })}
+                </Table.Cell>
+                <Table.Cell textAlign="center">{idx + 1}</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          );
+        })}
       </Table>
       <PaginationLong />
     </Segment>

@@ -1,32 +1,42 @@
-import { Menu, Icon, Search, Dropdown } from "semantic-ui-react";
-import React, { useState, useEffect } from "react";
+import { Menu, Icon, Dropdown } from "semantic-ui-react";
+// import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { filterClientList, sortDirection } from "../../arrayLists/index";
-import { useClient, useDropDownFilter, useFetch } from "../../context/Provider";
+import {
+  filterClientList,
+  filterCampaignList,
+  sortDirection,
+} from "../../arrayLists/index";
+import { useDropDownFilter } from "../../context/Provider";
 import SearchBar from "../SearchBar";
 
 function Header({ handleSidebarItem }) {
-  const { setClients } = useClient();
-  const [filterChoice, setFilterChoice] = useState(false);
+  // const { setClients } = useClient();
+  // const [filterChoice, setFilterChoice] = useState(false);
   const {
-    fieldDropDown,
+    // fieldDropDown,
     setFieldDropDown,
-    directionDropDown,
+    // directionDropDown,
     setDirectionDropDown,
   } = useDropDownFilter();
   let location = useLocation();
   // console.log(location);
-  const {
-    nextToken,
-    setNextNextToken,
-    // isLoading,
-    setIsLoading,
-    // disabledNext,
-    // disabledPrev,
-    // next,
-    // prev,
-  } = useFetch();
-
+  // const {
+  //   // nextToken,
+  //   // setNextNextToken,
+  //   // isLoading,
+  //   setIsLoading,
+  //   // disabledNext,
+  //   // disabledPrev,
+  //   // next,
+  //   // prev,
+  // } = useFetch();
+  let text =
+    location.pathname === "/client-list"
+      ? filterClientList.text
+      : filterCampaignList.text;
+  // : location.pathname === "/campaigns"
+  // ? filterCampaignList.text
+  // : "";
   // const SORT = {
   //   ASC: "ASC",
   //   DESC: "DESC",
@@ -43,22 +53,42 @@ function Header({ handleSidebarItem }) {
           <Icon name="sidebar" />
         </Menu.Item>
         <Menu.Menu position="right">
-          {location.pathname === "/client-list" ? (
+          <>
             <Menu.Item>
-              {/* // <Menu.Item vertical> */}
-              <Dropdown
-                basic
-                fluid
-                button
-                selectedLabel
-                selection
-                onChange={(e, value) => setFieldDropDown(value.value)}
-                options={filterClientList}
-                // value={filterClientList.value}
-                text={filterClientList.text || ""}
-                placeholder="Sort By:"
-                style={{ minWidth: "11vw", maxHeight: "4vh" }}
-              />
+              {location.pathname === "/client-list" && (
+                <Dropdown
+                  basic
+                  fluid
+                  button
+                  selectedLabel
+                  selection
+                  onChange={(e, value) =>
+                    setFieldDropDown({ clientList: value.value })
+                  }
+                  options={filterClientList}
+                  // value={filterClientList.value}
+                  text={filterClientList.text || ""}
+                  placeholder="Sort By:"
+                  style={{ minWidth: "11vw", maxHeight: "4vh" }}
+                />
+              )}
+              {location.pathname === "/campaigns" && (
+                <Dropdown
+                  basic
+                  fluid
+                  button
+                  selectedLabel
+                  selection
+                  onChange={(e, value) =>
+                    setFieldDropDown({ campaign: value.value })
+                  }
+                  options={filterCampaignList}
+                  // value={filterClientList.value}
+                  text={filterCampaignList.text || ""}
+                  placeholder="Sort By:"
+                  style={{ minWidth: "11vw", maxHeight: "4vh" }}
+                />
+              )}
               <Dropdown
                 basic
                 fluid
@@ -72,7 +102,8 @@ function Header({ handleSidebarItem }) {
                 style={{ minWidth: "3vw" }}
               />
             </Menu.Item>
-          ) : null}
+          </>
+
           <Menu.Item>
             <SearchBar />
           </Menu.Item>

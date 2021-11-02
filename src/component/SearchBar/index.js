@@ -12,7 +12,10 @@ const SearchBar = () => {
   let history = useHistory();
   const { setClients, setClientDetails, filteredResults, setFilteredResults } =
     useClient();
-  const { isLoading, setIsLoading } = useFetch();
+  const {
+    // isLoading,
+    setIsLoading,
+  } = useFetch();
   const initialState = { isLoading: false, results: [], value: "" };
 
   const [search, setSearch] = useState(initialState);
@@ -49,40 +52,29 @@ const SearchBar = () => {
               // image: result.lastName, could add one in the future
               price: result.companyName,
               key: result.id,
-              //and these to setClientDetails, when go to the detail page
-              id: result.id,
-              firstName: result.firstName,
-              lastName: result.lastName,
-              companyName: result.companyName,
-              campaigns: result.campaigns,
-              email: result.email,
-              phone: result.phone,
-              website: result.website,
-              country: result.country,
-              createdAt: result.createdAt,
-              notes: result.notes,
-              updatedAt: result.updatedAt,
+              //and the rest to setClientDetails, when go to the detail page
+              ...result,
             };
           }),
           isLoading: false,
         });
         console.log(filteredRes.data.listClients.items, "filteredRes-IN");
       }
-      console.log(search.results, "search.results");
-      // console.log(filteredRes.data.listClients.items, "filteredRes-OUT");
     } catch (error) {
       console.log("error with list clients :", error);
     }
   };
+  console.log(search.results, "search.results");
   useEffect(() => fetchResults(), [search.value]);
   //#################################################
   //           handleResultSelect
   //################################################
   const handleResultSelect = (e, { result }) => {
-    console.log(result, "handleRESssss");
     setSearch({ value: `${result.firstName} ${result.lastName}` });
     setClientDetails(result);
-    history.push(`/client/${result.firstName}`);
+    history.push(
+      `/client/${result.firstName}/${result.companyName}/${result.id}`
+    );
     setTimeout(() => {
       setSearch(initialState);
     }, 1500);

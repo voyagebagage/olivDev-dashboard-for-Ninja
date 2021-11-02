@@ -14,17 +14,21 @@ import {
 } from "semantic-ui-react";
 import { countries } from "../arrayLists/index";
 import { useClient, useVisible } from "../context/Provider";
-import { Link, useHistory } from "react-router-dom";
-import { useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import useForm from "../Forms/useForm";
 
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
 import { updateClient, deleteClient } from "../graphql/mutations";
+import { getClient } from "../graphql/queries";
 import SidebarForm from "../component/SidebarForm";
 import CampaignForm from "../Forms/CampaignForm";
 
 function ClientDetails() {
+  const { firstName, companyName, id } = useParams();
+  console.log({ firstName, companyName, id }, "params");
+
   const { clientDetails, setClientDetails } = useClient();
   const { onChange, form, setForm } = useForm();
   const { setVisible } = useVisible();
@@ -37,10 +41,23 @@ function ClientDetails() {
   const [edit, setEdit] = useState(false);
   const [areYouSure, setAreYouSure] = useState(false);
   // const [upClient, setUpClient] = useState({});
+  //------------------------------------------------
+  const fetchClient = async () => {
+    try {
+      const clientData = await API.graphql(
+        graphqlOperation(getClient, { id: id })
+      );
+      setClientDetails(clientData.data.getClient);
+      console.log(clientData.data.getClient, "clientData");
+    } catch (error) {
+      console.log("there is an error with getClient", error);
+    }
+  };
+  useEffect(() => fetchClient(), []);
   const {
-    firstName,
+    // firstName,
     lastName,
-    companyName,
+    // companyName,
     email,
     phone,
     website,
@@ -57,7 +74,7 @@ function ClientDetails() {
     setAreYouSure(false);
   };
   const handleCancel = () => setAreYouSure(false);
-  //-----------------------
+  //------------------------------------------------
   const editNotes = async () => {
     try {
       //--cannot have fields that aren't in the schema
@@ -130,6 +147,8 @@ function ClientDetails() {
       console.log("error updating a client", error);
     }
   };
+  console.log(clientDetails, "clientDetails");
+  console.log(campaigns, "campaigns");
 
   return (
     <>
@@ -180,20 +199,18 @@ function ClientDetails() {
                     ) : null}
                   </Card.Description>
                   <Header as="h4">
-                    {!campaigns.items
+                    {campaigns?.items
                       ? "Previous Campaigns"
                       : "No Campaigns yet"}
                   </Header>
-                  {!campaigns.items ? (
+                  {campaigns?.items ? (
                     <>
                       <Card.Group>
-                        {/* <div className="center">
-                  <div className="center"> */}
                         <Dropdown
                           search
                           icon="search"
                           selection
-                          options={campaigns.items.map((campaign) => {
+                          options={campaigns?.items.map((campaign) => {
                             return {
                               key: campaign.id,
                               text: campaign.name,
@@ -202,22 +219,16 @@ function ClientDetails() {
                           })}
                           placeholder="Find a Campaign"
                         />
-                        {/* </div>
-                  <div className="center"> */}
+
                         <Button
                           content="Go"
                           attached="right"
                           // className="dFlex"
                         />
-                        {/* </div> */}
-                        {/* </div> */}
                       </Card.Group>
 
                       <Card.Group>
-                        <Header as="h4">
-                          condition on Current campaign
-                          {/* {!campaigns.items ? "Current Campaigns :" : "No Campaigns"} */}
-                        </Header>
+                        <Header as="h4">condition on Current campaign</Header>
                         <List items={["current campaign"]} />
                       </Card.Group>
                     </>
@@ -225,7 +236,6 @@ function ClientDetails() {
                     <Header.Subheader>Be the first to add one</Header.Subheader>
                   )}
                 </Segment>
-                {/* <Card.Content>coucouc</Card.Content> */}
                 {textArea ? (
                   <>
                     <Button basic primary fluid onClick={() => editNotes()}>
@@ -425,7 +435,6 @@ function ClientDetails() {
                       // size="medium"
                       // style={{ width: "30vw" }}
                     >
-                      {/* <div> */}
                       <Button
                         content="Delete"
                         inverted
@@ -439,7 +448,6 @@ function ClientDetails() {
                         onCancel={handleCancel}
                         onConfirm={handleConfirm}
                       />
-                      {/* </div> */}
                       <Button
                         content="Save"
                         // inverted

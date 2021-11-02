@@ -150,6 +150,18 @@ export const listAgents = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            name
+            type
+            startDate
+            endDate
+            status
+            length
+            notes
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         kpis {
@@ -822,6 +834,18 @@ export const agentByMonthlyPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            name
+            type
+            startDate
+            endDate
+            status
+            length
+            notes
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         kpis {
@@ -874,6 +898,18 @@ export const agentByTotalPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            name
+            type
+            startDate
+            endDate
+            status
+            length
+            notes
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         kpis {
