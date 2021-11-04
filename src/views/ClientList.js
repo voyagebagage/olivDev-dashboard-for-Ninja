@@ -13,6 +13,7 @@ import {
   useVisible,
   useFetch,
   useDropDownFilter,
+  useSearch,
 } from "../context/Provider";
 import {
   List,
@@ -40,9 +41,11 @@ function Client() {
     // DESC: "desc",
   };
   //------------------------context & custom hooks----------------------
-  const { clients, setClients, filteredResults } = useClient();
+  const { clients, setClients } = useClient();
   //xxxxxxxxxxxxxxxxxxxx
   const { setVisible } = useVisible();
+  //xxxxxxxxxxxxxxxxxxxx
+  const { filteredResults } = useSearch();
   //xxxxxxxxxxxxxxxxxxxx
   const {
     isLoading,

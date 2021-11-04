@@ -13,7 +13,7 @@ import {
   Sidebar,
 } from "semantic-ui-react";
 import { countries } from "../arrayLists/index";
-import { useClient, useVisible } from "../context/Provider";
+import { useClient, useSearch, useVisible } from "../context/Provider";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useForm from "../Forms/useForm";
@@ -28,8 +28,8 @@ import CampaignForm from "../Forms/CampaignForm";
 function ClientDetails() {
   const { firstName, companyName, id } = useParams();
   console.log({ firstName, companyName, id }, "params");
-
-  const { clientDetails, setClientDetails } = useClient();
+  const { search, setSearch, filteredResults } = useSearch();
+  const { clientDetails, setClientDetails, setClients } = useClient();
   const { onChange, form, setForm } = useForm();
   const { setVisible } = useVisible();
   let history = useHistory();
@@ -156,7 +156,17 @@ function ClientDetails() {
         <Segment basic>
           <Link
             to={!edit ? "/client-list" : `/client/${firstName}`}
-            onClick={edit ? () => setEdit(false) : null}
+            onClick={
+              edit
+                ? () => {
+                    setEdit(false);
+                    // setSearch({ value: "" });
+                    // if (filteredResults.length) {
+                    //   setClients(filteredResults);
+                    // }
+                  }
+                : null
+            }
             style={{ color: "#566A63" }}
           >
             <Icon name="arrow left" size="large" />

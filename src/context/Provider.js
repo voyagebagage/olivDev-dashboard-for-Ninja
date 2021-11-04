@@ -1,12 +1,22 @@
 import { createContext, useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
-//----------------------------------
+//-----------------------------------
 const FetchContext = createContext();
+const SearchContext = createContext();
 const DropDownContext = createContext();
 const SingleClientContext = createContext();
 const CampaignContext = createContext();
 const SidebarVisibleContext = createContext();
-//----------------------------------
+//----------------------------------------------
+export function useFetch() {
+  return useContext(FetchContext);
+}
+export function useSearch() {
+  return useContext(SearchContext);
+}
+export function useDropDownFilter() {
+  return useContext(DropDownContext);
+}
 export function useClient() {
   return useContext(SingleClientContext);
 }
@@ -16,13 +26,7 @@ export function useCampaign() {
 export function useVisible() {
   return useContext(SidebarVisibleContext);
 }
-export function useFetch() {
-  return useContext(FetchContext);
-}
-export function useDropDownFilter() {
-  return useContext(DropDownContext);
-}
-//----------------------------------
+//------------------------------------------------
 export const GlobalProvider = ({ children }) => {
   let location = useLocation();
   // const [authState, authDispatch] = useReducer(auth, authInitialState);
@@ -30,6 +34,11 @@ export const GlobalProvider = ({ children }) => {
   //   contacts,
   //   contactsInitialState
   // );
+  //----------
+  const initialState = { isLoading: false, results: [], value: "" };
+  const [search, setSearch] = useState(initialState);
+  const [filteredResults, setFilteredResults] = useState([]);
+
   //----------
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   //----------
@@ -49,7 +58,6 @@ export const GlobalProvider = ({ children }) => {
   //-----------------
   const [clientDetails, setClientDetails] = useState({});
   const [clients, setClients] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
 
   //----------
   const [visible, setVisible] = useState(false);
@@ -89,11 +97,19 @@ export const GlobalProvider = ({ children }) => {
                 setClientDetails,
                 clients,
                 setClients,
-                filteredResults,
-                setFilteredResults,
               }}
             >
-              {children}
+              <SearchContext.Provider
+                value={{
+                  filteredResults,
+                  setFilteredResults,
+                  search,
+                  setSearch,
+                  initialState,
+                }}
+              >
+                {children}
+              </SearchContext.Provider>
             </SingleClientContext.Provider>
           </SidebarVisibleContext.Provider>
         </CampaignContext.Provider>

@@ -4,24 +4,27 @@ import { useHistory } from "react-router-dom";
 
 import { listClients } from "../../graphql/queries";
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { useClient, useFetch } from "../../context/Provider";
+import { useClient, useFetch, useSearch } from "../../context/Provider";
 //#################################################
 //           COMPONENT
 //################################################
 const SearchBar = () => {
   let history = useHistory();
-  const { setClients, setClientDetails, filteredResults, setFilteredResults } =
-    useClient();
+  const { setClients, setClientDetails } = useClient();
   const {
     // isLoading,
     setIsLoading,
   } = useFetch();
-  const initialState = { isLoading: false, results: [], value: "" };
+  const {
+    filteredResults,
+    setFilteredResults,
+    search,
+    setSearch,
+    initialState,
+  } = useSearch();
+  // const initialState = { isLoading: false, results: [], value: "" };
 
-  const [search, setSearch] = useState(initialState);
-  // const [filteredResults, setFilteredResults] = useState([]);
-  // const searchValueSize = search.value.length || 0;
-  // const [searchInputText, setSearchInputText] = useState("")
+  // const [search, setSearch] = useState(initialState);
 
   const fetchResults = async () => {
     try {
@@ -68,7 +71,7 @@ const SearchBar = () => {
   useEffect(() => fetchResults(), [search.value]);
   //#################################################
   //           handleResultSelect
-  //################################################
+  //#################################################
   const handleResultSelect = (e, { result }) => {
     setSearch({ value: `${result.firstName} ${result.lastName}` });
     setClientDetails(result);
@@ -81,26 +84,29 @@ const SearchBar = () => {
   };
   //#################################################
   //           handleSearchChange
-  //################################################
+  //#################################################
   const handleSearchChange = (e, { value }) => {
     setSearch({ isLoading: true, value: value });
-    if (value.length < 2) {
-      setSearch({ isLoading: false });
+    if (value.length <= 2) {
+      setSearch({ isLoading: false, results: [] });
       setFilteredResults([]);
     }
   };
   //#################################################
   //           handleKeyPress
-  //################################################
+  //#################################################
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       setClients(filteredResults);
       setIsLoading(false);
+      // setTimeout(() => {
+      //   setSearch({ value: "" });
+      // }, 1500);
     }
   };
   //#################################################
   //           RENDER
-  //################################################
+  //#################################################
   return (
     <>
       <Search

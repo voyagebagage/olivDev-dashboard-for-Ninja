@@ -65,19 +65,16 @@ html,
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
-.campaignsTags {
-  /* display: -webkit-box; */
-  /* overflow: hidden; */
-  max-width: 10vw;
-  text-overflow: ellipsis;
-  overflow-x: scroll;
-  list-style: none;
-  /* flex-shrink: 0; */
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: horizontal;
-  /* -webkit-scrollbar-width: 0;
-  -webkit-scrollbar-height: 0; */
+.campaignsTagsUl::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
+.campaignsTagsUl {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-x: scroll;
+}
+
 .sidebar-menu {
   background-color: #8caba0;
 }

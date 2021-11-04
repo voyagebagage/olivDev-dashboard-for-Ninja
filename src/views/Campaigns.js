@@ -1,11 +1,4 @@
-import {
-  Table,
-  Header,
-  Segment,
-  Sidebar,
-  List,
-  Label,
-} from "semantic-ui-react";
+import { Table, Header, Segment, Sidebar, List } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 import { PaginationShortCentered } from "../component/Pagination";
 import AddIcon from "../component/AddIcon";
@@ -106,7 +99,7 @@ function Campaigns() {
           <Header as="h2">Campaigns</Header>
           <AddIcon setVisible={setVisible} />
         </Segment>
-        {/* ---------------------TABLE HEADER---------------------------- */}
+        {/* -------------------TABLE HEADER------------------- */}
 
         <Table striped>
           <Table.Header>
@@ -119,7 +112,7 @@ function Campaigns() {
               {/* <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
-          {/* ---------------------TABLE BODY---------------------------- */}
+          {/* -----------------TABLE BODY--------------------- */}
           {campaigns.map((campaign, idx) => (
             <Table.Body>
               <Table.Row>
@@ -158,9 +151,9 @@ function Campaigns() {
             setTargetPage={setTargetPage}
           />
         </div>
-        {/* ------------------------------------------------------------------
+        {/* ----------------------------------------------------
         -                             SIDEBAR - FORM                        -
-        ------------------------------------------------------------------ */}
+        ----------------------------------------------------- */}
         <SidebarForm>
           <CampaignForm />
         </SidebarForm>

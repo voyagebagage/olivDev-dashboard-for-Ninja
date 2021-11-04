@@ -103,6 +103,7 @@ type Campaign
   agent: Agent! @connection(name: "CampaignAgent")
   startDate: AWSDate!
   endDate: AWSDate!
+  createdAt: AWSDateTime
   status: String #cannot put Boolean for sorting, will be "true"/"false"
   length: Float!
   notes: String

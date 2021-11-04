@@ -10,38 +10,12 @@ import { useDropDownFilter } from "../../context/Provider";
 import SearchBar from "../SearchBar";
 
 function Header({ handleSidebarItem }) {
-  // const { setClients } = useClient();
-  // const [filterChoice, setFilterChoice] = useState(false);
-  const {
-    // fieldDropDown,
-    setFieldDropDown,
-    // directionDropDown,
-    setDirectionDropDown,
-  } = useDropDownFilter();
+  const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
-  // console.log(location);
-  // const {
-  //   // nextToken,
-  //   // setNextNextToken,
-  //   // isLoading,
-  //   setIsLoading,
-  //   // disabledNext,
-  //   // disabledPrev,
-  //   // next,
-  //   // prev,
-  // } = useFetch();
   let text =
     location.pathname === "/client-list"
       ? filterClientList.text
       : filterCampaignList.text;
-  // : location.pathname === "/campaigns"
-  // ? filterCampaignList.text
-  // : "";
-  // const SORT = {
-  //   ASC: "ASC",
-  //   DESC: "DESC",
-  // };
-  // const limit = 12;
 
   return (
     <div>

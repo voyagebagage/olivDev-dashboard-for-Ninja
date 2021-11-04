@@ -39,7 +39,7 @@ function Dashboard() {
     DAY: agentByDailyPoints,
   };
 
-  const limit = 12;
+  // const limit = 12;
   const [activeItem, setActiveItem] = useState("");
 
   const handle = useFullScreenHandle();

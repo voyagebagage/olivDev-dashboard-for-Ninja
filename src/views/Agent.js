@@ -46,7 +46,7 @@ function Agent() {
     fetchAgents();
   }, []);
   return (
-    <Segment basic padded style={{ width: "70vw" }}>
+    <Segment basic padded style={{ width: "80%" }}>
       <div className="dFlex-sBetween">
         <Segment basic>
           <Header as="h2">Agents</Header>
@@ -59,9 +59,7 @@ function Agent() {
           <Table.Row>
             {/* <Table.HeaderCell>ID</Table.HeaderCell> */}
             <Table.HeaderCell>AGENT</Table.HeaderCell>
-            <Table.HeaderCell collapsing width={7}>
-              CAMPAIGNS
-            </Table.HeaderCell>
+            <Table.HeaderCell>CAMPAIGNS</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">
               RANK (MONTHLY)
             </Table.HeaderCell>
@@ -72,12 +70,12 @@ function Agent() {
           return (
             <Table.Body>
               <Table.Row>
-                {/* <Table.Cell>1</Table.Cell> */}
                 <Table.Cell>{agent.name}</Table.Cell>
                 <Table.Cell
                   singleLine
-                  collapsing
-                  // className="campaignsTags"
+                  width={9}
+                  style={{ maxWidth: "10vw" }}
+                  className="campaignsTagsUl"
                 >
                   {agent.campaigns.items
                     .slice(0)
@@ -97,6 +95,7 @@ function Agent() {
                             basic
                             color="black"
                             style={{ marginRight: "1.5%" }}
+                            // className="campaignsTagsli"
                           >
                             {campaign.name}
                           </Label>
