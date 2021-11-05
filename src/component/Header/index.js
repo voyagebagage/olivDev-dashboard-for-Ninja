@@ -79,7 +79,7 @@ function Header({ handleSidebarItem }) {
                 />
               </Menu.Item>
             )}
-            {location.pathname.includes("/campaign/") && (
+            {/* {location.pathname.includes("/campaign/") && (
               <>
                 <Menu.Item
                   inverted
@@ -93,7 +93,7 @@ function Header({ handleSidebarItem }) {
                   Reports
                 </Menu.Item>
               </>
-            )}
+            )} */}
             {/* ))} */}
           </>
 
