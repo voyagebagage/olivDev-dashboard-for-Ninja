@@ -14,6 +14,7 @@ import {
   Radio,
   Tab,
   Icon,
+  Label,
 } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 
@@ -60,255 +61,7 @@ function CampaignDetails() {
   const panes = [
     {
       menuItem: "Info",
-      render: () => (
-        <Tab.Pane attached={false} basic>
-          <div
-            className="dFlex-fEnd"
-            // style={{ backgroundColor: "purple" }}
-          >
-            <div className="dFlex" style={{ width: "30vw" }}>
-              <Segment
-                as={Card}
-                centered
-                basic
-                fluid
-                size="large"
-                className="dFlex-sBetween"
-                // style={{ paddingLeft: 0 }}
-              >
-                <Form>
-                  <Table
-                    padded
-                    // size="large"
-                    inverted
-                    celled
-                    fluid
-                    style={{
-                      backgroundColor: "#8CABA0",
-                      marginBottom: 0,
-                    }}
-                  >
-                    <Table.Row>
-                      <Table.HeaderCell className="dFlex-sBetween">
-                        Current info
-                        {/* <div className="dFlex-fEnd"> */}
-                        {!edit && (
-                          <Icon
-                            name="ellipsis horizontal"
-                            size="large"
-                            onClick={() => setEdit(!edit)}
-                          />
-                        )}
-                        {/* </div> */}
-                      </Table.HeaderCell>
-                      {edit && (
-                        <Table.HeaderCell
-                        //   className="dFlex-sBetween"
-                        //   style={{ width: "30vw" }}
-                        >
-                          Update to...
-                        </Table.HeaderCell>
-                      )}
-                    </Table.Row>
-                    <Table.Body>
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {name}
-                              <Header.Subheader>Campaign name</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Cell>
-                            {/* <Form.Input
-                    type="text"
-                    placeholder="ex: Matthew"
-                    name="firstName"
-                    value={form.firstName || ""}
-                    onChange={onChange}
-                  /> */}
-                          </Table.Cell>
-                        )}
-                      </Table.Row>
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {length} months
-                              <Header.Subheader>Length</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Cell>
-                            {/* <Form.Input
-                    type="text"
-                    placeholder="ex: Dunn"
-                    name="lastName"
-                    value={form.lastName || ""}
-                    onChange={onChange}
-                  /> */}
-                          </Table.Cell>
-                        )}
-                      </Table.Row>
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {startDate}
-                              <Header.Subheader>Start</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Cell>
-                            {/* <Form.Input
-                    type="text"
-                    placeholder="ex: +666..."
-                    name="phone"
-                    value={form.phone || ""}
-                    onChange={onChange}
-                  /> */}
-                          </Table.Cell>
-                        )}
-                      </Table.Row>
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {endDate}
-                              <Header.Subheader>End</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Cell>
-                            {/* <Form.Input
-                    type="text"
-                    name="email"
-                    value={form.email || ""}
-                    onChange={onChange}
-                  /> */}
-                          </Table.Cell>
-                        )}
-                      </Table.Row>
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {createdAt ? timeStampSplit(createdAt) : null}
-                              <Header.Subheader>Created at...</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Cell>
-                            {/* <Form.Input
-                    type="text"
-                    name="companyName"
-                    value={form.companyName || ""}
-                    onChange={onChange}
-                  /> */}
-                          </Table.Cell>
-                        )}
-                      </Table.Row>
-                      {createdAt !== updatedAt ? (
-                        //   timeStampSplit(createdAt) !== timeStampSplit(updatedAt)
-                        <Table.Row>
-                          <Table.Cell>
-                            <Header as="h4" image>
-                              <Header.Content>
-                                {updatedAt ? timeStampSplit(updatedAt) : null}
-                                <Header.Subheader>
-                                  Updated at...
-                                </Header.Subheader>
-                              </Header.Content>
-                            </Header>
-                          </Table.Cell>
-                          {edit && (
-                            <Table.Cell>
-                              {/* <Form.Input
-                    type="text"
-                    name="website"
-                    value={form.website || ""}
-                    onChange={onChange}
-                    placeholder="https://"
-                  /> */}
-                            </Table.Cell>
-                          )}
-                        </Table.Row>
-                      ) : null}
-
-                      <Table.Row>
-                        <Table.Cell>
-                          <Header as="h4" image>
-                            <Header.Content>
-                              {notes}
-                              <Header.Subheader>Notes</Header.Subheader>
-                            </Header.Content>
-                          </Header>
-                        </Table.Cell>
-                        {edit && (
-                          <Table.Row>
-                            <Table.Cell>
-                              {/* <Form.Dropdown
-                    clearable
-                    search
-                    selection
-                    options={countries}
-                    name="country"
-                    value={form.country || ""}
-                    onChange={onChange}
-                  /> */}
-                            </Table.Cell>
-                          </Table.Row>
-                        )}
-                      </Table.Row>
-                    </Table.Body>
-                  </Table>
-                  {edit && (
-                    <div className="dFlex">
-                      {/* // <Form.Group widths="equal" fluid attached="bottom"> */}
-                      <Button
-                        fluid
-                        content="Delete"
-                        inverted
-                        color="red"
-                        className="dFlex-1"
-                        style={{ marginRight: 0, marginLeft: 0 }}
-                        // onClick={show}
-                      />
-                      {/* //    <Confirm
-              //     open={areYouSure}
-              //     content="Are you sure you want to delete the client ?"
-              //     onCancel={handleCancel}
-              //     onConfirm={handleConfirm}
-              //   />  */}
-                      <Button
-                        fluid
-                        content="Save"
-                        style={{
-                          backgroundColor: "#566A63",
-                          marginRight: 0,
-                          marginLeft: 0,
-                        }}
-                        className="dFlex-1"
-                        // loading={isSubmitting}
-                        // onClick={editClient}
-                        onClick={() => setEdit(!edit)}
-                        // style={{ backgroundColor: "#566A63" }}
-                      />
-                      {/* // </Form.Group> */}
-                    </div>
-                  )}
-                </Form>
-              </Segment>
-            </div>
-          </div>
-        </Tab.Pane>
-      ),
+      render: () => <Tab.Pane attached={false}>Info</Tab.Pane>,
     },
     {
       menuItem: "Reports",
@@ -325,10 +78,21 @@ function CampaignDetails() {
         <Icon name="arrow left" size="large" />
         BACK
       </Link>
-
-      <Header as="h2" textAlign="center" dividing>
+      {/* <div className="dFlex"> */}
+      <Header
+        as="h2"
+        textAlign="center"
+        dividing
+        //   className="dFlex"
+        //   style={{ display: "flex" }}
+      >
         {name}
       </Header>
+      {/* <div className="dFlex-fEnd">
+          <Label basic color="green" size="large" content="Info" />
+          <Label basic color="green" size="large" content="Reports" />
+        </div> */}
+      {/* </div> */}
       <Segment basic as={Header} className="dFlex-sAround" centered>
         <div className="dFlex">{`${client?.firstName}  ${client?.lastName}`}</div>
         <div className="dFlex">
@@ -343,11 +107,249 @@ function CampaignDetails() {
           {agent?.name}
         </div>
       </Segment>
+      <div
+        className="dFlex-center"
+        // style={{ backgroundColor: "purple" }}
+      >
+        <div className="dFlex" style={{ width: "30vw" }}>
+          <Segment
+            as={Card}
+            centered
+            basic
+            fluid
+            size="large"
+            className="dFlex-sBetween"
+            // style={{ paddingLeft: 0 }}
+          >
+            <Form>
+              <Table
+                padded
+                // size="large"
+                inverted
+                celled
+                fluid
+                style={{
+                  backgroundColor: "#8CABA0",
+                  marginBottom: 0,
+                }}
+              >
+                <Table.Row>
+                  <Table.HeaderCell className="dFlex-sBetween">
+                    Current info
+                    {/* <div className="dFlex-fEnd"> */}
+                    {!edit && (
+                      <Icon
+                        name="ellipsis horizontal"
+                        size="large"
+                        onClick={() => setEdit(!edit)}
+                      />
+                    )}
+                    {/* </div> */}
+                  </Table.HeaderCell>
+                  {edit && (
+                    <Table.HeaderCell
+                    //   className="dFlex-sBetween"
+                    //   style={{ width: "30vw" }}
+                    >
+                      Update to...
+                    </Table.HeaderCell>
+                  )}
+                </Table.Row>
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {name}
+                          <Header.Subheader>Campaign name</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Cell>
+                        {/* <Form.Input
+                      type="text"
+                      placeholder="ex: Matthew"
+                      name="firstName"
+                      value={form.firstName || ""}
+                      onChange={onChange}
+                    /> */}
+                      </Table.Cell>
+                    )}
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {length} months
+                          <Header.Subheader>Length</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Cell>
+                        {/* <Form.Input
+                      type="text"
+                      placeholder="ex: Dunn"
+                      name="lastName"
+                      value={form.lastName || ""}
+                      onChange={onChange}
+                    /> */}
+                      </Table.Cell>
+                    )}
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {startDate}
+                          <Header.Subheader>Start</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Cell>
+                        {/* <Form.Input
+                      type="text"
+                      placeholder="ex: +666..."
+                      name="phone"
+                      value={form.phone || ""}
+                      onChange={onChange}
+                    /> */}
+                      </Table.Cell>
+                    )}
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {endDate}
+                          <Header.Subheader>End</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Cell>
+                        {/* <Form.Input
+                      type="text"
+                      name="email"
+                      value={form.email || ""}
+                      onChange={onChange}
+                    /> */}
+                      </Table.Cell>
+                    )}
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {createdAt ? timeStampSplit(createdAt) : null}
+                          <Header.Subheader>Created at...</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Cell>
+                        {/* <Form.Input
+                      type="text"
+                      name="companyName"
+                      value={form.companyName || ""}
+                      onChange={onChange}
+                    /> */}
+                      </Table.Cell>
+                    )}
+                  </Table.Row>
+                  {createdAt !== updatedAt ? (
+                    //   timeStampSplit(createdAt) !== timeStampSplit(updatedAt)
+                    <Table.Row>
+                      <Table.Cell>
+                        <Header as="h4" image>
+                          <Header.Content>
+                            {updatedAt ? timeStampSplit(updatedAt) : null}
+                            <Header.Subheader>Updated at...</Header.Subheader>
+                          </Header.Content>
+                        </Header>
+                      </Table.Cell>
+                      {edit && (
+                        <Table.Cell>
+                          {/* <Form.Input
+                      type="text"
+                      name="website"
+                      value={form.website || ""}
+                      onChange={onChange}
+                      placeholder="https://"
+                    /> */}
+                        </Table.Cell>
+                      )}
+                    </Table.Row>
+                  ) : null}
 
-      <Tab
-        menu={{ fluid: true, vertical: true, tabular: "right" }}
-        panes={panes}
-      />
+                  <Table.Row>
+                    <Table.Cell>
+                      <Header as="h4" image>
+                        <Header.Content>
+                          {notes}
+                          <Header.Subheader>Notes</Header.Subheader>
+                        </Header.Content>
+                      </Header>
+                    </Table.Cell>
+                    {edit && (
+                      <Table.Row>
+                        <Table.Cell>
+                          {/* <Form.Dropdown
+                      clearable
+                      search
+                      selection
+                      options={countries}
+                      name="country"
+                      value={form.country || ""}
+                      onChange={onChange}
+                    /> */}
+                        </Table.Cell>
+                      </Table.Row>
+                    )}
+                  </Table.Row>
+                </Table.Body>
+              </Table>
+              {edit && (
+                <div className="dFlex">
+                  {/* // <Form.Group widths="equal" fluid attached="bottom"> */}
+                  <Button
+                    fluid
+                    content="Delete"
+                    inverted
+                    color="red"
+                    className="dFlex-1"
+                    style={{ marginRight: 0, marginLeft: 0 }}
+                    // onClick={show}
+                  />
+                  {/* //    <Confirm
+                //     open={areYouSure}
+                //     content="Are you sure you want to delete the client ?"
+                //     onCancel={handleCancel}
+                //     onConfirm={handleConfirm}
+                //   />  */}
+                  <Button
+                    fluid
+                    content="Save"
+                    style={{
+                      backgroundColor: "#566A63",
+                      marginRight: 0,
+                      marginLeft: 0,
+                    }}
+                    className="dFlex-1"
+                    // loading={isSubmitting}
+                    // onClick={editClient}
+                    onClick={() => setEdit(!edit)}
+                    // style={{ backgroundColor: "#566A63" }}
+                  />
+                  {/* // </Form.Group> */}
+                </div>
+              )}
+            </Form>
+          </Segment>
+        </div>
+      </div>
     </>
   );
 }

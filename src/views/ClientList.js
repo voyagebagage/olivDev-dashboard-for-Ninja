@@ -133,7 +133,7 @@ function Client() {
         <Table striped>
           {/* ---------------------TABLE HEADER-------------------- */}
           <Table.Header>
-            <Table.Row>
+            <Table.Row singleLine>
               <Table.HeaderCell>COMPANY</Table.HeaderCell>
               <Table.HeaderCell>NAME</Table.HeaderCell>
               <Table.HeaderCell>E-mail</Table.HeaderCell>

@@ -12,11 +12,7 @@ import SearchBar from "../SearchBar";
 function Header({ handleSidebarItem }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
-  let text =
-    location.pathname === "/client-list"
-      ? filterClientList.text
-      : filterCampaignList.text;
-
+  console.log(location.pathname, "location");
   return (
     <div>
       <Menu stackable>
@@ -28,8 +24,8 @@ function Header({ handleSidebarItem }) {
         </Menu.Item>
         <Menu.Menu position="right">
           <>
-            <Menu.Item>
-              {location.pathname === "/client-list" && (
+            {location.pathname === "/client-list" && (
+              <Menu.Item>
                 <Dropdown
                   basic
                   fluid
@@ -45,8 +41,10 @@ function Header({ handleSidebarItem }) {
                   placeholder="Sort By:"
                   style={{ minWidth: "11vw", maxHeight: "4vh" }}
                 />
-              )}
-              {location.pathname === "/campaigns" && (
+              </Menu.Item>
+            )}
+            {location.pathname === "/campaigns" && (
+              <Menu.Item>
                 <Dropdown
                   basic
                   fluid
@@ -62,20 +60,41 @@ function Header({ handleSidebarItem }) {
                   placeholder="Sort By:"
                   style={{ minWidth: "11vw", maxHeight: "4vh" }}
                 />
-              )}
-              <Dropdown
-                basic
-                fluid
-                button
-                selectedLabel
-                selection
-                onChange={(e, value) => setDirectionDropDown(value.value)}
-                options={sortDirection}
-                text={sortDirection.text || ""}
-                placeholder="Way: A-Z"
-                style={{ minWidth: "3vw" }}
-              />
-            </Menu.Item>
+              </Menu.Item>
+            )}
+            {(location.pathname === "/campaigns" ||
+              location.pathname === "/client-list") && (
+              <Menu.Item>
+                <Dropdown
+                  basic
+                  fluid
+                  button
+                  selectedLabel
+                  selection
+                  onChange={(e, value) => setDirectionDropDown(value.value)}
+                  options={sortDirection}
+                  text={sortDirection.text || ""}
+                  placeholder="Way: A-Z"
+                  style={{ minWidth: "3vw" }}
+                />
+              </Menu.Item>
+            )}
+            {location.pathname.includes("/campaign/") && (
+              <>
+                <Menu.Item
+                  inverted
+                  style={{ color: "#566A63", backgroundColor: "#8CABA0" }}
+                >
+                  Info
+                </Menu.Item>
+                <Menu.Item
+                  style={{ color: "#566A63", backgroundColor: "#8CABA0" }}
+                >
+                  Reports
+                </Menu.Item>
+              </>
+            )}
+            {/* ))} */}
           </>
 
           <Menu.Item>
