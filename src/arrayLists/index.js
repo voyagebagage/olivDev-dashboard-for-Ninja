@@ -6,6 +6,7 @@ export const sortDirection = [
   { key: "0", text: "A-Z", value: "asc" },
   { key: "1", text: "Z-A", value: "desc" },
 ];
+
 export const filterClientList = [
   { key: "0", text: "First Name", value: "firstName" },
   { key: "1", text: "Last Name", value: "lastName" },

@@ -5,18 +5,12 @@ import Reports from "./views/Reports";
 import ClientList from "./views/ClientList";
 import Stats from "./views/Stats";
 import ClientDetails from "./views/ClientDetails";
+import CampaignDetails from "./views/CampaignDetails";
 // import Client from "../../views/ClientDetails";
 // import Dashboard from "./views/Dashboard";
 import AgentReport from "./views/AgentReport";
 
 export const Routes = [
-  {
-    title: "Client",
-    path: "/client/:firstName/:companyName/:id",
-    component: ClientDetails,
-    // iconName: "user",
-    cName: "nav-text",
-  },
   {
     title: "LeaderBoard",
     path: "/",
@@ -33,10 +27,24 @@ export const Routes = [
     cName: "nav-text",
   },
   {
+    title: "Client",
+    path: "/client/:firstName/:companyName/:id",
+    component: ClientDetails,
+    // iconName: "user",
+    cName: "nav-text",
+  },
+  {
     title: "Campaigns",
     path: "/campaigns",
     component: Campaigns,
     iconName: "gem",
+    cName: "nav-text",
+  },
+  {
+    title: "Campaign",
+    path: "/campaign/:name/:id",
+    component: CampaignDetails,
+    // iconName: "user",
     cName: "nav-text",
   },
   {

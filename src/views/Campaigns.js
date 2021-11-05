@@ -1,8 +1,11 @@
 import { Table, Header, Segment, Sidebar, List } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
+
 import { PaginationShortCentered } from "../component/Pagination";
 import AddIcon from "../component/AddIcon";
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
 import {
   useVisible,
   useFetch,
@@ -19,6 +22,8 @@ import { getYYYYMMDD } from "../lib/function";
 //           FUNCTION
 //################################################
 function Campaigns() {
+  let history = useHistory();
+
   const { setVisible } = useVisible();
   //xxxxxxxxxxxxxxxxxxxx
   const {
@@ -113,9 +118,15 @@ function Campaigns() {
             </Table.Row>
           </Table.Header>
           {/* -----------------TABLE BODY--------------------- */}
-          {campaigns.map((campaign, idx) => (
-            <Table.Body>
-              <Table.Row>
+          <Table.Body>
+            {campaigns.map((campaign, idx) => (
+              <Table.Row
+                key={campaign.id}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  history.push(`/campaign/${campaign.name}/${campaign.id}`)
+                }
+              >
                 <Table.Cell>
                   {campaign.client.firstName}&nbsp;&nbsp;
                   {campaign.client.lastName}
@@ -138,8 +149,8 @@ function Campaigns() {
                   }
                 </Table.Cell> */}
               </Table.Row>
-            </Table.Body>
-          ))}
+            ))}
+          </Table.Body>
         </Table>
         <div className="dFlex-fEnd">
           <PaginationShortCentered

@@ -17,9 +17,17 @@ html,
 .dFlex {
   display: flex;
 }
+.dFlex-1 {
+  display: flex;
+  flex: 1;
+}
 .dFlex-sBetween {
   display: flex;
   justify-content: space-between;
+}
+.dFlex-sAround {
+  display: flex;
+  justify-content: space-evenly;
 }
 .dFlex-sBetween-aCenter {
   display: flex;

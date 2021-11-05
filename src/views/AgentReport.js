@@ -26,6 +26,9 @@ export default function AgentReport() {
         <Icon name="arrow left" size="large" />
         BACK
       </Link>
+      <Header as="h2" textAlign="center" dividing>
+        {campaignName}
+      </Header>
       <Header as="h3">Agent: {agentName}</Header>
       <Table striped>
         <Table.Header>
