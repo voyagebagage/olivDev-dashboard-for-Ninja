@@ -436,21 +436,15 @@ function ClientDetails() {
                         </Table.Row>
                       </Table.Body>
                     </Table>
-                  </Form>
-                  <div style={{ maxWidth: "40vw", width: "38vw" }}>
-                    <Button.Group
-                      attached="bottom"
-                      // inverted
-                      // fluid
-                      // size="medium"
-                      // style={{ width: "30vw" }}
-                    >
+                    <div className="dFlex">
                       <Button
+                        fluid
                         content="Delete"
                         inverted
+                        className="dFlex-1"
                         color="red"
-                        // fluid
                         onClick={show}
+                        style={{ marginRight: 0, marginLeft: 0 }}
                       />
                       <Confirm
                         open={areYouSure}
@@ -460,14 +454,18 @@ function ClientDetails() {
                       />
                       <Button
                         content="Save"
-                        // inverted
-                        // fluid
+                        fluid
+                        className="dFlex-1"
                         loading={isSubmitting}
                         onClick={editClient}
-                        style={{ backgroundColor: "#566A63" }}
+                        style={{
+                          backgroundColor: "#566A63",
+                          marginRight: 0,
+                          marginLeft: 0,
+                        }}
                       />
-                    </Button.Group>
-                  </div>
+                    </div>
+                  </Form>
                 </Segment>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Table, Header, Icon } from "semantic-ui-react";
+import { Table, Header, Icon, Label, Segment } from "semantic-ui-react";
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import API, { graphqlOperation } from "@aws-amplify/api";
@@ -26,9 +26,23 @@ export default function AgentReport() {
         <Icon name="arrow left" size="large" />
         BACK
       </Link>
-      <Header as="h2" textAlign="center" dividing>
-        {campaignName}
-      </Header>
+      <Segment basic className="dFlex">
+        <Header as="h2" textAlign="center" dividing>
+          {campaignName}
+          {/* <div className="dFlex-fEnd"> */}
+          <Label
+            as={Link}
+            to={`/campaign/${campaignName}/${id}/report`}
+            basic
+            inverted
+            className="dFlex-fEnd"
+            style={{ color: "#566A63", cursor: "pointer" }}
+          >
+            fill up your report
+          </Label>
+          {/* </div> */}
+        </Header>
+      </Segment>
       <Header as="h3">Agent: {agentName}</Header>
       <Table striped>
         <Table.Header>

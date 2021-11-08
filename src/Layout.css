@@ -27,7 +27,7 @@ html,
 }
 .dFlex-sAround {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
 }
 .dFlex-sBetween-aCenter {
   display: flex;
