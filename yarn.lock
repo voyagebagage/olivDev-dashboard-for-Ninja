@@ -6432,6 +6432,11 @@ cssstyle@^2.2.0:
   dependencies:
     cssom "~0.3.6"
 
+current-week-number@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/current-week-number/-/current-week-number-1.0.7.tgz#567278aeb5fe58decb150b9ac864f93dce4ed972"
+  integrity sha1-VnJ4rrX+WN7LFQuayGT5Pc5O2XI=
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"

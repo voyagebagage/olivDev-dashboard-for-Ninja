@@ -28,13 +28,25 @@ function CampaignDetails() {
   const { name, id } = useParams();
   const [campaignDetails, setCampaignDetails] = useState({});
   const [edit, setEdit] = useState(false);
+  // const [status, setStatus] = useState(false);
   console.log({ name, id }, "params");
+  var currentWeekNumber = require("current-week-number");
+
   //--
   const fetchCampaign = async () => {
     try {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
+      const start = currentWeekNumber(campaignData.data.getCampaign.startDate);
+      const end = currentWeekNumber(campaignData.data.getCampaign.endDate);
+      const now = currentWeekNumber(new Date());
+      console.log(start, end, now, "startendnow");
+      // const status = "false";
+      if (now >= start && now <= end) {
+        campaignData.data.getCampaign.status = "true";
+      }
+      console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
       console.log(campaignData.data.getCampaign, "campaignData");
       console.log("succes campaignData");
@@ -55,7 +67,7 @@ function CampaignDetails() {
     agent,
     status,
   } = campaignDetails;
-  //   console.log(client.firstName);
+  console.log(status, "STA TUS");
   const panes = [
     {
       menuItem: {
@@ -97,7 +109,7 @@ function CampaignDetails() {
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
-              <ReportTab />
+              <ReportTab campaignDetails={campaignDetails} />
             </Tab.Pane>
           )}
         />
@@ -195,20 +207,10 @@ function CampaignDetails() {
         BACK
       </Link>
       {/* <div className="dFlex"> */}
-      <Header
-        as="h2"
-        textAlign="center"
-        dividing
-        //   className="dFlex"
-        //   style={{ display: "flex" }}
-      >
+      <Header as="h2" textAlign="center" dividing>
         <div className="dFlex">{name}</div>
       </Header>
-      {/* <div className="dFlex-fEnd">
-          <Label basic color="green" size="large" content="Info" />
-          <Label basic color="green" size="large" content="Reports" />
-        </div> */}
-      {/* </div> */}
+
       <Segment basic as={Header} className="dFlex-sAround" centered>
         <div className="dFlex">{`${client?.firstName}  ${client?.lastName}`}</div>
         <div className="dFlex">
@@ -216,14 +218,14 @@ function CampaignDetails() {
           <Icon
             as={Icon}
             name="circle thin"
-            color={status === true ? "green" : "grey"}
+            color={status ? "green" : "grey"}
           />
         </div>
         <div className="dFlex" as="h3">
           {agent?.name}
         </div>
       </Segment>
-
+      {/* <div className="dFlex-sBetween"> */}
       <Tab
         renderActiveOnly={false}
         activeIndex={-1}
@@ -231,7 +233,10 @@ function CampaignDetails() {
         menuPosition="right"
         panes={panes}
         onTabChange={(event, value) => console.log(value, "TAB")}
+        // className="dFlex"
+        // style={{ maxWidth: "80%", right: "80%" }}
       />
+      {/* </div> */}
     </>
   );
 }
