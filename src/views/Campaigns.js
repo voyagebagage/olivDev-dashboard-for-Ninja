@@ -124,7 +124,7 @@ function Campaigns() {
                 key={campaign.id}
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                  history.push(`/campaign/${campaign.name}/${campaign.id}`)
+                  history.push(`/campaign/${campaign.name}/${campaign.id}/info`)
                 }
               >
                 <Table.Cell>
