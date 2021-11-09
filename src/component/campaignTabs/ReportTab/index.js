@@ -1,12 +1,20 @@
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { useEffect, useState } from "react";
 import { Header, Form, Table } from "semantic-ui-react";
+import { getDailyReport } from "../../../graphql/queries";
 import { getYYYYMMDD } from "../../../lib/function";
-const ReportTab = ({ campaignDetails: { startDate, endDate } }) => {
+//====================
+//      function
+//====================
+const ReportTab = ({ campaignDetails: { startDate, dailyReports } }) => {
   var currentWeekNumber = require("current-week-number");
-  currentWeekNumber(startDate);
-  currentWeekNumber(endDate);
-  console.log(currentWeekNumber(startDate), startDate);
-  console.log(currentWeekNumber(endDate), endDate);
-  console.log(currentWeekNumber(new Date()), new Date());
+  const [kpis, setKpis] = useState([]);
+  // console.log(dailyReports, "dailyReports");
+  // console.log(dailyReports?.items[0].id, "dailyReports.items.id");
+
+  //####################################################
+  //                GET the WEEK we are in
+  //####################################################
   function getDateOfISOWeek(w, y) {
     var simple = new Date(y, 0, 1 + (w - 1) * 7);
     var dow = simple.getDay();
@@ -15,88 +23,112 @@ const ReportTab = ({ campaignDetails: { startDate, endDate } }) => {
     else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
     return ISOweekStart;
   }
-  const startWeekDate = getYYYYMMDD(
-    getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear())
-  )
-    .split("-")
-    .reverse()
-    .join("-");
-  console.log(
-    getYYYYMMDD(
-      getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear())
-    )
-      .split("-")
-      .reverse()
-      .join("-"),
-    "coucou"
+  //----------------------------------------------
+  const startWeekDate = getDateOfISOWeek(
+    currentWeekNumber(new Date()),
+    new Date().getFullYear()
   );
-  // getYYYYMMDD()
+  const lastDay = startWeekDate.getDate() + 4;
+  const endWeekDate = new Date(startWeekDate);
+  endWeekDate.setDate(lastDay);
+  //----------------------------------------------
+
+  //#####################################################
+  //               WEEK ARRAY DATES
+  //#####################################################
+  var getDaysArray = function (start, end) {
+    let i = 0;
+    for (
+      var weekArray = [], dt = new Date(start);
+      dt <= end;
+      dt.setDate(dt.getDate() + 1)
+    ) {
+      const daysArray = ["Mon", "Tues", "Wed", "Thur", "Fri"];
+      weekArray.push(
+        `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
+          .split("-")
+          .reverse()
+          .join("-")}`
+      );
+      i++;
+    }
+    return weekArray;
+  };
+  const weekArray = getDaysArray(startWeekDate, endWeekDate);
+  //xxxxxxxxxxxxxxxxxxxx
+  //#####################################################
+  //               FETCH DAILY-REPORT
+  //#####################################################
+  const fetchDailyReport = async () => {
+    try {
+      if (dailyReports) {
+        const dailyReportData = await API.graphql(
+          graphqlOperation(getDailyReport, {
+            id: dailyReports?.items[0].id,
+          })
+        );
+        console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
+        setKpis(dailyReportData.data.getDailyReport.kpis.items);
+        console.log("succes Kpis");
+      }
+    } catch (error) {
+      console.log("there is an error with getDailyReport", error);
+    }
+  };
+  useEffect(() => fetchDailyReport(), []);
+  console.log(kpis, "KPIS");
   return (
     <Table
       striped
       padded
-      // size="large"
       singleLine
       inverted
       celled
-      // color="black"
       fluid
-      style={{
-        marginBottom: 0,
-        //   backgroundColor: "white",
-      }}
+      style={{ marginBottom: 0 }}
     >
-      <Table.Row
-        style={{
-          backgroundColor: "#566A63",
-        }}
-      >
-        <Table.HeaderCell className="dFlex-sBetween">
-          Week {currentWeekNumber(startDate)}
-        </Table.HeaderCell>
+      <Table.Header>
+        <Table.Row style={{ backgroundColor: "#566A63" }}>
+          <Table.HeaderCell className="dFlex-sBetween">
+            Week {currentWeekNumber(startDate)}
+          </Table.HeaderCell>
+          {dailyReports &&
+            kpis.map((oneKpi) => (
+              <Table.HeaderCell width={2} key={oneKpi.name}>
+                {oneKpi.name}
+              </Table.HeaderCell>
+            ))}
 
-        <Table.HeaderCell collapsing width={2}>
-          KPi2
-        </Table.HeaderCell>
-        <Table.HeaderCell collapsing width={2}>
-          KPi2
-        </Table.HeaderCell>
-        <Table.HeaderCell>Target</Table.HeaderCell>
-        <Table.HeaderCell>Daily Points</Table.HeaderCell>
-        <Table.HeaderCell>% Points</Table.HeaderCell>
-      </Table.Row>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>
-            <Header as="h4" inverted>
-              {startWeekDate}
-            </Header>
-          </Table.Cell>
-          <Table.Cell width={1}>
-            <Form.Input
-              type="text"
-              // style={{ maxWidth: "60%" }}
-              // placeholder="ex: Matthew"
-              // name="firstName"
-              // value={form.firstName || ""}
-              // onChange={onChange}
-            />
-          </Table.Cell>
-          <Table.Cell width={1}>
-            <Form.Input
-              type="text"
-              // style={{ maxWidth: "60%" }}
-
-              // placeholder="ex: Matthew"
-              // name="firstName"
-              // value={form.firstName || ""}
-              // onChange={onChange}
-            />
-          </Table.Cell>
-          <Table.Cell></Table.Cell>
-          <Table.Cell></Table.Cell>
-          <Table.Cell></Table.Cell>
+          {/* <Table.HeaderCell width={2}>KPiTwo</Table.HeaderCell> */}
+          <Table.HeaderCell>Target</Table.HeaderCell>
+          <Table.HeaderCell>Daily Points</Table.HeaderCell>
+          <Table.HeaderCell>% Points</Table.HeaderCell>
         </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {weekArray.map((oneDay, idx) => (
+          <Table.Row>
+            <Table.Cell>
+              <Header as="h4" inverted>
+                {oneDay}
+              </Header>
+            </Table.Cell>
+            {kpis &&
+              kpis.map((kpi, idx) => (
+                <Table.Cell width={2}>
+                  {/* {kpi.name} */}
+                  <Form.Input
+                    type="text"
+                    style={{ maxWidth: "5vw" }}
+                    placeholder={`${kpi.name}`}
+                    // name="firstName"
+                    // value={form.firstName || ""}
+                    // onChange={onChange}
+                  />
+                </Table.Cell>
+              ))}
+          </Table.Row>
+        ))}
       </Table.Body>
     </Table>
   );

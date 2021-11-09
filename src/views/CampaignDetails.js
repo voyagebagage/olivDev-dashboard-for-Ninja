@@ -38,6 +38,7 @@ function CampaignDetails() {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
+      //xxxxxxxxxxxxxxxxxxxx Status xxxxxxxxxx
       const start = currentWeekNumber(campaignData.data.getCampaign.startDate);
       const end = currentWeekNumber(campaignData.data.getCampaign.endDate);
       const now = currentWeekNumber(new Date());
@@ -46,6 +47,7 @@ function CampaignDetails() {
       if (now >= start && now <= end) {
         campaignData.data.getCampaign.status = "true";
       }
+      //xxxxxxxxxxxxxxxxxxxx xxxxxxxxxx xxxxxxxxxx
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
       console.log(campaignData.data.getCampaign, "campaignData");
@@ -62,6 +64,7 @@ function CampaignDetails() {
     endDate,
     updatedAt,
     createdAt,
+    dailyReports,
     notes,
     client,
     agent,
