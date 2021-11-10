@@ -18,17 +18,6 @@ export default function AgentReport() {
         graphqlOperation(getCampaign, { id: id })
       );
       setCampaignReport(campaignData.data.getCampaign);
-      // if (campaignData.data.getCampaign.dailyReports) {
-      //   console.log("111111111111");
-      //   setIdDailyReport(
-      //     campaignData.data.getCampaign.dailyReports?.items[0].id
-      //   );
-      // console.log(
-      //   campaignData.data.getCampaign.dailyReports.items[0].id,
-      //   "items[0].id"
-      // );
-      // console.log(idDailyReport, "IFF idDailyReport");
-      // }
       console.log(campaignData.data.getCampaign, "campaignData");
       setIsLoading(false);
     } catch (error) {
@@ -36,7 +25,7 @@ export default function AgentReport() {
     }
   };
   useEffect(() => fetchCampaign(), []);
-  // console.log(campaignReport?.dailyReports.items[0].id, "items[0].id");
+
   return !isLoading ? (
     <>
       <Link to="/agent" style={{ color: "#566A63" }}>

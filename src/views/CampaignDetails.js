@@ -2,20 +2,7 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { Link, useHistory, Route, useParams, NavLink } from "react-router-dom";
 // import { panes } from "../arrayLists/index";
 import { getCampaign } from "../graphql/queries";
-import {
-  Card,
-  Button,
-  Segment,
-  Header,
-  Form,
-  Table,
-  Confirm,
-  Grid,
-  Radio,
-  Tab,
-  Icon,
-  Label,
-} from "semantic-ui-react";
+import { Segment, Header, Tab, Icon, Button } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import InfoTab from "../component/campaignTabs/InfoTab";
 import ReportTab from "../component/campaignTabs/ReportTab";
@@ -25,6 +12,10 @@ import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
 import TargetSummaryTab from "../component/campaignTabs/TargetsSummaryTab";
 //x
 function CampaignDetails() {
+  let history = useHistory();
+  const goToPreviousPath = () => {
+    history.goBack();
+  };
   const { name, id } = useParams();
   const [campaignDetails, setCampaignDetails] = useState({});
   const [edit, setEdit] = useState(false);
@@ -206,10 +197,16 @@ function CampaignDetails() {
   ];
   return (
     <>
-      <Link to="/campaigns" style={{ color: "#566A63" }}>
-        <Icon name="arrow left" size="large" />
+      <Button
+        // basic
+        inverted
+        // to={goToPreviousPath}
+        onClick={goToPreviousPath}
+        style={{ color: "#566A63" }}
+      >
+        <Icon name="arrow left" size="large" style={{ color: "#566A63" }} />
         BACK
-      </Link>
+      </Button>
       {/* <div className="dFlex"> */}
       <Header as="h2" textAlign="center" dividing>
         <div className="dFlex">{name}</div>
