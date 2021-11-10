@@ -1,5 +1,5 @@
 import { Table, Header, Icon, Label, Segment } from "semantic-ui-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { getCampaign } from "../graphql/queries";
@@ -7,14 +7,15 @@ import { getCampaign } from "../graphql/queries";
 export default function AgentReport() {
   const { agentName, campaignName, id } = useParams();
   console.log({ agentName, campaignName, id }, "params");
-
+  const [campaignReport, setCampaignReport] = useState({});
   //xxxxxxxxxxxxxxxxxx**************xxxxxxxxxxxxxxxxxxxxxx
   const fetchCampaign = async () => {
     try {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
-      console.log(campaignData, "campaignData");
+      setCampaignReport(campaignData.data.getCampaign);
+      console.log(campaignData.data.getCampaign, "campaignData");
     } catch (error) {
       console.log("there is an error with getCampaign", error);
     }
@@ -30,9 +31,10 @@ export default function AgentReport() {
         <Header as="h2" textAlign="center" dividing>
           {campaignName}
           {/* <div className="dFlex-fEnd"> */}
+          {/* ${campaignReport.dailyReports?.items[0].id} */}
           <Label
             as={Link}
-            to={`/campaign/${campaignName}/${id}/report`}
+            to={`/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0].id}`}
             basic
             inverted
             className="dFlex-fEnd"

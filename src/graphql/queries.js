@@ -909,6 +909,13 @@ export const agentByTotalPoints = /* GraphQL */ `
             notes
             createdAt
             updatedAt
+            # dailyReports {
+            #   items {
+            #     id
+            #     # createdAt
+            #     # updatedAt
+            #   }
+            # }
           }
           nextToken
         }

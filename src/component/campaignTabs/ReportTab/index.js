@@ -1,16 +1,19 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Header, Form, Table } from "semantic-ui-react";
 import { getDailyReport } from "../../../graphql/queries";
 import { getYYYYMMDD } from "../../../lib/function";
 //====================
 //      function
 //====================
-const ReportTab = ({ campaignDetails: { startDate, dailyReports } }) => {
+const ReportTab = ({ campaignDetails: { startDate } }) => {
+  const { dailyReportId } = useParams();
+  console.log(dailyReportId);
   var currentWeekNumber = require("current-week-number");
   const [kpis, setKpis] = useState([]);
-  // console.log(dailyReports, "dailyReports");
-  // console.log(dailyReports?.items[0].id, "dailyReports.items.id");
+  // console.log(dailyReportId, "dailyReportId");
+  // console.log(dailyReportId?.items[0].id, "dailyReportId.items.id");
 
   //####################################################
   //                GET the WEEK we are in
@@ -61,10 +64,10 @@ const ReportTab = ({ campaignDetails: { startDate, dailyReports } }) => {
   //#####################################################
   const fetchDailyReport = async () => {
     try {
-      if (dailyReports) {
+      if (dailyReportId) {
         const dailyReportData = await API.graphql(
           graphqlOperation(getDailyReport, {
-            id: dailyReports?.items[0].id,
+            id: dailyReportId,
           })
         );
         console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
@@ -75,7 +78,7 @@ const ReportTab = ({ campaignDetails: { startDate, dailyReports } }) => {
       console.log("there is an error with getDailyReport", error);
     }
   };
-  useEffect(() => fetchDailyReport(), []);
+  useEffect(() => fetchDailyReport(), [dailyReportId]);
   console.log(kpis, "KPIS");
   return (
     <Table
@@ -92,7 +95,7 @@ const ReportTab = ({ campaignDetails: { startDate, dailyReports } }) => {
           <Table.HeaderCell className="dFlex-sBetween">
             Week {currentWeekNumber(startDate)}
           </Table.HeaderCell>
-          {dailyReports &&
+          {dailyReportId &&
             kpis.map((oneKpi) => (
               <Table.HeaderCell width={2} key={oneKpi.name}>
                 {oneKpi.name}

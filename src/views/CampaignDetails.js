@@ -71,6 +71,7 @@ function CampaignDetails() {
     status,
   } = campaignDetails;
   console.log(status, "STA TUS");
+  console.log(dailyReports?.items[0], "dailyReports");
   const panes = [
     {
       menuItem: {
@@ -102,13 +103,13 @@ function CampaignDetails() {
         as: NavLink,
         id: "tab2",
         content: "Reports",
-        to: `/campaign/${name}/${id}/report`,
+        to: `/campaign/${name}/${id}/report/${dailyReports?.items[0].id}`,
         exact: true,
         key: "reports",
       },
       pane: (
         <Route
-          path={`/campaign/${name}/${id}/report`}
+          path={`/campaign/${name}/${id}/report/:dailyReportId`}
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
