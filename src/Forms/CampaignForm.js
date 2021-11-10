@@ -446,6 +446,7 @@ const CampaignForm = () => {
                         <Form.Button
                           type="submit"
                           primary
+                          size="large"
                           disabled={disabledStep2Button}
                           loading={isSubmitting}
                         >
@@ -472,210 +473,218 @@ const CampaignForm = () => {
             // width={8}
             stretched
           >
-            <Segment disabled={!step2 ? true : false} fluid basic>
-              <Segment basic as={Header}>
-                Daily Report Configuration
-              </Segment>
-              {/* ################################################################################ */}
-              <Segment basic padded>
-                <Form onSubmit={onSubmitCampaign}>
-                  <Grid
-                    relaxed="very"
-                    // padded
-                    columns={3}
-                    // stretched
-                  >
-                    {/* ---------------------------------------------- */}
-                    {/* //============ROW================= */}
-                    <Grid.Row
-                      columns={4}
+            {step2 ? (
+              <Segment disabled={!step2 ? true : false} fluid basic>
+                <Segment basic as={Header}>
+                  Daily Report Configuration
+                </Segment>
+                {/* ################################################################################ */}
+                <Segment basic padded>
+                  <Form onSubmit={onSubmitCampaign}>
+                    <Grid
+                      relaxed="very"
+                      // padded
+                      columns={3}
                       // stretched
-                      // centered
                     >
-                      <Grid.Column>
-                        <h4 className="kpi-header">KPI's</h4>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <h4 className="kpi-header">Coeff.</h4>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <h4 className="kpi-header">Assign Targets</h4>
-                      </Grid.Column>
-                    </Grid.Row>
-                    {/* //=============ROW================ */}
-                    {listKpi?.length
-                      ? listKpi.map((oneKpi, idx) => (
-                          <>
-                            <Grid.Row
-                              columns={4}
-                              stretched
-                              // centered
-                            >
-                              <Grid.Column key={idx}>
-                                <strong className="kpi-header">
-                                  {oneKpi.name}
-                                </strong>
-                              </Grid.Column>
-                              <Grid.Column>
-                                <strong className="kpi-header">
-                                  {oneKpi.coeff}
-                                </strong>
-                              </Grid.Column>
-                              <Grid.Column>
-                                <strong className="kpi-header">
-                                  {oneKpi.target}
-                                </strong>
-                              </Grid.Column>
-                              <Grid.Column width={1}>
-                                <div className="centerSized">
-                                  <Icon
-                                    inverted
-                                    name="remove circle"
-                                    fitted
-                                    link
-                                    size="large"
-                                    onClick={() => handleDeleteKpi(idx)}
-                                  />
-                                </div>
-                              </Grid.Column>
-                            </Grid.Row>
-                          </>
-                        ))
-                      : null}
-
-                    {newKpi && step2 ? (
-                      <>
-                        {/* //=============ROW================ */}
-                        <Grid.Row columns={4}>
-                          <Grid.Column style={{ padding: "1%" }}>
-                            <Form.Input
-                              placeholder="a name"
-                              name="name"
-                              value={form.name || ""}
-                              onChange={onChange}
-                            />
-                          </Grid.Column>
-                          <Grid.Column
-                            style={{
-                              paddingTop: "1%",
-                              paddingRight: "6%",
-                              paddingLeft: "6%",
-                            }}
-                          >
-                            <Form.Input
-                              placeholder="ex:10"
-                              name="coeff"
-                              value={Number(form.coeff) || ""}
-                              onChange={onChange}
-                            />
-                          </Grid.Column>
-                          <Grid.Column
-                            style={{
-                              paddingTop: "1%",
-                              paddingRight: "5%",
-                              paddingLeft: "6%",
-                            }}
-                          >
-                            <Form.Input
-                              placeholder="1-100"
-                              name="target"
-                              value={Number(form.target) || ""}
-                              onChange={onChange}
-                              fluid
-                            />
-                          </Grid.Column>
-                          <Grid.Column width={1}>
-                            <div className="centerSized">
-                              <Icon name="percent" fitted size="large" />
-                            </div>
-                          </Grid.Column>
-                        </Grid.Row>
-                      </>
-                    ) : null}
-                    <>
-                      {/* //=============ROW================ */}
-                      <Grid.Row stretched>
-                        {newKpi ? (
-                          <>
-                            <div className="center">
-                              <Icon
-                                size="large"
-                                name="add circle"
-                                link
-                                disabled={addKpiButtonValid}
-                                style={{ borderWidth: 0 }}
-                                onClick={handleAddKpi}
-                              />
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="center">
-                              <Label labelPosition="left">Add a new KPI</Label>
-                              <Icon
-                                size="big"
-                                name="add circle"
-                                link
-                                // labelPosition="left"
-                                inverted
-                                onClick={() => setNewKpi(true)}
-                              />
-                            </div>
-                          </>
-                        )}
-                      </Grid.Row>
-                    </>
-                    {/* //=============ROW================ */}
-                    {step2 ? (
-                      <Grid.Row columns={1}>
-                        <Grid.Column stretched>
-                          <Form.Group
-                            widths="equal"
-                            fluid
-                            className="dFlex-sBetween-aCenter"
-                          >
-                            <Form.Button
-                              secondary
-                              inverted
-                              fluid
-                              size="large"
-                              onClick={() => {
-                                setStep2(false);
-                                setBackButton(true);
-                                setNewKpi(false);
-                                form.campaignAgentId = newCampaign.agent.id;
-                                form.campaignClientId = newCampaign.client.id;
-                                setForm({ ...newCampaign, ...form });
-                                setIsSubmitting(false);
-                              }}
-                              style={{ maxWidth: "80%" }}
-                            >
-                              Back
-                            </Form.Button>
-                            <Form.Button
-                              type="submit"
-                              fluid
-                              size="large"
-                              disabled={
-                                listKpi.length
-                                  ? !step2
-                                  : addKpiButtonValid && step2
-                              }
-                              primary
-                              loading={isSubmitting}
-                              style={{ maxWidth: "80%" }}
-                            >
-                              Submit
-                            </Form.Button>
-                          </Form.Group>
+                      {/* ---------------------------------------------- */}
+                      {/* //============ROW================= */}
+                      <Grid.Row
+                        columns={4}
+                        // stretched
+                        // centered
+                      >
+                        <Grid.Column>
+                          <h4 className="kpi-header">KPI's</h4>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <h4 className="kpi-header">Coeff.</h4>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <h4 className="kpi-header">Assign Targets</h4>
                         </Grid.Column>
                       </Grid.Row>
-                    ) : null}
-                    {/* ---------------------------------------------- */}
-                  </Grid>
-                </Form>
+                      {/* //=============ROW================ */}
+                      {listKpi?.length
+                        ? listKpi.map((oneKpi, idx) => (
+                            <>
+                              <Grid.Row
+                                columns={4}
+                                stretched
+                                // centered
+                              >
+                                <Grid.Column key={idx}>
+                                  <strong className="kpi-header">
+                                    {oneKpi.name}
+                                  </strong>
+                                </Grid.Column>
+                                <Grid.Column>
+                                  <strong className="kpi-header">
+                                    {oneKpi.coeff}
+                                  </strong>
+                                </Grid.Column>
+                                <Grid.Column>
+                                  <strong className="kpi-header">
+                                    {oneKpi.target}
+                                  </strong>
+                                </Grid.Column>
+                                <Grid.Column width={1}>
+                                  <div className="centerSized">
+                                    <Icon
+                                      inverted
+                                      name="remove circle"
+                                      fitted
+                                      link
+                                      size="large"
+                                      onClick={() => handleDeleteKpi(idx)}
+                                    />
+                                  </div>
+                                </Grid.Column>
+                              </Grid.Row>
+                            </>
+                          ))
+                        : null}
+
+                      {newKpi && step2 ? (
+                        <>
+                          {/* //=============ROW================ */}
+                          <Grid.Row columns={4}>
+                            <Grid.Column style={{ padding: "1%" }}>
+                              <Form.Input
+                                placeholder="a name"
+                                name="name"
+                                value={form.name || ""}
+                                onChange={onChange}
+                              />
+                            </Grid.Column>
+                            <Grid.Column
+                              style={{
+                                paddingTop: "1%",
+                                paddingRight: "6%",
+                                paddingLeft: "6%",
+                              }}
+                            >
+                              <Form.Input
+                                placeholder="ex:10"
+                                name="coeff"
+                                value={Number(form.coeff) || ""}
+                                onChange={onChange}
+                              />
+                            </Grid.Column>
+                            <Grid.Column
+                              style={{
+                                paddingTop: "1%",
+                                paddingRight: "5%",
+                                paddingLeft: "6%",
+                              }}
+                            >
+                              <Form.Input
+                                placeholder="1-100"
+                                name="target"
+                                value={Number(form.target) || ""}
+                                onChange={onChange}
+                                fluid
+                              />
+                            </Grid.Column>
+                            <Grid.Column width={1}>
+                              <div className="centerSized">
+                                <Icon name="percent" fitted size="large" />
+                              </div>
+                            </Grid.Column>
+                          </Grid.Row>
+                        </>
+                      ) : null}
+                      <>
+                        {/* //=============ROW================ */}
+                        <Grid.Row stretched>
+                          {newKpi ? (
+                            <>
+                              <div className="center">
+                                <Icon
+                                  size="large"
+                                  name="add circle"
+                                  link
+                                  disabled={addKpiButtonValid}
+                                  style={{ borderWidth: 0 }}
+                                  onClick={handleAddKpi}
+                                />
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="center">
+                                <Label labelPosition="left">
+                                  Add a new KPI
+                                </Label>
+                                <Icon
+                                  size="big"
+                                  name="add circle"
+                                  link
+                                  // labelPosition="left"
+                                  inverted
+                                  onClick={() => setNewKpi(true)}
+                                />
+                              </div>
+                            </>
+                          )}
+                        </Grid.Row>
+                      </>
+                      {/* //=============ROW================ */}
+                      {step2 ? (
+                        <Grid.Row columns={1}>
+                          <Grid.Column stretched>
+                            <Form.Group
+                              widths="equal"
+                              fluid
+                              className="dFlex-sBetween-aCenter"
+                            >
+                              <Form.Button
+                                secondary
+                                inverted
+                                fluid
+                                size="large"
+                                onClick={() => {
+                                  setStep2(false);
+                                  setBackButton(true);
+                                  setNewKpi(false);
+                                  form.campaignAgentId = newCampaign.agent.id;
+                                  form.campaignClientId = newCampaign.client.id;
+                                  setForm({ ...newCampaign, ...form });
+                                  setIsSubmitting(false);
+                                }}
+                                style={{ maxWidth: "80%" }}
+                              >
+                                Back
+                              </Form.Button>
+                              <Form.Button
+                                type="submit"
+                                fluid
+                                size="large"
+                                disabled={
+                                  listKpi.length
+                                    ? !step2
+                                    : addKpiButtonValid && step2
+                                }
+                                primary
+                                loading={isSubmitting}
+                                style={{ maxWidth: "80%" }}
+                              >
+                                Submit
+                              </Form.Button>
+                            </Form.Group>
+                          </Grid.Column>
+                        </Grid.Row>
+                      ) : null}
+                      {/* ---------------------------------------------- */}
+                    </Grid>
+                  </Form>
+                </Segment>
               </Segment>
-            </Segment>
+            ) : (
+              <Header size="large" className="dFlex-jCenter-aCenter">
+                first step
+              </Header>
+            )}
           </Grid.Column>
         </Grid>
       </Segment>

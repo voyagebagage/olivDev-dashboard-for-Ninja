@@ -1,4 +1,4 @@
-import { Table, Header, Icon, Label, Segment } from "semantic-ui-react";
+import { Table, Header, Icon, Label, Segment, Button } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import API, { graphqlOperation } from "@aws-amplify/api";
@@ -8,20 +8,36 @@ export default function AgentReport() {
   const { agentName, campaignName, id } = useParams();
   console.log({ agentName, campaignName, id }, "params");
   const [campaignReport, setCampaignReport] = useState({});
+  const [idDailyReport, setIdDailyReport] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   //xxxxxxxxxxxxxxxxxx**************xxxxxxxxxxxxxxxxxxxxxx
   const fetchCampaign = async () => {
     try {
+      // setIdDailyReport([]);
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
       setCampaignReport(campaignData.data.getCampaign);
+      // if (campaignData.data.getCampaign.dailyReports) {
+      //   console.log("111111111111");
+      //   setIdDailyReport(
+      //     campaignData.data.getCampaign.dailyReports?.items[0].id
+      //   );
+      // console.log(
+      //   campaignData.data.getCampaign.dailyReports.items[0].id,
+      //   "items[0].id"
+      // );
+      // console.log(idDailyReport, "IFF idDailyReport");
+      // }
       console.log(campaignData.data.getCampaign, "campaignData");
+      setIsLoading(false);
     } catch (error) {
       console.log("there is an error with getCampaign", error);
     }
   };
   useEffect(() => fetchCampaign(), []);
-  return (
+  // console.log(campaignReport?.dailyReports.items[0].id, "items[0].id");
+  return !isLoading ? (
     <>
       <Link to="/agent" style={{ color: "#566A63" }}>
         <Icon name="arrow left" size="large" />
@@ -30,18 +46,30 @@ export default function AgentReport() {
       <Segment basic className="dFlex">
         <Header as="h2" textAlign="center" dividing>
           {campaignName}
-          {/* <div className="dFlex-fEnd"> */}
-          {/* ${campaignReport.dailyReports?.items[0].id} */}
-          <Label
-            as={Link}
-            to={`/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0].id}`}
+
+          <Button
             basic
             inverted
-            className="dFlex-fEnd"
-            style={{ color: "#566A63", cursor: "pointer" }}
+            disabled={!campaignReport.dailyReports?.items[0]}
           >
-            fill up your report
-          </Label>
+            <Label
+              as={Link}
+              to={
+                campaignReport.dailyReports?.items[0]
+                  ? `/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0].id}`
+                  : null
+              }
+              basic
+              inverted
+              className="dFlex-fEnd"
+              style={{ color: "#566A63", cursor: "pointer" }}
+            >
+              {campaignReport.dailyReports?.items[0]
+                ? "fill up your report"
+                : "No Daily Report"}
+            </Label>
+          </Button>
+
           {/* </div> */}
         </Header>
       </Segment>
@@ -57,5 +85,5 @@ export default function AgentReport() {
         </Table.Header>
       </Table>
     </>
-  );
+  ) : null;
 }

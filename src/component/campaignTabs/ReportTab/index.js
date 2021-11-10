@@ -1,7 +1,7 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Header, Form, Table } from "semantic-ui-react";
+import { Header, Form, Table, Segment } from "semantic-ui-react";
 import { getDailyReport } from "../../../graphql/queries";
 import { getYYYYMMDD } from "../../../lib/function";
 //====================
@@ -80,7 +80,7 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
   };
   useEffect(() => fetchDailyReport(), [dailyReportId]);
   console.log(kpis, "KPIS");
-  return (
+  return dailyReportId ? (
     <Table
       striped
       padded
@@ -134,6 +134,8 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
         ))}
       </Table.Body>
     </Table>
+  ) : (
+    <Segment as={Header}>That Campaign doesn't have a Daily Report</Segment>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Table, Header, Segment, Sidebar, List } from "semantic-ui-react";
+import { Table, Header, Segment, Sidebar, List, Icon } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 
 import { PaginationShortCentered } from "../component/Pagination";
@@ -106,14 +106,15 @@ function Campaigns() {
         </Segment>
         {/* -------------------TABLE HEADER------------------- */}
 
-        <Table striped>
+        <Table striped singleLine>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing>CLIENT</Table.HeaderCell>
               <Table.HeaderCell>CAMPAIGN</Table.HeaderCell>
-              <Table.HeaderCell>AGENT</Table.HeaderCell>
-              <Table.HeaderCell>START</Table.HeaderCell>
-              <Table.HeaderCell>END</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">AGENT</Table.HeaderCell>
+              <Table.HeaderCell collapsing>START</Table.HeaderCell>
+              <Table.HeaderCell collapsing>END</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
               {/* <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
@@ -131,23 +132,23 @@ function Campaigns() {
                   {campaign.client.firstName}&nbsp;&nbsp;
                   {campaign.client.lastName}
                 </Table.Cell>
-                <Table.Cell>{campaign.name}</Table.Cell>
-                <Table.Cell>{campaign.agent.name}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell collapsing>{campaign.name}</Table.Cell>
+                <Table.Cell textAlign="center">
+                  {campaign.agent.name}
+                </Table.Cell>
+                <Table.Cell collapsing>
                   {campaign.startDate.split("-").reverse().join("-")}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell collapsing>
                   {campaign.endDate.split("-").reverse().join("-")}
                 </Table.Cell>
-                {/* <Table.Cell>
-                  {
-                    console.log(let a= new Date(campaign.startDate); .getTime())
-                    // <= getYYYYMMDD().getTime() &&
-                    // campaign.endDate.getTime() >= getYYYYMMDD().getTime() ? (
-                    //   <Label content="coucou" />
-                    // ) : null
-                  }
-                </Table.Cell> */}
+                <Table.Cell textAlign="center">
+                  <Icon
+                    as={Icon}
+                    name="circle thin"
+                    // color={status ? "green" : "grey"}
+                  />
+                </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>

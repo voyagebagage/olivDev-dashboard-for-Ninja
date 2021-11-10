@@ -139,7 +139,7 @@ function Client() {
               <Table.HeaderCell>E-mail</Table.HeaderCell>
               <Table.HeaderCell>WEBSITE</Table.HeaderCell>
               <Table.HeaderCell>LOCATION</Table.HeaderCell>
-              <Table.HeaderCell>ON CAMPAIGN</Table.HeaderCell>
+              {/* <Table.HeaderCell>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
           {/* ---------------------TABLE BODY------------------------ */}
@@ -183,6 +183,7 @@ function Client() {
                   </a>
                 </Table.Cell>
                 <Table.Cell
+                  textAlign="center"
                   onClick={() =>
                     history.push(
                       `/client/${client.firstName}/${client.companyName}/${client.id}`
@@ -191,7 +192,7 @@ function Client() {
                 >
                   {client.country}
                 </Table.Cell>
-                <Table.Cell
+                {/* <Table.Cell
                   onClick={() =>
                     history.push(
                       `/client/${client.firstName}/${client.companyName}/${client.id}`
@@ -203,8 +204,8 @@ function Client() {
                       {campaign.endDate.split("-").reverse().join("-")}
                     </p>
                   ))}
-                  {/* <Radio toggle={client.status?true:false} /> */}
-                </Table.Cell>
+                </Table.Cell> */}
+                {/* <Radio toggle={client.status?true:false} /> */}
               </Table.Row>
             ))}
           </Table.Body>
