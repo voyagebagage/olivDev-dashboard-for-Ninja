@@ -35,19 +35,14 @@ export default function AgentReport() {
       <Segment basic className="dFlex">
         <Header as="h2" textAlign="center" dividing>
           {campaignName}
-
           <Button
             basic
             inverted
-            disabled={!campaignReport.dailyReports?.items[0]}
+            disabled={!campaignReport.dailyReports?.items[0]?.id}
           >
             <Label
               as={Link}
-              to={
-                campaignReport.dailyReports?.items[0]
-                  ? `/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0].id}`
-                  : null
-              }
+              to={`/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0]?.id}`}
               basic
               inverted
               className="dFlex-fEnd"

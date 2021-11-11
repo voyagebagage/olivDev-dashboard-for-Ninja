@@ -110,35 +110,59 @@ type Campaign
   dailyReports: [DailyReport!]!
     @connection(name: "CampaignDailyReports", sortField: "createdAt")
 }
+####################################################################
 
+################## REPORTS #########################################
 type DailyReport @model @searchable {
   id: ID
   campaign: Campaign! @connection(name: "CampaignDailyReports")
   kpis: [Kpi!]! @connection(name: "DailyReportKpis")
   createdAt: AWSDateTime
+  dailyTarget: Int
+  weeklyReport: WeeklyReport @connection(name: "WeeklyReport")
+  dailyPoints: Int
+  weeklyTarget: Int #it might be taken off
 }
-#   date: AWSDate!
+##--------------- WEEKLY -----------------------##
+type WeeklyReport @model @searchable {
+  id: ID
+  dailyReports: [DailyReport]! @connection(name: "WeeklyReport")
+  createdAt: AWSDateTime
+  weeklyTarget: Int!
+  monthlyReport: MonthlyReport @connection(name: "MonthlyReport")
+  weeklyPoints: Int
+}
+##--------------- MONTHLY -----------------------##
 
-type Kpi
-  @model
-  @searchable
-  @key(
-    name: "kpiByTarget"
-    fields: ["name", "target"]
-    queryField: "kpiByTarget"
-  ) {
+type MonthlyReport @model @searchable {
+  id: ID
+  createdAt: AWSDateTime
+  monthlyTarget: Int!
+  weeklyReports: [WeeklyReport]! @connection(name: "MonthlyReport")
+  monthlyPoints: Int
+}
+###################################################################
+
+###################################################################
+type Kpi @model @searchable {
+  # @key(
+  #   name: "kpiByTarget"
+  #   fields: ["name", "agent"]
+  #   queryField: "kpiByTarget"
+  # )
   id: ID
   name: String! #category
+  result: Int
   target: Int!
   coeff: Int!
   dailyReport: DailyReport! @connection(name: "DailyReportKpis")
   agent: Agent! @connection(name: "AgentKpis", sortField: "name")
 }
-#------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 
 # -                                                                                              -
 
-#------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 # type Kpi @model @searchable {
 #   id: ID
 #   name: String!

@@ -94,7 +94,7 @@ function CampaignDetails() {
         as: NavLink,
         id: "tab2",
         content: "Reports",
-        to: `/campaign/${name}/${id}/report/${dailyReports?.items[0].id}`,
+        to: `/campaign/${name}/${id}/report/${dailyReports?.items[0]?.id}`,
         exact: true,
         key: "reports",
       },

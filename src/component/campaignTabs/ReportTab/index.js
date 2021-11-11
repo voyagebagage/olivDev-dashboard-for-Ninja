@@ -81,6 +81,7 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
   };
   useEffect(() => fetchDailyReport(), [dailyReportId]);
   console.log(kpis, "KPIS");
+  console.log(kpis.result, "KPIS.RESULT");
   return dailyReportId ? (
     <Table
       striped
@@ -104,7 +105,6 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
             ))}
 
           {/* <Table.HeaderCell width={2}>KPiTwo</Table.HeaderCell> */}
-          <Table.HeaderCell>Target</Table.HeaderCell>
           <Table.HeaderCell>Daily Points</Table.HeaderCell>
           <Table.HeaderCell>% Points</Table.HeaderCell>
         </Table.Row>

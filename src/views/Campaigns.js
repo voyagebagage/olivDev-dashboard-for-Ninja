@@ -114,7 +114,12 @@ function Campaigns() {
               <Table.HeaderCell textAlign="center">AGENT</Table.HeaderCell>
               <Table.HeaderCell collapsing>START</Table.HeaderCell>
               <Table.HeaderCell collapsing>END</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center">STATUS</Table.HeaderCell>
+              <Table.HeaderCell
+                textAlign="center"
+                // style={{ maxWidth: "10vw", marginRight: 0 }}
+              >
+                STATUS
+              </Table.HeaderCell>
               {/* <Table.HeaderCell collapsing>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>

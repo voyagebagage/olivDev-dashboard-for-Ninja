@@ -17,6 +17,9 @@ import {
   createCampaign,
   updateCampaign,
   deleteKpi,
+  updateDailyReport,
+  createWeeklyReport,
+  createMonthlyReport,
   // updateAgent,
   // updateClient,
 } from "../graphql/mutations";
@@ -51,6 +54,8 @@ const CampaignForm = () => {
   const [newKpi, setNewKpi] = useState(false);
   // const [editKpi, setEditKpi] = useState(false);
   const [dailyReport, setDailyReport] = useState({});
+  // const [weeklyReport, setWeeklyReport] = useState({});
+  // const [monthlyReport, setMonthlyReport] = useState({});
   const [listKpi, setListKpi] = useState([]);
   const [agentName, setAgentName] = useState([]);
   const [clientName, setClientName] = useState([]);
@@ -249,9 +254,89 @@ const CampaignForm = () => {
   //#########################################################
   const onSubmitCampaign = async () => {
     setIsSubmitting(true);
-    if (newKpi) {
-      await handleAddKpi();
+    if (newKpi) await handleAddKpi();
+    let idMonthlyReport = "";
+    let idWeeklyReport = "";
+    let sum = 0;
+    console.log(sum, "SUM+++++======");
+    for (let i = 0; i < listKpi.length; i++) {
+      sum += listKpi[i].target * listKpi[i].coeff;
+      console.log(sum, "SUM+++++======");
     }
+    dailyReport.weeklyTarget = sum;
+    console.log(dailyReport.weeklyTarget, "dailyReport.weeklyTarget");
+    dailyReport.dailyTarget = Math.floor(dailyReport.weeklyTarget / 5);
+    console.log(dailyReport.dailyTarget, "dailyReport.dailyTarget");
+
+    //----=========== Create  newMonthlyReport============---------------------
+    try {
+      const newD = new Date();
+      const d = (y, m) => new Date(y, m, 0).getDate();
+      let daysInMonth = d(newD.getFullYear(), newD.getMonth() + 1);
+      console.log(daysInMonth, "----  daysInMonth ----");
+      const newMonthlyReport = await API.graphql(
+        graphqlOperation(createMonthlyReport, {
+          input: {
+            monthlyTarget: dailyReport.dailyTarget * daysInMonth,
+          },
+        })
+      );
+      idMonthlyReport = newMonthlyReport.data.createMonthlyReport.id;
+      console.log(
+        newMonthlyReport.data.createMonthlyReport,
+        "createMonthlyReport"
+      );
+      console.log("success creating MonthlyReport");
+    } catch (error) {
+      console.log("there is an error with creating MonthlyReport,", error);
+    }
+
+    //-------------=========== Create newWeeklyReport============------------
+    try {
+      const newWeeklyReport = await API.graphql(
+        graphqlOperation(createWeeklyReport, {
+          input: {
+            weeklyReportMonthlyReportId: idMonthlyReport,
+            weeklyTarget: dailyReport.weeklyTarget,
+          },
+        })
+      );
+      idWeeklyReport = newWeeklyReport.data.createWeeklyReport.id;
+      console.log(
+        newWeeklyReport.data.createWeeklyReport,
+        "createWeeklyReport"
+      );
+      console.log("success creating WeeklyReport");
+    } catch (error) {
+      console.log("there is an error with creating WeeklyReport,", error);
+    }
+
+    //----------------------========== Update DR ============------
+    try {
+      delete dailyReport.createdAt;
+      delete dailyReport.updatedAt;
+      console.log(dailyReport, "        DR       ");
+      const dailyReportUpdate = await API.graphql(
+        graphqlOperation(updateDailyReport, {
+          input: {
+            id: dailyReport.id,
+            weeklyTarget: dailyReport.weeklyTarget,
+            dailyTarget: dailyReport.dailyTarget,
+            dailyReportWeeklyReportId: idWeeklyReport,
+            // newWeeklyReport.data.createWeeklyReport.id,
+          },
+        })
+      );
+      setDailyReport(dailyReportUpdate.data.updateDailyReport);
+      console.log(
+        dailyReportUpdate.data.updateDailyReport,
+        "updateDailyReport"
+      );
+      console.log("success updating DR");
+    } catch (error) {
+      console.log("there is an error with updating DR,", error);
+    }
+
     setForm({});
     setListKpi([]);
     setBackButton(false);
@@ -484,21 +569,21 @@ const CampaignForm = () => {
                     <Grid
                       relaxed="very"
                       // padded
-                      columns={3}
+                      columns={4}
                       // stretched
                     >
                       {/* ---------------------------------------------- */}
                       {/* //============ROW================= */}
                       <Grid.Row
-                        columns={4}
-                        // stretched
-                        // centered
+                      // columns={3}
+                      // stretched
+                      // centered
                       >
                         <Grid.Column>
                           <h4 className="kpi-header">KPI's</h4>
                         </Grid.Column>
                         <Grid.Column>
-                          <h4 className="kpi-header">Coeff.</h4>
+                          <h4 className="kpi-header">KPI Points</h4>
                         </Grid.Column>
                         <Grid.Column>
                           <h4 className="kpi-header">Assign Targets</h4>
@@ -579,18 +664,18 @@ const CampaignForm = () => {
                               }}
                             >
                               <Form.Input
-                                placeholder="1-100"
+                                placeholder="ex: 2, 5, 10"
                                 name="target"
                                 value={Number(form.target) || ""}
                                 onChange={onChange}
                                 fluid
                               />
                             </Grid.Column>
-                            <Grid.Column width={1}>
+                            {/* <Grid.Column width={1}>
                               <div className="centerSized">
                                 <Icon name="percent" fitted size="large" />
                               </div>
-                            </Grid.Column>
+                            </Grid.Column> */}
                           </Grid.Row>
                         </>
                       ) : null}
