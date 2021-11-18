@@ -64,8 +64,6 @@ function Campaigns() {
         graphqlOperation(searchCampaigns, variables)
       );
 
-      //
-
       //----------------------setStates-----------
       setCampaigns(campaignData.data.searchCampaigns.items);
       console.log(campaignData.data.searchCampaigns, "campaing");
@@ -156,7 +154,15 @@ function Campaigns() {
                   <Icon
                     as={Icon}
                     name="circle thin"
-                    color={campaign.status === "true" ? "green" : "grey"}
+                    color={
+                      campaign.status === "true"
+                        ? "green"
+                        : campaign.status === "not yet"
+                        ? "blue"
+                        : campaign.status === "done"
+                        ? "red"
+                        : "grey"
+                    }
                   />
                 </Table.Cell>
               </Table.Row>
@@ -190,46 +196,46 @@ export default Campaigns;
 
 // const now = new Date().getTime();
 // for (let i = 0; i < campaignData.data.searchCampaigns.items.length; i++) {
-//   if (!campaignData.data.searchCampaigns.items[i].status) {
-//     const startTime = new Date(
-//       campaignData.data.searchCampaigns.items[i].startDate
-//     ).getTime();
-//     const endTime = new Date(
-//       campaignData.data.searchCampaigns.items[i].endDate
-//     ).getTime();
+//   // if (!campaignData.data.searchCampaigns.items[i].status) {
+//   const startTime = new Date(
+//     campaignData.data.searchCampaigns.items[i].startDate
+//   ).getTime();
+//   const endTime = new Date(
+//     campaignData.data.searchCampaigns.items[i].endDate
+//   ).getTime();
 
-//     if (now >= startTime && now <= endTime) {
-//       campaignData.data.searchCampaigns.items[i].status = "true";
-//       // const elem = campaignData.data.searchCampaigns.items[i];
-//       // console.log(elem, "elem");
-//       // delete elem.createdAt;
-//       // delete elem.updatedAt;
-//       // delete elem.client;
-//       // delete elem.agent;
-//       // delete elem.dailyReports;
-//       // delete elem.weeklyReports;
-//       // delete elem.monthlyReports;
-//       // delete elem.kpis;
-//       // const campaignUpdate = await API.graphql(
-//       //   graphqlOperation(updateCampaign, { input: elem })
-//       // );
-//     }
-
-//     if (now <= startTime || now >= endTime) {
-//       campaignData.data.searchCampaigns.items[i].status = "false";
-//       // const elem = campaignData.data.searchCampaigns.items[i];
-//       // console.log(elem, "elem");
-//       // delete elem.createdAt;
-//       // delete elem.updatedAt;
-//       // delete elem.client;
-//       // delete elem.agent;
-//       // delete elem.dailyReports;
-//       // delete elem.weeklyReports;
-//       // delete elem.monthlyReports;
-//       // delete elem.kpis;
-//       // const campaignUpdate = await API.graphql(
-//       //   graphqlOperation(updateCampaign, { input: elem })
-//       // );
-//     }
+//   if (now < startTime) {
+//     campaignData.data.searchCampaigns.items[i].status = "not yet";
+//     const elem = campaignData.data.searchCampaigns.items[i];
+//     console.log(elem, "elem");
+//     delete elem.createdAt;
+//     delete elem.updatedAt;
+//     delete elem.client;
+//     delete elem.agent;
+//     delete elem.dailyReports;
+//     delete elem.weeklyReports;
+//     delete elem.monthlyReports;
+//     delete elem.kpis;
+//     const campaignUpdate = await API.graphql(
+//       graphqlOperation(updateCampaign, { input: elem })
+//     );
 //   }
+
+//   if (now > endTime) {
+//     campaignData.data.searchCampaigns.items[i].status = "done";
+//     const elem = campaignData.data.searchCampaigns.items[i];
+//     console.log(elem, "elem");
+//     delete elem.createdAt;
+//     delete elem.updatedAt;
+//     delete elem.client;
+//     delete elem.agent;
+//     delete elem.dailyReports;
+//     delete elem.weeklyReports;
+//     delete elem.monthlyReports;
+//     delete elem.kpis;
+//     const campaignUpdate = await API.graphql(
+//       graphqlOperation(updateCampaign, { input: elem })
+//     );
+//   }
+//   // }
 // }
