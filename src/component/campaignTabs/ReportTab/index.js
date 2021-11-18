@@ -1,36 +1,31 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { Header, Form, Table, Segment } from "semantic-ui-react";
+import { Header, Form, Table, Segment, TableCell } from "semantic-ui-react";
+import { createDailyReport, createKpi } from "../../../graphql/mutations";
 import { getDailyReport } from "../../../graphql/queries";
-import { getYYYYMMDD } from "../../../lib/function";
-//====================
-//      function
-//====================
-const ReportTab = ({ campaignDetails: { startDate } }) => {
+import { getDateOfISOWeek, getYYYYMMDD } from "../../../lib/function";
+var currentWeekNumber = require("current-week-number");
+//=====================
+//     + function +
+//=====================
+const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
   const { dailyReportId } = useParams();
   console.log(dailyReportId);
-  var currentWeekNumber = require("current-week-number");
   const [kpis, setKpis] = useState([]);
-  // console.log(dailyReportId, "dailyReportId");
-  // console.log(dailyReportId?.items[0].id, "dailyReportId.items.id");
-  // let location = useLocation();
-  // console.log(location, "LOCATION");
+  const [dailyReport, setDailyReport] = useState({});
+  const d = new Date().toString().slice(0, 3);
+  console.log(d, "d");
   //####################################################
-  //                GET the WEEK we are in
+  //     GET the first day of the WEEK we are in
   //####################################################
-  function getDateOfISOWeek(w, y) {
-    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-    var dow = simple.getDay();
-    var ISOweekStart = simple;
-    if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
-    else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
-    return ISOweekStart;
-  }
-  //----------------------------------------------
   const startWeekDate = getDateOfISOWeek(
     currentWeekNumber(new Date()),
     new Date().getFullYear()
+  );
+  console.log(
+    getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear()),
+    "STARTWEEKDATE"
   );
   const lastDay = startWeekDate.getDate() + 4;
   const endWeekDate = new Date(startWeekDate);
@@ -59,7 +54,7 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
     return weekArray;
   };
   const weekArray = getDaysArray(startWeekDate, endWeekDate);
-  //xxxxxxxxxxxxxxxxxxxx
+
   //#####################################################
   //               FETCH DAILY-REPORT
   //#####################################################
@@ -72,69 +67,164 @@ const ReportTab = ({ campaignDetails: { startDate } }) => {
           })
         );
         console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
+        if (
+          new Date().getDay() === 2 &&
+          dailyReportData.data.getDailyReport.kpis.items?.nextWeekTarget
+        ) {
+          console.log("piuouPIOU");
+        }
+        setDailyReport(dailyReportData.data.getDailyReport);
         setKpis(dailyReportData.data.getDailyReport.kpis.items);
         console.log("succes Kpis");
       }
     } catch (error) {
-      console.log("there is an error with getDailyReport", error);
+      console.log("There is an error with getDailyReport", error);
     }
   };
+  //#####################################################
+  //               FETCH DAILY-REPORT
+  //#####################################################
+  const newDailyReport = async () => {
+    const kpisSaved = dailyReport.kpis.items;
+    let idReport = "";
+    console.log(dailyReport, "dailyreport sub");
+    try {
+      console.log("coucou");
+      //here can choose btween id from campaign or camp of DR
+      delete dailyReport.kpis;
+      delete dailyReport.id;
+      delete dailyReport.campaign;
+      delete dailyReport.createdAt;
+      delete dailyReport.updatedAt;
+      delete dailyReport.weeklyReport;
+      delete dailyReport.monthlyReport;
+      const createNewDR = await API.graphql(
+        graphqlOperation(createDailyReport, {
+          input: { dailyReportCampaignId: id, ...dailyReport },
+        })
+      );
+      idReport = createNewDR.data.createDailyReport.id;
+      console.log(createNewDR.data.createDailyReport, "createNewDR");
+    } catch (error) {
+      console.log("There is an erro with create Daily Report", error);
+    }
+    console.log(kpisSaved, "SAVED");
+    try {
+      console.log("1");
+      for (let i = 0; i < kpisSaved.length; i++) {
+        console.log("2");
+        delete kpisSaved[i].createdAt;
+        delete kpisSaved[i].updatedAt;
+        delete kpisSaved[i].id;
+        const newKpi = await API.graphql(
+          graphqlOperation(createKpi, {
+            input: {
+              kpiAgentId: agent.id,
+              kpiCampaignId: id,
+              kpiDailyReportId: idReport,
+              ...kpisSaved[i],
+            },
+          })
+        );
+        console.log("coco");
+        console.log(newKpi.data.createKpi, "kpi");
+      }
+    } catch (error) {
+      console.log("There is an erro with create Kpi ", error);
+    }
+
+    console.log("succes with updating A L L RESULTS");
+  };
+
   useEffect(() => fetchDailyReport(), [dailyReportId]);
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   console.log(kpis, "KPIS");
   console.log(kpis.result, "KPIS.RESULT");
+  console.log(id, "ID");
   return dailyReportId ? (
-    <Table
-      striped
-      padded
-      singleLine
-      inverted
-      celled
-      fluid
-      style={{ marginBottom: 0 }}
-    >
-      <Table.Header>
-        <Table.Row style={{ backgroundColor: "#566A63" }}>
-          <Table.HeaderCell className="dFlex-sBetween">
-            Week {currentWeekNumber(startDate)}
-          </Table.HeaderCell>
-          {dailyReportId &&
-            kpis.map((oneKpi) => (
-              <Table.HeaderCell width={2} key={oneKpi.name}>
-                {oneKpi.name}
-              </Table.HeaderCell>
-            ))}
-
-          {/* <Table.HeaderCell width={2}>KPiTwo</Table.HeaderCell> */}
-          <Table.HeaderCell>Daily Points</Table.HeaderCell>
-          <Table.HeaderCell>% Points</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {weekArray.map((oneDay, idx) => (
-          <Table.Row>
-            <Table.Cell>
-              <Header as="h4" inverted>
-                {oneDay}
-              </Header>
-            </Table.Cell>
-            {kpis &&
-              kpis.map((kpi, idx) => (
-                <Table.Cell width={2}>
-                  {/* {kpi.name} */}
-                  <Form.Input
-                    type="text"
-                    style={{ maxWidth: "5vw" }}
-                    placeholder={`${kpi.name}`}
-                    // name="firstName"
-                    // value={form.firstName || ""}
-                    // onChange={onChange}
-                  />
-                </Table.Cell>
+    <Form onSubmit={newDailyReport}>
+      <Table
+        striped
+        padded
+        singleLine
+        inverted
+        celled
+        fluid
+        style={{ marginBottom: 0 }}
+      >
+        <Table.Header>
+          <Table.Row style={{ backgroundColor: "#566A63" }}>
+            <Table.HeaderCell className="dFlex-sBetween">
+              Week {currentWeekNumber(new Date())}
+            </Table.HeaderCell>
+            {dailyReportId &&
+              kpis.map((oneKpi) => (
+                <Table.HeaderCell width={2} key={oneKpi.name}>
+                  {oneKpi.name}
+                </Table.HeaderCell>
               ))}
+
+            <Table.HeaderCell>Daily Points</Table.HeaderCell>
+            <Table.HeaderCell>% Points</Table.HeaderCell>
           </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
+        </Table.Header>
+        <Table.Body>
+          {weekArray.map((oneDay, idx) => (
+            <Table.Row>
+              <Table.Cell>
+                <Header
+                  as="h4"
+                  inverted
+                  color={oneDay.slice(0, 3) === d ? "green" : null}
+                >
+                  {oneDay}
+                </Header>
+              </Table.Cell>
+              {/* {oneDay !== d && <Table.Cell width={2}>coucouc</Table.Cell>} */}
+              {kpis &&
+                kpis.map((kpi, idx) => (
+                  <Table.Cell width={2}>
+                    {oneDay.slice(0, 3) === d && status === "true" && (
+                      <Form.Input
+                        type="text"
+                        style={{ maxWidth: "5vw" }}
+                        placeholder={`${kpi.name}`}
+                        disabled={oneDay.slice(0, 3) !== d}
+                        inverted
+                        transparent
+                        onChange={(e) => {
+                          const result = Number(e.target.value);
+                          // console.log(target, "TAR GET");
+                          setKpis((currentResult) =>
+                            currentResult.map((x) =>
+                              x.id === kpi.id ? { ...x, result } : x
+                            )
+                          );
+                        }}
+                        value={kpi.result || ""}
+                      />
+                    )}
+                    {/* {oneDay.slice(0, 3) !== d && kpi.result} */}
+                  </Table.Cell>
+                ))}
+              {oneDay.slice(0, 3) === d && status === "true" && (
+                <TableCell colSpan="2">
+                  <Form.Button
+                    type="submit"
+                    color="green"
+                    fluid
+                    // onClick={newDailyReport}
+                  >
+                    Submit your work
+                  </Form.Button>
+                </TableCell>
+              )}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    </Form>
   ) : (
     <Segment as={Header}>That Campaign doesn't have a Daily Report</Segment>
   );

@@ -10,6 +10,9 @@ import WeeklySummaryTab from "../component/campaignTabs/WeeklySummaryTab";
 import MonthlyTotalsTab from "../component/campaignTabs/MonthlyTotalsTab";
 import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
 import TargetSummaryTab from "../component/campaignTabs/TargetsSummaryTab";
+import { setStatus } from "../lib/function";
+import { useKpis } from "../context/Provider";
+
 //x
 function CampaignDetails() {
   let history = useHistory();
@@ -17,11 +20,12 @@ function CampaignDetails() {
     history.goBack();
   };
   const { name, id } = useParams();
+  const { kpis, setKpis } = useKpis();
   const [campaignDetails, setCampaignDetails] = useState({});
   const [edit, setEdit] = useState(false);
   // const [status, setStatus] = useState(false);
-  console.log({ name, id }, "params");
-  var currentWeekNumber = require("current-week-number");
+  // console.log({ name, id }, "params");
+  // var currentWeekNumber = require("current-week-number");
 
   //--
   const fetchCampaign = async () => {
@@ -30,17 +34,20 @@ function CampaignDetails() {
         graphqlOperation(getCampaign, { id: id })
       );
       //xxxxxxxxxxxxxxxxxxxx Status xxxxxxxxxx
-      const start = currentWeekNumber(campaignData.data.getCampaign.startDate);
-      const end = currentWeekNumber(campaignData.data.getCampaign.endDate);
-      const now = currentWeekNumber(new Date());
-      console.log(start, end, now, "startendnow");
-      // const status = "false";
-      if (now >= start && now <= end) {
-        campaignData.data.getCampaign.status = "true";
-      }
+      // const { startDate, endDate } = campaignData.data.getCampaign;
+      // const now = new Date().getTime();
+      // const startTime = new Date(startDate).getTime();
+      // const endTime = new Date(endDate).getTime();
+      // // console.log(now, "NOW");
+      // // console.log(startTime, "startTime");
+      // // console.log(endTime, "endTime");
+      // if (now >= startTime && now <= endTime) {
+      //   campaignData.data.getCampaign.status = "true";
+      // }
       //xxxxxxxxxxxxxxxxxxxx xxxxxxxxxx xxxxxxxxxx
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
+      setKpis(campaignData.data.getCampaign.kpis.items);
       console.log(campaignData.data.getCampaign, "campaignData");
       console.log("succes campaignData");
     } catch (error) {
@@ -56,6 +63,9 @@ function CampaignDetails() {
     updatedAt,
     createdAt,
     dailyReports,
+    weeklyReports,
+    monthlyReports,
+    // kpis,
     notes,
     client,
     agent,
@@ -63,6 +73,7 @@ function CampaignDetails() {
   } = campaignDetails;
   console.log(status, "STA TUS");
   console.log(dailyReports?.items[0], "dailyReports");
+  //'
   const panes = [
     {
       menuItem: {
@@ -115,17 +126,17 @@ function CampaignDetails() {
         as: NavLink,
         id: "tab3",
         content: "Weekly Summary",
-        to: `/campaign/${name}/${id}/weeklySummary`,
+        to: `/campaign/${name}/${id}/weeklySummary/${weeklyReports?.items[0]?.id}`,
         exact: true,
         key: "weeklySummary",
       },
       pane: (
         <Route
-          path={`/campaign/${name}/${id}/weeklySummary`}
+          path={`/campaign/${name}/${id}/weeklySummary/:weeklyReportId`}
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
-              <WeeklySummaryTab />
+              <WeeklySummaryTab kpis={kpis} />
             </Tab.Pane>
           )}
         />
@@ -136,13 +147,13 @@ function CampaignDetails() {
         as: NavLink,
         id: "tab4",
         content: "Monthly Totals",
-        to: `/campaign/${name}/${id}/monthlyTotals`,
+        to: `/campaign/${name}/${id}/monthlyTotals/${monthlyReports?.items[0]?.id}`,
         exact: true,
         key: "monthlyTotals",
       },
       pane: (
         <Route
-          path={`/campaign/${name}/${id}/monthlyTotals`}
+          path={`/campaign/${name}/${id}/monthlyTotals/:monthlyReportId`}
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
@@ -167,7 +178,13 @@ function CampaignDetails() {
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
-              <TargetSummaryTab />
+              <TargetSummaryTab
+                dayTarget={dailyReports?.items[0].dailyTarget}
+                week1={dailyReports?.items[0].weeklyTarget}
+                week2={null}
+                week3={null}
+                week4={null}
+              />
             </Tab.Pane>
           )}
         />
@@ -188,13 +205,14 @@ function CampaignDetails() {
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
-              <KpiPointsTab />
+              <KpiPointsTab kpis={kpis} />
             </Tab.Pane>
           )}
         />
       ),
     },
   ];
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   return (
     <>
       <Button
@@ -219,7 +237,7 @@ function CampaignDetails() {
           <Icon
             as={Icon}
             name="circle thin"
-            color={status ? "green" : "grey"}
+            color={status === "true" ? "green" : "grey"}
           />
         </div>
         <div className="dFlex" as="h3">

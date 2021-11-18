@@ -5,12 +5,14 @@ import {
   Header,
   Dropdown,
   Icon,
+  Input,
   TextArea,
   Form,
   Table,
   List,
   Confirm,
   Sidebar,
+  Select,
 } from "semantic-ui-react";
 import { countries } from "../arrayLists/index";
 import { useClient, useSearch, useVisible } from "../context/Provider";
@@ -216,25 +218,26 @@ function ClientDetails() {
                   {campaigns?.items ? (
                     <>
                       <Card.Group>
-                        <Dropdown
-                          search
-                          icon="search"
-                          selection
-                          options={campaigns?.items.map((campaign) => {
-                            return {
-                              key: campaign.id,
-                              text: campaign.name,
-                              value: campaign.id,
-                            };
-                          })}
-                          placeholder="Find a Campaign"
-                        />
+                        <Input icon="search" iconPosition="left" action>
+                          <Select
+                            search
+                            selection
+                            options={campaigns?.items.map((campaign) => {
+                              return {
+                                key: campaign.id,
+                                text: campaign.name,
+                                value: campaign.id,
+                              };
+                            })}
+                            placeholder="Find a Campaign"
+                          />
 
-                        <Button
-                          content="Go"
-                          attached="right"
-                          // className="dFlex"
-                        />
+                          <Button
+                            content="Go"
+                            // attached="right"
+                            // className="dFlex"
+                          />
+                        </Input>
                       </Card.Group>
 
                       <Card.Group>

@@ -16,6 +16,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { searchCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
 import { getYYYYMMDD } from "../lib/function";
+import { updateCampaign } from "../graphql/mutations";
 
 // import { fetchClients } from "../fetch/FetchClients";
 //#################################################
@@ -62,6 +63,9 @@ function Campaigns() {
       const campaignData = await API.graphql(
         graphqlOperation(searchCampaigns, variables)
       );
+
+      //
+
       //----------------------setStates-----------
       setCampaigns(campaignData.data.searchCampaigns.items);
       console.log(campaignData.data.searchCampaigns, "campaing");
@@ -94,6 +98,7 @@ function Campaigns() {
     filteredCampaigns,
     maxPages,
   ]);
+  console.log(campaigns, "CAMPAIGNS");
   //#################################################
   //           RENDER
   //################################################
@@ -134,12 +139,12 @@ function Campaigns() {
                 }
               >
                 <Table.Cell>
-                  {campaign.client.firstName}&nbsp;&nbsp;
-                  {campaign.client.lastName}
+                  {campaign.client?.firstName}&nbsp;&nbsp;
+                  {campaign.client?.lastName}
                 </Table.Cell>
                 <Table.Cell collapsing>{campaign.name}</Table.Cell>
                 <Table.Cell textAlign="center">
-                  {campaign.agent.name}
+                  {campaign.agent?.name}
                 </Table.Cell>
                 <Table.Cell collapsing>
                   {campaign.startDate.split("-").reverse().join("-")}
@@ -151,7 +156,7 @@ function Campaigns() {
                   <Icon
                     as={Icon}
                     name="circle thin"
-                    // color={status ? "green" : "grey"}
+                    color={campaign.status === "true" ? "green" : "grey"}
                   />
                 </Table.Cell>
               </Table.Row>
@@ -182,3 +187,49 @@ function Campaigns() {
 }
 
 export default Campaigns;
+
+// const now = new Date().getTime();
+// for (let i = 0; i < campaignData.data.searchCampaigns.items.length; i++) {
+//   if (!campaignData.data.searchCampaigns.items[i].status) {
+//     const startTime = new Date(
+//       campaignData.data.searchCampaigns.items[i].startDate
+//     ).getTime();
+//     const endTime = new Date(
+//       campaignData.data.searchCampaigns.items[i].endDate
+//     ).getTime();
+
+//     if (now >= startTime && now <= endTime) {
+//       campaignData.data.searchCampaigns.items[i].status = "true";
+//       // const elem = campaignData.data.searchCampaigns.items[i];
+//       // console.log(elem, "elem");
+//       // delete elem.createdAt;
+//       // delete elem.updatedAt;
+//       // delete elem.client;
+//       // delete elem.agent;
+//       // delete elem.dailyReports;
+//       // delete elem.weeklyReports;
+//       // delete elem.monthlyReports;
+//       // delete elem.kpis;
+//       // const campaignUpdate = await API.graphql(
+//       //   graphqlOperation(updateCampaign, { input: elem })
+//       // );
+//     }
+
+//     if (now <= startTime || now >= endTime) {
+//       campaignData.data.searchCampaigns.items[i].status = "false";
+//       // const elem = campaignData.data.searchCampaigns.items[i];
+//       // console.log(elem, "elem");
+//       // delete elem.createdAt;
+//       // delete elem.updatedAt;
+//       // delete elem.client;
+//       // delete elem.agent;
+//       // delete elem.dailyReports;
+//       // delete elem.weeklyReports;
+//       // delete elem.monthlyReports;
+//       // delete elem.kpis;
+//       // const campaignUpdate = await API.graphql(
+//       //   graphqlOperation(updateCampaign, { input: elem })
+//       // );
+//     }
+//   }
+// }

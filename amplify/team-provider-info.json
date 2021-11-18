@@ -10,6 +10,18 @@
       "StackName": "amplify-dashboardforninjagql-dev-190119",
       "StackId": "arn:aws:cloudformation:ap-southeast-1:847054957517:stack/amplify-dashboardforninjagql-dev-190119/a1a9d9a0-2441-11ec-a8f6-068bdc3a7ec0",
       "AmplifyAppId": "dcc5jfrf7panr"
+    },
+    "categories": {
+      "function": {
+        "newWeek": {
+          "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
+          "s3Key": "amplify-builds/newWeek-70664f684a334b303555-build.zip"
+        },
+        "newWeekChanges": {
+          "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
+          "s3Key": "amplify-builds/newWeekChanges-6b763831496b6f644d38-build.zip"
+        }
+      }
     }
   }
 }

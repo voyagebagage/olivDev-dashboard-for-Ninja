@@ -1,11 +1,12 @@
 import { createContext, useContext, useState } from "react";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 //-----------------------------------
 const FetchContext = createContext();
 const SearchContext = createContext();
 const DropDownContext = createContext();
 const SingleClientContext = createContext();
 const CampaignContext = createContext();
+const KpisContext = createContext();
 const SidebarVisibleContext = createContext();
 //----------------------------------------------
 export function useFetch() {
@@ -23,12 +24,15 @@ export function useClient() {
 export function useCampaign() {
   return useContext(CampaignContext);
 }
+export function useKpis() {
+  return useContext(KpisContext);
+}
 export function useVisible() {
   return useContext(SidebarVisibleContext);
 }
 //------------------------------------------------
 export const GlobalProvider = ({ children }) => {
-  let location = useLocation();
+  // let location = useLocation();
   // const [authState, authDispatch] = useReducer(auth, authInitialState);
   // const [contactsState, contactsDispatch] = useReducer(
   //   contacts,
@@ -55,6 +59,7 @@ export const GlobalProvider = ({ children }) => {
   const [from, setFrom] = useState(0);
 
   //-----------------
+  const [kpis, setKpis] = useState([]);
   //-----------------
   const [clientDetails, setClientDetails] = useState({});
   const [clients, setClients] = useState([]);
@@ -90,28 +95,30 @@ export const GlobalProvider = ({ children }) => {
         <CampaignContext.Provider
           value={{ filteredCampaigns, setFilteredCampaigns }}
         >
-          <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
-            <SingleClientContext.Provider
-              value={{
-                clientDetails,
-                setClientDetails,
-                clients,
-                setClients,
-              }}
-            >
-              <SearchContext.Provider
+          <KpisContext.Provider value={{ kpis, setKpis }}>
+            <SidebarVisibleContext.Provider value={{ visible, setVisible }}>
+              <SingleClientContext.Provider
                 value={{
-                  filteredResults,
-                  setFilteredResults,
-                  search,
-                  setSearch,
-                  initialState,
+                  clientDetails,
+                  setClientDetails,
+                  clients,
+                  setClients,
                 }}
               >
-                {children}
-              </SearchContext.Provider>
-            </SingleClientContext.Provider>
-          </SidebarVisibleContext.Provider>
+                <SearchContext.Provider
+                  value={{
+                    filteredResults,
+                    setFilteredResults,
+                    search,
+                    setSearch,
+                    initialState,
+                  }}
+                >
+                  {children}
+                </SearchContext.Provider>
+              </SingleClientContext.Provider>
+            </SidebarVisibleContext.Provider>
+          </KpisContext.Provider>
         </CampaignContext.Provider>
       </FetchContext.Provider>
     </DropDownContext.Provider>

@@ -14,7 +14,11 @@ export const PaginationShortCentered = ({
         activePage={targetPage}
         defaultActivePage={1}
         boundaryRange={undefined}
-        ellipsisItem={maxPages / 2 >= targetPage ? maxPages / 2 : null}
+        ellipsisItem={
+          maxPages / 2 >= targetPage && maxPages % 2 === 0
+            ? maxPages / 2
+            : maxPages / 2 + 0.5
+        }
         firstItem={targetPage < 4 ? null : 1}
         lastItem={null}
         siblingRange={0}

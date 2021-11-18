@@ -77,31 +77,25 @@ function Agent() {
                   style={{ maxWidth: "10vw" }}
                   className="campaignsTagsUl"
                 >
-                  {agent.campaigns.items
-                    .slice(0)
-                    .reverse()
-                    .map((campaign, idx) => {
-                      console.log(campaign);
-                      console.log(
-                        agent.campaigns.items,
-                        "agent.campaigns.items"
-                      );
-                      return (
-                        <Link
-                          to={`/agent-report/${agent.name}/${campaign.name}/${campaign.id}`}
-                          key={campaign.id}
+                  {agent.campaigns.items.map((campaign, idx) => {
+                    console.log(campaign);
+                    console.log(agent.campaigns.items, "agent.campaigns.items");
+                    return (
+                      <Link
+                        to={`/agent-report/${agent.name}/${campaign.name}/${campaign.id}`}
+                        key={campaign.id}
+                      >
+                        <Label
+                          basic
+                          color="black"
+                          style={{ marginRight: "1.5%" }}
+                          // className="campaignsTagsli"
                         >
-                          <Label
-                            basic
-                            color="black"
-                            style={{ marginRight: "1.5%" }}
-                            // className="campaignsTagsli"
-                          >
-                            {campaign.name}
-                          </Label>
-                        </Link>
-                      );
-                    })}
+                          {campaign.name}
+                        </Label>
+                      </Link>
+                    );
+                  })}
                 </Table.Cell>
                 <Table.Cell textAlign="center">{idx + 1}</Table.Cell>
               </Table.Row>

@@ -16,5 +16,18 @@
         }
       }
     }
+  },
+  "function": {
+    "newWeek": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "newWeekChanges": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    }
   }
 }

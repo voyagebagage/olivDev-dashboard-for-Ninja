@@ -34,6 +34,7 @@ import {
 // import { getYYYYMMDD } from "../lib/function";
 // import { v4 as uuidv4 } from "uuid";
 import useForm from "./useForm";
+import { setStatus } from "../lib/function";
 
 const CampaignForm = () => {
   const {
@@ -114,15 +115,22 @@ const CampaignForm = () => {
   //                     CAMPAIGN
   //#########################################################
   //-
+
   //-----------------===========Add============------------------
   const addCampaign = async () => {
     setStep2(true);
     setIsSubmitting(true);
-    console.log(backButton, "backButton -OUT");
+    // console.log(backButton, "backButton -OUT");
 
     if (!backButton) {
-      console.log(backButton, "!backButton ");
-
+      // console.log(backButton, "!backButton ");
+      // setStatus(form.startDate, form.endDate, form.status);
+      const now = new Date().getTime();
+      const startTime = new Date(form.startDate).getTime();
+      const endTime = new Date(form.endDate).getTime();
+      if (now >= startTime && now <= endTime) form.status = "true";
+      if (now <= startTime || now >= endTime) form.status = "false";
+      form.category = "campaign";
       let idDailyReport = "";
       try {
         const newCampaignData = await API.graphql(
@@ -136,7 +144,6 @@ const CampaignForm = () => {
         setNewCampaign(newCampaignData.data.createCampaign);
         idDailyReport = newCampaignData.data.createCampaign.id;
         console.log(newCampaignData.data.createCampaign, "newCampaignData");
-        console.log(newCampaign, "newCampaign");
         console.log("succes createCampaign");
       } catch (error) {
         console.log("Error with create new Campaign", error);
@@ -177,6 +184,13 @@ const CampaignForm = () => {
         delete form.dailyReports;
         delete form.createdAt;
         delete form.updatedAt;
+        //---upgrading status
+        const now = new Date().getTime();
+        const startTime = new Date(form.startDate).getTime();
+        const endTime = new Date(form.endDate).getTime();
+        if (now >= startTime && now <= endTime) form.status = "true";
+        if (now <= startTime || now >= endTime) form.status = "false";
+        //----------
         const campaignUpdate = await API.graphql(
           graphqlOperation(updateCampaign, { input: form })
         );
@@ -203,6 +217,7 @@ const CampaignForm = () => {
       // setIsSubmitting(true);
       form.kpiDailyReportId = dailyReport.id;
       form.kpiAgentId = dailyReport.campaign.agent.id;
+      form.kpiCampaignId = newCampaign.id;
       const newKpi = await API.graphql(
         graphqlOperation(createKpi, { input: form })
       );
@@ -278,6 +293,7 @@ const CampaignForm = () => {
         graphqlOperation(createMonthlyReport, {
           input: {
             monthlyTarget: dailyReport.dailyTarget * daysInMonth,
+            monthlyReportCampaignId: newCampaign.id,
           },
         })
       );
@@ -297,6 +313,7 @@ const CampaignForm = () => {
         graphqlOperation(createWeeklyReport, {
           input: {
             weeklyReportMonthlyReportId: idMonthlyReport,
+            weeklyReportCampaignId: newCampaign.id,
             weeklyTarget: dailyReport.weeklyTarget,
           },
         })

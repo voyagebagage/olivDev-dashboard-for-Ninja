@@ -105,6 +105,7 @@ export const getAgent = /* GraphQL */ `
           name
           result
           target
+          nextWeekTarget
           coeff
           createdAt
           updatedAt
@@ -369,6 +370,40 @@ export const getCampaign = /* GraphQL */ `
         }
         nextToken
       }
+      weeklyReports {
+        items {
+          id
+          willBeActiveOn
+          createdAt
+          weeklyTarget
+          weeklyPoints
+          updatedAt
+        }
+        nextToken
+      }
+      monthlyReports {
+        items {
+          id
+          createdAt
+          monthlyTarget
+          monthlyPoints
+          updatedAt
+        }
+        nextToken
+      }
+      kpis {
+        items {
+          id
+          name
+          result
+          target
+          nextWeekTarget
+          coeff
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -418,6 +453,15 @@ export const listCampaigns = /* GraphQL */ `
         length
         notes
         dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
           nextToken
         }
         updatedAt
@@ -470,6 +514,15 @@ export const getDailyReport = /* GraphQL */ `
         dailyReports {
           nextToken
         }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
         updatedAt
       }
       kpis {
@@ -478,6 +531,7 @@ export const getDailyReport = /* GraphQL */ `
           name
           result
           target
+          nextWeekTarget
           coeff
           createdAt
           updatedAt
@@ -488,6 +542,20 @@ export const getDailyReport = /* GraphQL */ `
       dailyTarget
       weeklyReport {
         id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         dailyReports {
           nextToken
         }
@@ -538,6 +606,7 @@ export const listDailyReports = /* GraphQL */ `
         dailyTarget
         weeklyReport {
           id
+          willBeActiveOn
           createdAt
           weeklyTarget
           weeklyPoints
@@ -555,6 +624,58 @@ export const getWeeklyReport = /* GraphQL */ `
   query GetWeeklyReport($id: ID!) {
     getWeeklyReport(id: $id) {
       id
+      willBeActiveOn
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
       dailyReports {
         items {
           id
@@ -570,6 +691,19 @@ export const getWeeklyReport = /* GraphQL */ `
       weeklyTarget
       monthlyReport {
         id
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         createdAt
         monthlyTarget
         weeklyReports {
@@ -592,6 +726,20 @@ export const listWeeklyReports = /* GraphQL */ `
     listWeeklyReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         dailyReports {
           nextToken
         }
@@ -615,11 +763,63 @@ export const getMonthlyReport = /* GraphQL */ `
   query GetMonthlyReport($id: ID!) {
     getMonthlyReport(id: $id) {
       id
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
       createdAt
       monthlyTarget
       weeklyReports {
         items {
           id
+          willBeActiveOn
           createdAt
           weeklyTarget
           weeklyPoints
@@ -641,6 +841,19 @@ export const listMonthlyReports = /* GraphQL */ `
     listMonthlyReports(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         createdAt
         monthlyTarget
         weeklyReports {
@@ -656,10 +869,62 @@ export const listMonthlyReports = /* GraphQL */ `
 export const getKpi = /* GraphQL */ `
   query GetKpi($id: ID!) {
     getKpi(id: $id) {
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
       id
       name
       result
       target
+      nextWeekTarget
       coeff
       dailyReport {
         id
@@ -683,6 +948,7 @@ export const getKpi = /* GraphQL */ `
         dailyTarget
         weeklyReport {
           id
+          willBeActiveOn
           createdAt
           weeklyTarget
           weeklyPoints
@@ -736,10 +1002,24 @@ export const listKpis = /* GraphQL */ `
   ) {
     listKpis(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         id
         name
         result
         target
+        nextWeekTarget
         coeff
         dailyReport {
           id
@@ -1033,6 +1313,19 @@ export const agentByTotalPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            category
+            name
+            type
+            startDate
+            endDate
+            createdAt
+            status
+            length
+            notes
+            updatedAt
+          }
           nextToken
         }
         kpis {
@@ -1104,6 +1397,78 @@ export const agentByName = /* GraphQL */ `
     }
   }
 `;
+export const campaignById = /* GraphQL */ `
+  query CampaignById(
+    $category: String
+    $id: ModelIDKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelCampaignFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    campaignById(
+      category: $category
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const campaignTypeByLength = /* GraphQL */ `
   query CampaignTypeByLength(
     $type: String
@@ -1159,6 +1524,15 @@ export const campaignTypeByLength = /* GraphQL */ `
         length
         notes
         dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
           nextToken
         }
         updatedAt
@@ -1222,6 +1596,15 @@ export const campaignByCreatedAt = /* GraphQL */ `
         length
         notes
         dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
           nextToken
         }
         updatedAt
@@ -1322,6 +1705,15 @@ export const searchCampaigns = /* GraphQL */ `
         dailyReports {
           nextToken
         }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
         updatedAt
       }
       nextToken
@@ -1366,6 +1758,7 @@ export const searchDailyReports = /* GraphQL */ `
         dailyTarget
         weeklyReport {
           id
+          willBeActiveOn
           createdAt
           weeklyTarget
           weeklyPoints
@@ -1397,6 +1790,20 @@ export const searchWeeklyReports = /* GraphQL */ `
     ) {
       items {
         id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         dailyReports {
           nextToken
         }
@@ -1434,6 +1841,19 @@ export const searchMonthlyReports = /* GraphQL */ `
     ) {
       items {
         id
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         createdAt
         monthlyTarget
         weeklyReports {
@@ -1463,10 +1883,24 @@ export const searchKpis = /* GraphQL */ `
       from: $from
     ) {
       items {
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
         id
         name
         result
         target
+        nextWeekTarget
         coeff
         dailyReport {
           id

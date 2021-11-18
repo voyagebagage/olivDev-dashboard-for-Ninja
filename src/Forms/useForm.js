@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export default () => {
   const [form, setForm] = useState({});
+  const [array, setArray] = useState([]);
   // const [form2, setForm2] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState("");
@@ -10,9 +11,9 @@ export default () => {
   const onChange = (e, { name, value }) => {
     setForm({ ...form, [name]: value });
   };
-  // const onChange2 = (e, { name, value }) => {
-  //   setForm({ ...form, [name]: value });
-  // };
+  const onChange2 = (e, { name, value }) => {
+    setArray([...array, (name = value)]);
+  };
 
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
@@ -51,6 +52,8 @@ export default () => {
     form,
     setForm,
     onChange,
+    array,
+    onChange2,
     clientFormValid,
     addKpiButtonValid,
     campaignFormValid,
