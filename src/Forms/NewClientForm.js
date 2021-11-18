@@ -24,7 +24,7 @@ const NewClientForm = ({ setVisible, clients, setClients }) => {
   // const [isSubmitting, setIsSubmitting] = useState(false);
   // const [errors, setErrors] = useState("");
 
-  //----to update whenever someone-call-createClient-instead of the --------------useEffect array--------------------
+  //----to update whenever someone-call-createClient-instead of the --------------Suscription--------------------
   useEffect(() => {
     const subscription = API.graphql(
       graphqlOperation(onCreateClient)
@@ -42,6 +42,8 @@ const NewClientForm = ({ setVisible, clients, setClients }) => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
+      form.category = "client";
+      form.website = `https://${form.website}`;
       const newClient = await API.graphql(
         graphqlOperation(createClient, { input: form })
       );

@@ -73,6 +73,7 @@ function CampaignDetails() {
   } = campaignDetails;
   console.log(status, "STA TUS");
   console.log(dailyReports?.items[0], "dailyReports");
+  console.log(dailyReports, "dailyReports ARRAY");
   //'
   const panes = [
     {

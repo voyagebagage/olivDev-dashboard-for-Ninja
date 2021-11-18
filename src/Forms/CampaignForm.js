@@ -218,6 +218,8 @@ const CampaignForm = () => {
       form.kpiDailyReportId = dailyReport.id;
       form.kpiAgentId = dailyReport.campaign.agent.id;
       form.kpiCampaignId = newCampaign.id;
+      form.coeff = Number(form.coeff);
+      form.target = Number(form.target);
       const newKpi = await API.graphql(
         graphqlOperation(createKpi, { input: form })
       );
@@ -478,7 +480,7 @@ const CampaignForm = () => {
                         <Form.Input
                           fluid
                           type="text"
-                          label="Campaign Type"
+                          label="Type"
                           name="type"
                           value={form.type || ""}
                           onChange={onChange}
@@ -488,7 +490,7 @@ const CampaignForm = () => {
                         <Form.Input
                           fluid
                           type="text"
-                          label="Campaign Length"
+                          label="Length"
                           name="length"
                           value={form.length || ""}
                           onChange={onChange}
@@ -667,9 +669,10 @@ const CampaignForm = () => {
                               }}
                             >
                               <Form.Input
+                                type="number"
                                 placeholder="ex:10"
                                 name="coeff"
-                                value={Number(form.coeff) || ""}
+                                value={form.coeff || ""}
                                 onChange={onChange}
                               />
                             </Grid.Column>
@@ -681,9 +684,10 @@ const CampaignForm = () => {
                               }}
                             >
                               <Form.Input
+                                type="number"
                                 placeholder="ex: 2, 5, 10"
                                 name="target"
-                                value={Number(form.target) || ""}
+                                value={form.target || ""}
                                 onChange={onChange}
                                 fluid
                               />

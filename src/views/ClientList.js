@@ -87,6 +87,13 @@ function Client() {
         graphqlOperation(searchClients, variables)
         // listClients, variables)
       );
+      console.log(clientData.data.searchClients.items, "+++++");
+      for (let i = 0; i <= clientData.data.searchClients.items; i++) {
+        if (clientData.data.searchClients.items[i].category) {
+          console.log("COUCOUC");
+        }
+      }
+
       //----------------------setStates-----------
       setClients(clientData.data.searchClients.items);
       //----onKeyPress === "Enter"---------------

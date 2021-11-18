@@ -3,7 +3,6 @@ import {
   Button,
   Segment,
   Header,
-  Dropdown,
   Icon,
   Input,
   TextArea,
@@ -42,6 +41,7 @@ function ClientDetails() {
   const [text, setText] = useState("");
   const [edit, setEdit] = useState(false);
   const [areYouSure, setAreYouSure] = useState(false);
+  const [campaign, setCampaign] = useState({});
   // const [upClient, setUpClient] = useState({});
   //------------------------------------------------
   const fetchClient = async () => {
@@ -151,6 +151,7 @@ function ClientDetails() {
   };
   console.log(clientDetails, "clientDetails");
   console.log(campaigns, "campaigns");
+  console.log(campaign, "campaign = - _ +");
 
   return (
     <>
@@ -225,25 +226,33 @@ function ClientDetails() {
                             options={campaigns?.items.map((campaign) => {
                               return {
                                 key: campaign.id,
-                                text: campaign.name,
+                                text: `${campaign.name}   ${
+                                  campaign.status === "true" ? "ON" : "OFF"
+                                }`,
                                 value: campaign.id,
                               };
                             })}
+                            onChange={(event, data) => {
+                              let choice = data.options.filter(
+                                (choice) => choice.value === data.value
+                              );
+                              setCampaign(choice[0]);
+                            }}
                             placeholder="Find a Campaign"
                           />
 
                           <Button
+                            as={Link}
+                            to={`/campaign/${campaign.text}/${campaign.value}/info`}
                             content="Go"
-                            // attached="right"
-                            // className="dFlex"
                           />
                         </Input>
                       </Card.Group>
 
-                      <Card.Group>
+                      {/* <Card.Group>
                         <Header as="h4">condition on Current campaign</Header>
                         <List items={["current campaign"]} />
-                      </Card.Group>
+                      </Card.Group> */}
                     </>
                   ) : (
                     <Header.Subheader>Be the first to add one</Header.Subheader>
