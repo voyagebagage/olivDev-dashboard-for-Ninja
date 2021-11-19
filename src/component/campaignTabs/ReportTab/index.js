@@ -2,20 +2,36 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Header, Form, Table, Segment, TableCell } from "semantic-ui-react";
-import { createDailyReport, createKpi } from "../../../graphql/mutations";
+import {
+  createDailyReport,
+  createKpi,
+  updateKpi,
+} from "../../../graphql/mutations";
 import { getDailyReport } from "../../../graphql/queries";
 import { getDateOfISOWeek, getYYYYMMDD } from "../../../lib/function";
 var currentWeekNumber = require("current-week-number");
 //=====================
 //     + function +
 //=====================
-const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
+const ReportTab = ({
+  campaignDetails: { status, id, agent, client, dailyReports },
+}) => {
   const { dailyReportId } = useParams();
   console.log(dailyReportId, "DR id");
+  console.log(
+    dailyReports?.items[0].createdAt
+      .slice(0, 10)
+      .split("-")
+      .reverse()
+      .join("-"),
+    "DRs"
+  );
   const [kpis, setKpis] = useState([]);
   const [dailyReport, setDailyReport] = useState({});
   const d = new Date().toString().slice(0, 3);
   console.log(d, "d");
+  const dt = new Date(17 - 11 - 2021);
+  console.log(dt, "DT");
   //####################################################
   //     GET the first day of the WEEK we are in
   //####################################################
@@ -30,8 +46,6 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
   const lastDay = startWeekDate.getDate() + 4;
   const endWeekDate = new Date(startWeekDate);
   endWeekDate.setDate(lastDay);
-  //----------------------------------------------
-
   //#####################################################
   //               WEEK ARRAY DATES
   //#####################################################
@@ -43,6 +57,12 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
       dt.setDate(dt.getDate() + 1)
     ) {
       const daysArray = ["Mon", "Tues", "Wed", "Thur", "Fri"];
+      let comp1 = new Date(dt).getTime();
+      let comp2 = new Date(dailyReports?.items[i]?.createdAt).getTime();
+      console.log(comp1, "1", comp2, "2");
+      if (comp1 == comp2) {
+        console.log("HIIIIIIIIIIIII t'as reussi");
+      }
       weekArray.push(
         `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
           .split("-")
@@ -54,7 +74,7 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
     return weekArray;
   };
   const weekArray = getDaysArray(startWeekDate, endWeekDate);
-
+  console.log(weekArray, "WA");
   //#####################################################
   //               FETCH DAILY-REPORT
   //#####################################################
@@ -67,12 +87,12 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
           })
         );
         console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
-        if (
-          new Date().getDay() === 2 &&
-          dailyReportData.data.getDailyReport.kpis.items?.nextWeekTarget
-        ) {
-          console.log("piuouPIOU");
-        }
+        // if (
+        //   new Date().getDay() === 2 &&
+        //   dailyReportData.data.getDailyReport.kpis.items?.nextWeekTarget
+        // ) {
+        //   console.log("piuouPIOU");
+        // }
         setDailyReport(dailyReportData.data.getDailyReport);
         setKpis(dailyReportData.data.getDailyReport.kpis.items);
         console.log("succes Kpis");
@@ -82,10 +102,22 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
     }
   };
   //#####################################################
-  //               FETCH DAILY-REPORT
+  //               SUBMIT RES + CREATE NEW DR
   //#####################################################
   const newDailyReport = async () => {
     const kpisSaved = dailyReport.kpis.items;
+    try {
+      for (let i = 0; i < kpisSaved.length; i++) {
+        delete kpisSaved[i].createdAt;
+        delete kpisSaved[i].updatedAt;
+        const updateResult = await API.graphql(
+          graphqlOperation(updateKpi, { input: kpisSaved[i] })
+        );
+        console.log(`succes with updating ${kpisSaved[i]?.name}`);
+      }
+    } catch (error) {
+      console.log("There is an error with update KPIS result", error);
+    }
     let idReport = "";
     console.log(dailyReport, "dailyreport sub");
     try {
@@ -106,7 +138,7 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
       idReport = createNewDR.data.createDailyReport.id;
       console.log(createNewDR.data.createDailyReport, "createNewDR");
     } catch (error) {
-      console.log("There is an erro with create Daily Report", error);
+      console.log("There is an error with create Daily Report", error);
     }
     console.log(kpisSaved, "SAVED");
     try {
@@ -141,7 +173,7 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   console.log(kpis, "KPIS");
   console.log(kpis.result, "KPIS.RESULT");
-  console.log(id, "ID");
+  console.log(id, "ID CAMP");
   return dailyReportId ? (
     <Form onSubmit={newDailyReport}>
       <Table
@@ -185,37 +217,34 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
               {kpis &&
                 kpis.map((kpi, idx) => (
                   <Table.Cell width={2}>
-                    {oneDay.slice(0, 3) === d && status === "true" && (
-                      <Form.Input
-                        type="text"
-                        style={{ maxWidth: "5vw" }}
-                        placeholder={`${kpi.name}`}
-                        disabled={oneDay.slice(0, 3) !== d}
-                        inverted
-                        transparent
-                        onChange={(e) => {
-                          const result = Number(e.target.value);
-                          // console.log(target, "TAR GET");
-                          setKpis((currentResult) =>
-                            currentResult.map((x) =>
-                              x.id === kpi.id ? { ...x, result } : x
-                            )
-                          );
-                        }}
-                        value={kpi.result || ""}
-                      />
-                    )}
+                    {oneDay.slice(0, 3) === d &&
+                      status === "true" &&
+                      (kpi.result || (
+                        <Form.Input
+                          type="text"
+                          style={{ maxWidth: "5vw" }}
+                          placeholder={`${kpi.name}`}
+                          disabled={oneDay.slice(0, 3) !== d}
+                          inverted
+                          transparent
+                          onChange={(e) => {
+                            const result = Number(e.target.value);
+                            // console.log(target, "TAR GET");
+                            setKpis((currentResult) =>
+                              currentResult.map((x) =>
+                                x.id === kpi.id ? { ...x, result } : x
+                              )
+                            );
+                          }}
+                          value={kpi.result || ""}
+                        />
+                      ))}
                     {/* {oneDay.slice(0, 3) !== d && kpi.result} */}
                   </Table.Cell>
                 ))}
               {oneDay.slice(0, 3) === d && status === "true" && (
                 <TableCell colSpan="2">
-                  <Form.Button
-                    type="submit"
-                    color="green"
-                    fluid
-                    // onClick={newDailyReport}
-                  >
+                  <Form.Button type="submit" color="green" fluid>
                     Submit your work
                   </Form.Button>
                 </TableCell>

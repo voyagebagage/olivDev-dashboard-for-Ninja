@@ -1,7 +1,7 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { Link, useHistory, Route, useParams, NavLink } from "react-router-dom";
 // import { panes } from "../arrayLists/index";
-import { getCampaign } from "../graphql/queries";
+import { getCampaign, getDailyReport } from "../graphql/queries";
 import { Segment, Header, Tab, Icon, Button } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import InfoTab from "../component/campaignTabs/InfoTab";
@@ -33,22 +33,19 @@ function CampaignDetails() {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
-      //xxxxxxxxxxxxxxxxxxxx Status xxxxxxxxxx
-      // const { startDate, endDate } = campaignData.data.getCampaign;
-      // const now = new Date().getTime();
-      // const startTime = new Date(startDate).getTime();
-      // const endTime = new Date(endDate).getTime();
-      // // console.log(now, "NOW");
-      // // console.log(startTime, "startTime");
-      // // console.log(endTime, "endTime");
-      // if (now >= startTime && now <= endTime) {
-      //   campaignData.data.getCampaign.status = "true";
-      // }
-      //xxxxxxxxxxxxxxxxxxxx xxxxxxxxxx xxxxxxxxxx
+      // console.log(campaignData.data.getCampaign.id, "ID CAMP");
+
+      const DRData = await API.graphql(
+        graphqlOperation(getDailyReport, {
+          id: campaignData.data.getCampaign.dailyReports.items[0].id,
+        })
+      );
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
-      setKpis(campaignData.data.getCampaign.kpis.items);
+      // setKpis(campaignData.data.getCampaign.kpis.items);
+      setKpis(DRData.data.getDailyReport.kpis.items);
       console.log(campaignData.data.getCampaign, "campaignData");
+      console.log(DRData.data.getDailyReport, "getDailyReport");
       console.log("succes campaignData");
     } catch (error) {
       console.log("there is an error with getCampaign", error);
@@ -77,8 +74,10 @@ function CampaignDetails() {
     dailyReports?.items[dailyReports.items.length - 1],
     "LAST dailyReports"
   );
+
   console.log(dailyReports?.items.length - 1, "LAST dailyReports");
   console.log(dailyReports?.items, "dailyReports ARRAY");
+  // console.log(dailyReports.items[0].kpi, "dailyReports ARRAY");
   //'
   const panes = [
     {

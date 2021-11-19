@@ -61,11 +61,6 @@ const WeeklySummaryTab = () => {
     // console.log(firstDayOfNextWeek, "firstDayOfNextWeek");
     try {
       for (let i = 0; i < kpis.length; i++) {
-        // kpis[i].nextWeekTarget = kpis[i].target;
-        // setForm(await kpis[i]);
-        // console.log(await kpis[i], "kpi iii");
-
-        // console.log(form, "FOR FORM1111");
         delete kpis[i].createdAt;
         delete kpis[i].updatedAt;
         console.log(form, "FOR FORM");
