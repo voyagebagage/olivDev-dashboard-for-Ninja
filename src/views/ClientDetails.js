@@ -57,6 +57,7 @@ function ClientDetails() {
   };
   useEffect(() => fetchClient(), []);
   const {
+    // id,
     // firstName,
     lastName,
     // companyName,
@@ -158,7 +159,11 @@ function ClientDetails() {
       <Sidebar.Pushable as={List}>
         <Segment basic>
           <Link
-            to={!edit ? "/client-list" : `/client/${firstName}`}
+            to={
+              !edit
+                ? "/client-list"
+                : `/client/${firstName}/${companyName}/${id}`
+            }
             onClick={
               edit
                 ? () => {

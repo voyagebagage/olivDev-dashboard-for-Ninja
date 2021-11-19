@@ -89,8 +89,8 @@ function Client() {
       );
       console.log(clientData.data.searchClients.items, "+++++");
       for (let i = 0; i <= clientData.data.searchClients.items; i++) {
-        if (clientData.data.searchClients.items[i].category) {
-          console.log("COUCOUC");
+        if (clientData.data.searchClients.items[i].category === null) {
+          console.log("COUCOUC===========================");
         }
       }
 
@@ -185,7 +185,11 @@ function Client() {
                   {client.email}
                 </Table.Cell>
                 <Table.Cell singleLine>
-                  <a href={client.website} className="clientListLink">
+                  <a
+                    href={client.website}
+                    target="_blank"
+                    className="clientListLink"
+                  >
                     {client.website}
                   </a>
                 </Table.Cell>

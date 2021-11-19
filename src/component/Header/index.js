@@ -15,7 +15,7 @@ function Header({ handleSidebarItem }) {
   console.log(location.pathname, "location");
   return (
     <div>
-      <Menu stackable>
+      <Menu stackable size="tiny">
         <Menu.Item>
           <img src="https://react.semantic-ui.com/logo.png" alt="logo" />
         </Menu.Item>

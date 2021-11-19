@@ -216,20 +216,29 @@ function CampaignDetails() {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   return (
     <>
-      <Button
-        // basic
-        inverted
-        // to={goToPreviousPath}
-        onClick={goToPreviousPath}
-        style={{ color: "#566A63" }}
-      >
-        <Icon name="arrow left" size="large" style={{ color: "#566A63" }} />
-        BACK
-      </Button>
-      {/* <div className="dFlex"> */}
-      <Header as="h2" textAlign="center" dividing>
-        <div className="dFlex">{name}</div>
-      </Header>
+      <div className="dFlex">
+        <div className="dFlex">
+          <Button
+            // basic
+            inverted
+            onClick={goToPreviousPath}
+            style={{ color: "#566A63" }}
+          >
+            <div className="dFlex">
+              <Icon
+                name="arrow left"
+                size="large"
+                style={{ color: "#566A63" }}
+              />
+              <div className="dFlex-aCenter">BACK</div>
+            </div>
+          </Button>
+        </div>
+        {/* <div className="dFlex"> */}
+        <Header as="h2" textAlign="center" dividing>
+          <div className="dFlex">{name}</div>
+        </Header>
+      </div>
 
       <Segment basic as={Header} className="dFlex-sAround" centered>
         <div className="dFlex">{`${client?.firstName}  ${client?.lastName}`}</div>

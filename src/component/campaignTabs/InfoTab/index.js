@@ -42,12 +42,13 @@ const InfoTab = ({ setEdit, edit, campaignDetails }) => {
           className="dFlex-sBetween"
           // style={{ paddingLeft: 0 }}
         >
-          <Form>
+          <Form size="mini">
             <Table
               padded
               inverted
               celled
               fluid
+              size="small"
               style={{
                 backgroundColor: "#8CABA0",
                 marginBottom: 0,
@@ -55,7 +56,17 @@ const InfoTab = ({ setEdit, edit, campaignDetails }) => {
             >
               <Table.Row>
                 <Table.HeaderCell className="dFlex-sBetween">
-                  Current info
+                  <div className="dFlex-aCenter">
+                    <Header
+                      as="div"
+                      size="huge"
+                      centered
+                      inverted
+                      textAlign="left"
+                    >
+                      Current info
+                    </Header>
+                  </div>
                   {!edit && (
                     <Icon
                       name="ellipsis horizontal"
@@ -64,7 +75,21 @@ const InfoTab = ({ setEdit, edit, campaignDetails }) => {
                     />
                   )}
                 </Table.HeaderCell>
-                {edit && <Table.HeaderCell>Update to...</Table.HeaderCell>}
+                {edit && (
+                  <Table.HeaderCell>
+                    <div className="dFlex-aCenter">
+                      <Header
+                        as="div"
+                        size="huge"
+                        centered
+                        inverted
+                        textAlign="left"
+                      >
+                        Update to...
+                      </Header>
+                    </div>
+                  </Table.HeaderCell>
+                )}
               </Table.Row>
               <Table.Body>
                 <Table.Row>
