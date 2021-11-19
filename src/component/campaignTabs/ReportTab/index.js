@@ -11,7 +11,7 @@ var currentWeekNumber = require("current-week-number");
 //=====================
 const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
   const { dailyReportId } = useParams();
-  console.log(dailyReportId);
+  console.log(dailyReportId, "DR id");
   const [kpis, setKpis] = useState([]);
   const [dailyReport, setDailyReport] = useState({});
   const d = new Date().toString().slice(0, 3);
@@ -23,10 +23,10 @@ const ReportTab = ({ campaignDetails: { status, id, agent, client } }) => {
     currentWeekNumber(new Date()),
     new Date().getFullYear()
   );
-  console.log(
-    getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear()),
-    "STARTWEEKDATE"
-  );
+  // console.log(
+  //   getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear()),
+  //   "STARTWEEKDATE"
+  // );
   const lastDay = startWeekDate.getDate() + 4;
   const endWeekDate = new Date(startWeekDate);
   endWeekDate.setDate(lastDay);

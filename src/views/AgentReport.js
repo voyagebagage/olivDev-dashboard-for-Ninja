@@ -42,7 +42,11 @@ export default function AgentReport() {
           >
             <Label
               as={Link}
-              to={`/campaign/${campaignName}/${id}/report/${campaignReport.dailyReports?.items[0]?.id}`}
+              to={`/campaign/${campaignName}/${id}/report/${
+                campaignReport.dailyReports?.items[
+                  campaignReport.dailyReports.items.length - 1
+                ]?.id
+              }`}
               basic
               inverted
               className="dFlex-fEnd"

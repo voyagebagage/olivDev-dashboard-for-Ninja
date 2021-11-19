@@ -72,8 +72,13 @@ function CampaignDetails() {
     status,
   } = campaignDetails;
   console.log(status, "STA TUS");
-  console.log(dailyReports?.items[0], "dailyReports");
-  console.log(dailyReports, "dailyReports ARRAY");
+  console.log(dailyReports?.items[0], " FIRST dailyReports");
+  console.log(
+    dailyReports?.items[dailyReports.items.length - 1],
+    "LAST dailyReports"
+  );
+  console.log(dailyReports?.items.length - 1, "LAST dailyReports");
+  console.log(dailyReports?.items, "dailyReports ARRAY");
   //'
   const panes = [
     {
@@ -106,7 +111,9 @@ function CampaignDetails() {
         as: NavLink,
         id: "tab2",
         content: "Reports",
-        to: `/campaign/${name}/${id}/report/${dailyReports?.items[0]?.id}`,
+        to: `/campaign/${name}/${id}/report/${
+          dailyReports?.items[dailyReports.items.length - 1]?.id
+        }`,
         exact: true,
         key: "reports",
       },
