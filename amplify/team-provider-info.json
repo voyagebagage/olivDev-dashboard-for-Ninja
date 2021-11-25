@@ -19,7 +19,7 @@
         },
         "newWeekChanges": {
           "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
-          "s3Key": "amplify-builds/newWeekChanges-6b763831496b6f644d38-build.zip"
+          "s3Key": "amplify-builds/newWeekChanges-764a69767361794d3550-build.zip"
         }
       }
     }

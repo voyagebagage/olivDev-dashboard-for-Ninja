@@ -1639,6 +1639,19 @@ export const searchClients = /* GraphQL */ `
         website
         country
         campaigns {
+          # items {
+          #   id
+          #   category
+          #   name
+          #   type
+          #   startDate
+          #   endDate
+          #   createdAt
+          #   status
+          #   length
+          #   notes
+          #   updatedAt
+          # }
           nextToken
         }
         notes

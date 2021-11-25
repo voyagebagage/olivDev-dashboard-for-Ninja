@@ -2,6 +2,7 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { Header, Form, Table, Segment, TableCell } from "semantic-ui-react";
+import { useKpis } from "../../../context/Provider";
 import {
   createDailyReport,
   createKpi,
@@ -10,28 +11,34 @@ import {
 import { getDailyReport } from "../../../graphql/queries";
 import { getDateOfISOWeek, getYYYYMMDD } from "../../../lib/function";
 var currentWeekNumber = require("current-week-number");
-//=====================
+//======================
 //     + function +
-//=====================
+//======================
 const ReportTab = ({
   campaignDetails: { status, id, agent, client, dailyReports },
 }) => {
   const { dailyReportId } = useParams();
-  console.log(dailyReportId, "DR id");
-  console.log(
-    dailyReports?.items[0].createdAt
-      .slice(0, 10)
-      .split("-")
-      .reverse()
-      .join("-"),
-    "DRs"
-  );
-  const [kpis, setKpis] = useState([]);
+  // console.log(dailyReportId, "DR id");
+  // console.log(
+  //   dailyReports?.items[0].createdAt
+  //     .slice(0, 10)
+  //     .split("-")
+  //     .reverse()
+  //     .join("-"),
+  //   "DRs"
+  // );
+  const { kpis, setKpis } = useKpis();
+  // console.log();
   const [dailyReport, setDailyReport] = useState({});
+  const initialState = { dates: "", kpi: [] };
+  const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
+  const [weekArray, setWeekArray] = useState([]);
+  console.log(typeof weekArray, "++++++++");
+  // let weekArray = [];
   const d = new Date().toString().slice(0, 3);
-  console.log(d, "d");
-  const dt = new Date(17 - 11 - 2021);
-  console.log(dt, "DT");
+  // console.log(d, "d");
+  // const dt = new Date(17 - 11 - 2021);
+  // console.log(dt, "DT");
   //####################################################
   //     GET the first day of the WEEK we are in
   //####################################################
@@ -39,42 +46,90 @@ const ReportTab = ({
     currentWeekNumber(new Date()),
     new Date().getFullYear()
   );
-  // console.log(
-  //   getDateOfISOWeek(currentWeekNumber(new Date()), new Date().getFullYear()),
-  //   "STARTWEEKDATE"
-  // );
   const lastDay = startWeekDate.getDate() + 4;
   const endWeekDate = new Date(startWeekDate);
   endWeekDate.setDate(lastDay);
   //#####################################################
   //               WEEK ARRAY DATES
   //#####################################################
-  var getDaysArray = function (start, end) {
+  const dailyReportsArray = async (id) => {
+    try {
+      console.log("id:", id);
+      const dailyReportData = await API.graphql(
+        graphqlOperation(getDailyReport, { id: id })
+      );
+      console.log("succes");
+      console.log("dailyReportsWeek.kpi:", dailyReportsWeek.kpi);
+      return await dailyReportData.data.getDailyReport.kpis.items;
+    } catch (error) {
+      console.log("error get DR", error);
+    }
+  };
+  const getDaysArray = async (start, end) => {
     let i = 0;
+    const newTab = [...weekArray];
+    console.log("===================================");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("==      getDaysArray             ==");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("===================================");
     for (
-      var weekArray = [], dt = new Date(start);
+      var weekArrayLoop = [], dt = new Date(start);
       dt <= end;
       dt.setDate(dt.getDate() + 1)
     ) {
       const daysArray = ["Mon", "Tues", "Wed", "Thur", "Fri"];
       let comp1 = new Date(dt).getTime();
       let comp2 = new Date(dailyReports?.items[i]?.createdAt).getTime();
-      console.log(comp1, "1", comp2, "2");
-      if (comp1 == comp2) {
-        console.log("HIIIIIIIIIIIII t'as reussi");
+      let minus = comp2 - comp1;
+      console.log(i, "comp1:", comp1, "comp2:", comp2, "minus:", minus);
+      //86400000 miliSecs in 24hours
+      //if today
+      console.log("1 dailyReportsWeek:", dailyReportsWeek);
+
+      if (minus <= 86400000 && dailyReports?.items[i]) {
+        // console.log(dailyReports?.items[i], "IFFFFFF");
+        console.log("IFFFFF");
+
+        dailyReportsWeek.kpi = await dailyReportsArray(
+          dailyReports.items[i].id
+        );
+
+        // dailyReportsWeek.kpi = dailyReports?.items[i];
+        console.log(dailyReportsWeek.kpi, "dailyReportsWeek.kpi");
+        console.log("2 dailyReportsWeek:", { ...dailyReportsWeek });
+      } else {
+        console.log("ELSE");
+        // delete dailyReportsWeek.kpi;
+        dailyReportsWeek.kpi = null;
       }
-      weekArray.push(
-        `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
-          .split("-")
-          .reverse()
-          .join("-")}`
-      );
+      dailyReportsWeek.dates = `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
+        .split("-")
+        .reverse()
+        .join("-")}`;
+
+      console.log("dailyReportsWeek.dates:", dailyReportsWeek.dates);
+      console.log("3 dailyReportsWeek:", { ...dailyReportsWeek });
+      // weekArrayLoop = [...weekArray];
+      console.log("weekArrayLoop LOOP0000:", weekArrayLoop);
+      newTab.push({ ...dailyReportsWeek });
+      // console.log("weekArray LOOP[i]:", newTab[i], typeof newTab);
+      console.log("newTab LOOP:", newTab, typeof newTab);
+      dailyReportsWeek.dates = "";
+      dailyReportsWeek.kpi = [];
+      // setDailyReportsWeek({});
       i++;
     }
-    return weekArray;
+    console.log("++ newTab:+ +", newTab, typeof newTab);
+    return newTab;
+    // setWeekArray(weekArray);
   };
-  const weekArray = getDaysArray(startWeekDate, endWeekDate);
-  console.log(weekArray, "WA");
+  // weekArray = getDaysArray(startWeekDate, endWeekDate);
+  // console.log(weekArray, "WA", typeof weekArray);
+  // console.log([weekArray], "WA");
   //#####################################################
   //               FETCH DAILY-REPORT
   //#####################################################
@@ -87,14 +142,14 @@ const ReportTab = ({
           })
         );
         console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
-        // if (
-        //   new Date().getDay() === 2 &&
-        //   dailyReportData.data.getDailyReport.kpis.items?.nextWeekTarget
-        // ) {
-        //   console.log("piuouPIOU");
-        // }
+
         setDailyReport(dailyReportData.data.getDailyReport);
         setKpis(dailyReportData.data.getDailyReport.kpis.items);
+        const report = await getDaysArray(startWeekDate, endWeekDate);
+        // console.log("===================================");
+        // console.log(typeof report, report);
+        // console.log("===================================");
+        setWeekArray(report);
         console.log("succes Kpis");
       }
     } catch (error) {
@@ -105,15 +160,32 @@ const ReportTab = ({
   //               SUBMIT RES + CREATE NEW DR
   //#####################################################
   const newDailyReport = async () => {
+    console.log("===================================");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("==            Submit             ==");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("==                               ==");
+    console.log("===================================");
     const kpisSaved = dailyReport.kpis.items;
     try {
-      for (let i = 0; i < kpisSaved.length; i++) {
-        delete kpisSaved[i].createdAt;
-        delete kpisSaved[i].updatedAt;
+      for (let i = 0; i < kpis.length; i++) {
+        delete kpis[i].createdAt;
+        delete kpis[i].updatedAt;
+        // delete kpis[i].campaign;
+        // delete kpis[i].agent;
+        // delete kpis[i].dailyReport;
+        console.log(kpis[i], "KPI [iiii]");
+        console.log(kpis[i].id, "KPI [ID]");
+        console.log(kpis[i].result, "KPI [RES]");
         const updateResult = await API.graphql(
-          graphqlOperation(updateKpi, { input: kpisSaved[i] })
+          graphqlOperation(updateKpi, {
+            input: kpis[i],
+          })
         );
-        console.log(`succes with updating ${kpisSaved[i]?.name}`);
+        console.log(`succes with updating ${kpis[i]?.name}`);
+        console.log("my K p I", updateResult.data.updateKpi.result);
       }
     } catch (error) {
       console.log("There is an error with update KPIS result", error);
@@ -168,12 +240,19 @@ const ReportTab = ({
     console.log("succes with updating A L L RESULTS");
   };
 
-  useEffect(() => fetchDailyReport(), [dailyReportId]);
+  useEffect(() => {
+    fetchDailyReport();
+  }, [dailyReportId]);
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  console.log(kpis, "KPIS");
-  console.log(kpis.result, "KPIS.RESULT");
-  console.log(id, "ID CAMP");
+  // console.log(kpis, "KPIS");
+  // console.log(kpis, "KPIS");
+  console.log(kpis, "<==*****==");
+
+  // console.log("weekArray:-=-=-=-=-=", typeof weekArray, weekArray);
+  // console.log("===================================");
+  // console.log(kpis.result, "KPIS.RESULT");
+  // console.log(startWeekDate, "startWeekDate");
   return dailyReportId ? (
     <Form onSubmit={newDailyReport}>
       <Table
@@ -202,55 +281,75 @@ const ReportTab = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {weekArray.map((oneDay, idx) => (
-            <Table.Row>
-              <Table.Cell>
-                <Header
-                  as="h4"
-                  inverted
-                  color={oneDay.slice(0, 3) === d ? "green" : null}
-                >
-                  {oneDay}
-                </Header>
-              </Table.Cell>
-              {/* {oneDay !== d && <Table.Cell width={2}>coucouc</Table.Cell>} */}
-              {kpis &&
-                kpis.map((kpi, idx) => (
-                  <Table.Cell width={2}>
-                    {oneDay.slice(0, 3) === d &&
-                      status === "true" &&
-                      (kpi.result || (
-                        <Form.Input
-                          type="text"
-                          style={{ maxWidth: "5vw" }}
-                          placeholder={`${kpi.name}`}
-                          disabled={oneDay.slice(0, 3) !== d}
-                          inverted
-                          transparent
-                          onChange={(e) => {
-                            const result = Number(e.target.value);
-                            // console.log(target, "TAR GET");
-                            setKpis((currentResult) =>
-                              currentResult.map((x) =>
-                                x.id === kpi.id ? { ...x, result } : x
-                              )
-                            );
-                          }}
-                          value={kpi.result || ""}
-                        />
-                      ))}
-                    {/* {oneDay.slice(0, 3) !== d && kpi.result} */}
+          {weekArray.map((oneDay, idx) => {
+            console.log(idx, "=====", oneDay);
+            console.log(idx, "oneDayKPI", oneDay?.kpi);
+            console.log(oneDay.dates.slice(0, 3), d);
+            console.log(status);
+            return (
+              <>
+                <Table.Row>
+                  <Table.Cell>
+                    <Header
+                      as="h4"
+                      inverted
+                      color={oneDay.dates.slice(0, 3) === d ? "green" : null}
+                    >
+                      {oneDay.dates}
+                    </Header>
                   </Table.Cell>
-                ))}
-              {oneDay.slice(0, 3) === d && status === "true" && (
-                <TableCell colSpan="2">
-                  <Form.Button type="submit" color="green" fluid>
-                    Submit your work
-                  </Form.Button>
-                </TableCell>
-              )}
-            </Table.Row>
-          ))}
+                  {/* <Table.Cell width={2}> */}
+                  {oneDay.kpi &&
+                    kpis.map((oneKpi, idx) => {
+                      console.log(idx, "====>kpi:<====", oneKpi);
+                      // ####################
+                      {
+                        return oneDay.dates.slice(0, 3) === d &&
+                          status === "true" ? (
+                          <Table.Cell width={2}>
+                            <Form.Input
+                              type="text"
+                              style={{ maxWidth: "5vw" }}
+                              placeholder={`${oneKpi.name}`}
+                              // disabled={oneDay.dates.slice(0, 3) !== d}
+                              inverted
+                              transparent
+                              onChange={(e) => {
+                                console.log([e.target.value]);
+                                const result = Number(e.target.value);
+                                console.log(result, "R  E  S");
+                                setKpis((currentKpis) =>
+                                  currentKpis.map((x) =>
+                                    x.id === oneKpi.id ? { ...x, result } : x
+                                  )
+                                );
+                              }}
+                              value={oneKpi.result}
+                            />
+                          </Table.Cell>
+                        ) : oneKpi.result && oneDay.dates.slice(0, 3) !== d ? (
+                          <Table.Cell width={2}>Res{oneKpi.result}</Table.Cell>
+                        ) : null;
+                      }
+
+                      // {
+                      //   return oneKpi.result && (
+                      //     <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
+                      //   );
+                      // }
+                    })}
+                  {/* </Table.Cell> */}
+                  {oneDay.dates.slice(0, 3) === d && status === "true" && (
+                    <TableCell colSpan="2">
+                      <Form.Button type="submit" color="green" fluid>
+                        Submit your work
+                      </Form.Button>
+                    </TableCell>
+                  )}
+                </Table.Row>
+              </>
+            );
+          })}
         </Table.Body>
       </Table>
     </Form>

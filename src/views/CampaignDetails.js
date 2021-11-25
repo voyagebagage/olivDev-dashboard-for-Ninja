@@ -68,15 +68,15 @@ function CampaignDetails() {
     agent,
     status,
   } = campaignDetails;
-  console.log(status, "STA TUS");
-  console.log(dailyReports?.items[0], " FIRST dailyReports");
-  console.log(
-    dailyReports?.items[dailyReports.items.length - 1],
-    "LAST dailyReports"
-  );
+  // console.log(status, "STA TUS");
+  // console.log(dailyReports?.items[0], " FIRST dailyReports");
+  // console.log(
+  //   dailyReports?.items[dailyReports.items.length - 1],
+  //   "LAST dailyReports"
+  // );
 
-  console.log(dailyReports?.items.length - 1, "LAST dailyReports");
-  console.log(dailyReports?.items, "dailyReports ARRAY");
+  // console.log(dailyReports?.items.length - 1, "LAST dailyReports");
+  // console.log(dailyReports?.items, "dailyReports ARRAY");
   // console.log(dailyReports.items[0].kpi, "dailyReports ARRAY");
   //'
   const panes = [

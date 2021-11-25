@@ -1,4 +1,14 @@
-import { Table, Header, Segment, Sidebar, List, Icon } from "semantic-ui-react";
+import {
+  Table,
+  Header,
+  Segment,
+  Sidebar,
+  List,
+  Icon,
+  Dimmer,
+  Image,
+  Loader,
+} from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 
 import { PaginationShortCentered } from "../component/Pagination";
@@ -15,8 +25,6 @@ import {
 import { API, graphqlOperation } from "aws-amplify";
 import { searchCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
-import { getYYYYMMDD } from "../lib/function";
-import { updateCampaign } from "../graphql/mutations";
 
 // import { fetchClients } from "../fetch/FetchClients";
 //#################################################
@@ -59,14 +67,16 @@ function Campaigns() {
   //---------------------Functions------------------------------
   const fetchCampaigns = async () => {
     try {
-      // setFieldDropDown("name");
+      setIsLoading(true);
       const campaignData = await API.graphql(
         graphqlOperation(searchCampaigns, variables)
       );
+      // console.log(await campaignData.data.searchCampaigns.items, "campaing");
+      // console.log(await campaignData.data.searchCampaigns.items, "campaing");
+      // console.log(campaignData.data.searchCampaigns.items.length, "campaing");
 
       //----------------------setStates-----------
       setCampaigns(campaignData.data.searchCampaigns.items);
-      console.log(campaignData.data.searchCampaigns, "campaing");
       //----onKeyPress === "Enter"---------------
       if (filteredCampaigns.length) {
         setTotalClients(filteredCampaigns.length);
@@ -83,24 +93,25 @@ function Campaigns() {
       setFrom(limit * (targetPage - 1));
       setIsLoading(false);
     } catch (error) {
-      console.log("error with get clients :", error);
+      console.log("error with get campaigns :", error);
     }
   };
-  useEffect(() => {
-    fetchCampaigns();
-  }, [
-    from,
-    targetPage,
-    directionDropDown,
-    fieldDropDown,
-    filteredCampaigns,
-    maxPages,
-  ]);
-  console.log(campaigns, "CAMPAIGNS");
+  useEffect(
+    () => fetchCampaigns(),
+    [
+      from,
+      targetPage,
+      directionDropDown,
+      fieldDropDown,
+      filteredCampaigns,
+      maxPages,
+    ]
+  );
+  console.log(campaigns.length, "CAMPAIGNS");
   //#################################################
   //           RENDER
   //################################################
-  return !isLoading ? (
+  return !isLoading && campaigns.length !== 0 ? (
     <Sidebar.Pushable as={List}>
       <div style={{ width: "83%" }}>
         <Segment basic className="dFlex-sBetween">
@@ -183,12 +194,36 @@ function Campaigns() {
         -                             SIDEBAR - FORM                        -
         ----------------------------------------------------- */}
         <SidebarForm>
-          <CampaignForm />
+          <CampaignForm campaigns={campaigns} setCampaigns={setCampaigns} />
         </SidebarForm>
       </div>
     </Sidebar.Pushable>
+  ) : !isLoading && campaigns.length === 0 ? (
+    <Sidebar.Pushable as={List}>
+      {/* <div style={{ width: "83%" }}> */}
+      <Segment basic className="centerSized">
+        <Header as="h2">Campaigns</Header>
+        <AddIcon setVisible={setVisible} />
+      </Segment>
+      <SidebarForm>
+        <CampaignForm campaigns={campaigns} setCampaigns={setCampaigns} />
+      </SidebarForm>
+      {/* </div> */}
+    </Sidebar.Pushable>
   ) : (
-    <h1>Loading</h1>
+    <Segment>
+      <Dimmer active inverted>
+        <Loader size="massive">Loading</Loader>
+      </Dimmer>
+      <Image
+        size="massive"
+        src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
+      />
+      <Image
+        size="massive"
+        src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
+      />
+    </Segment>
   );
 }
 

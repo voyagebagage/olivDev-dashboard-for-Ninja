@@ -27,6 +27,7 @@ import {
 } from "semantic-ui-react";
 // import useForm from "../Forms/useForm";
 import NewClientForm from "../Forms/NewClientForm";
+
 //------------------------context & custom hooks----------------------
 
 /* -----------------------------------------------------------
@@ -87,12 +88,6 @@ function Client() {
         graphqlOperation(searchClients, variables)
         // listClients, variables)
       );
-      console.log(clientData.data.searchClients.items, "+++++");
-      for (let i = 0; i <= clientData.data.searchClients.items; i++) {
-        if (clientData.data.searchClients.items[i].category === null) {
-          console.log("COUCOUC===========================");
-        }
-      }
 
       //----------------------setStates-----------
       setClients(clientData.data.searchClients.items);
@@ -126,10 +121,11 @@ function Client() {
       maxPages,
     ]
   );
+  console.log(clients.length);
   //#################################################
   //           RENDER
   //################################################
-  return !isLoading ? (
+  return !isLoading && clients.length !== 0 ? (
     <div style={{ width: "83%" }}>
       <Sidebar.Pushable as={List}>
         <Segment basic className="dFlex-sBetween">
@@ -144,8 +140,8 @@ function Client() {
               <Table.HeaderCell>COMPANY</Table.HeaderCell>
               <Table.HeaderCell>NAME</Table.HeaderCell>
               <Table.HeaderCell>E-mail</Table.HeaderCell>
-              <Table.HeaderCell>WEBSITE</Table.HeaderCell>
-              <Table.HeaderCell>LOCATION</Table.HeaderCell>
+              <Table.HeaderCell collapsing>WEBSITE</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">LOCATION</Table.HeaderCell>
               {/* <Table.HeaderCell>ON CAMPAIGN</Table.HeaderCell> */}
             </Table.Row>
           </Table.Header>
@@ -190,7 +186,7 @@ function Client() {
                     target="_blank"
                     className="clientListLink"
                   >
-                    {client.website}
+                    {client.website.slice(8)}
                   </a>
                 </Table.Cell>
                 <Table.Cell
@@ -259,16 +255,52 @@ function Client() {
         </SidebarForm>
       </Sidebar.Pushable>
     </div>
+  ) : !isLoading && clients.length === 0 ? (
+    <>
+      <Sidebar.Pushable as={List}>
+        <Segment
+          basic
+          fluid
+          className="centerSized"
+          // style={{ alignItems : "center" }}
+        >
+          <Header as="h2">Clients</Header>
+          <AddIcon setVisible={setVisible} />
+        </Segment>
+        <SidebarForm>
+          <Segment
+            as="h3"
+            padded
+            fluid
+            size="huge"
+            style={{
+              borderRightWidth: 0,
+              borderRadius: 0,
+            }}
+          >
+            New Client
+          </Segment>
+          <NewClientForm
+            // updateList={fetchClients}
+            setVisible={setVisible}
+            clients={clients}
+            setClients={setClients}
+          />
+        </SidebarForm>
+      </Sidebar.Pushable>
+    </>
   ) : (
     <Segment>
       <Dimmer active inverted>
         <Loader size="massive">Loading</Loader>
       </Dimmer>
       <Image
+        className="centerSized"
         size="massive"
         src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
       />
       <Image
+        className="centerSized"
         size="massive"
         src="https://react.semantic-ui.com/images/wireframe/paragraph.png"
       />

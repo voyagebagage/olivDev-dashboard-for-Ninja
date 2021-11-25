@@ -52,24 +52,26 @@ const WeeklySummaryTab = () => {
     console.log("==                               ==");
     console.log("==                               ==");
     console.log("===================================");
-    // const week = currentWeekNumber(new Date());
-    // const firstDayOfNextWeek = getDateOfISOWeek(
-    //   week + 1,
-    //   new Date().getFullYear()
-    // );
+    const week = currentWeekNumber(new Date());
+    const firstDayOfNextWeek = getDateOfISOWeek(
+      week + 1,
+      new Date().getFullYear()
+    );
     // console.log(week, "week");
     // console.log(firstDayOfNextWeek, "firstDayOfNextWeek");
     try {
       for (let i = 0; i < kpis.length; i++) {
         delete kpis[i].createdAt;
         delete kpis[i].updatedAt;
-        console.log(form, "FOR FORM");
+        // console.log(form, "FOR FORM");
         const updateTarget = await API.graphql(
           graphqlOperation(updateKpi, { input: kpis[i] })
         );
         console.log(`succes with updating ${kpis[i]?.name}`);
+        console.log("my K p I", updateTarget.data.updateKpi);
         // await setForm({});
       }
+      // setKpis([]);
       console.log("succes with updating A L L TARGETS");
     } catch (error) {
       console.log(
@@ -115,35 +117,33 @@ const WeeklySummaryTab = () => {
             {/* </Table.Header> */}
             {/* //_____________________ */}
             <Table.Body>
-              {kpis.map((kpi, idx) => {
-                return (
-                  <Table.Row singleLine key={kpi.id}>
-                    <Table.Cell>{kpi.name}</Table.Cell>
-                    <Table.Cell>{kpi.result || 0}</Table.Cell>
-                    <Table.Cell>{kpi.target}</Table.Cell>
-                    <Table.Cell textAlign="center">0</Table.Cell>
-                    {editTarget && (
-                      <Table.Cell width={2}>
-                        <Form.Input
-                          type="text"
-                          style={{ maxWidth: "5vw" }}
-                          placeholder="target"
-                          onChange={(e) => {
-                            const nextWeekTarget = Number(e.target.value);
-                            // console.log(target, "TAR GET");
-                            setKpis((currentKpis) =>
-                              currentKpis.map((x) =>
-                                x.id === kpi.id ? { ...x, nextWeekTarget } : x
-                              )
-                            );
-                          }}
-                          value={kpi.nextWeekTarget || ""}
-                        />
-                      </Table.Cell>
-                    )}
-                  </Table.Row>
-                );
-              })}
+              {kpis.map((kpi) => (
+                <Table.Row singleLine key={kpi.id}>
+                  <Table.Cell>{kpi.name}</Table.Cell>
+                  <Table.Cell>{kpi.result || 0}</Table.Cell>
+                  <Table.Cell>{kpi.target}</Table.Cell>
+                  <Table.Cell textAlign="center">0</Table.Cell>
+                  {editTarget && (
+                    <Table.Cell width={2}>
+                      <Form.Input
+                        type="text"
+                        style={{ maxWidth: "5vw" }}
+                        placeholder="target"
+                        onChange={(e) => {
+                          const nextWeekTarget = Number(e.target.value);
+                          // console.log(target, "TAR GET");
+                          setKpis((currentKpis) =>
+                            currentKpis.map((x) =>
+                              x.id === kpi.id ? { ...x, nextWeekTarget } : x
+                            )
+                          );
+                        }}
+                        value={kpi.nextWeekTarget || kpi.target}
+                      />
+                    </Table.Cell>
+                  )}
+                </Table.Row>
+              ))}
               {/* <Table.Row>
               <Table.Cell>Open Rate %</Table.Cell>
               <Table.Cell>0</Table.Cell>

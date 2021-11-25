@@ -8,7 +8,7 @@ import {
   Grid,
   Button,
 } from "semantic-ui-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVisible } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
 import {
@@ -35,8 +35,9 @@ import {
 // import { v4 as uuidv4 } from "uuid";
 import useForm from "./useForm";
 import { setStatus } from "../lib/function";
+import { onCreateCampaign } from "../graphql/subscriptions";
 
-const CampaignForm = () => {
+const CampaignForm = ({ campaigns, setCampaigns }) => {
   const {
     onChange,
     form,
@@ -65,11 +66,21 @@ const CampaignForm = () => {
     ? campaignFormValid || step2
     : campaignFormUpdateValid;
   //-------------------Functions------------------------------
-
+  useEffect(() => {
+    const subscription = API.graphql(
+      graphqlOperation(onCreateCampaign)
+    ).subscribe({
+      next: (eventData) => {
+        const newCampaign = eventData.value.data.onCreateCampaign;
+        setCampaigns([...campaigns, newCampaign]);
+      },
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   //#########################################################
   //                     DROPDOWNs
   //#########################################################
-  const selectClient = async () => {
+  const selectClient = async (e) => {
     // console.log(form.campaignClientId, "campaignClientId");
     try {
       const filteredClientNames = await API.graphql(
@@ -374,7 +385,10 @@ const CampaignForm = () => {
     "listKpi",
     "backbutton",
   ]);
-
+  useEffect(() => {
+    selectClient();
+    selectAgent();
+  }, []);
   return (
     <>
       <Segment
@@ -453,7 +467,12 @@ const CampaignForm = () => {
                         placeholder="Select Client"
                         name="campaignClientId"
                         value={form.campaignClientId || ""}
-                        onChange={onChange}
+                        onChange={
+                          onChange
+                          // (event, data) =>
+                          //   setForm({ campaignClientId: data.options[0].key })
+                          // console.log(data.options[0].key, "data")
+                        }
                         onFocus={selectClient}
                         disabled={step2}
                       />
@@ -515,7 +534,11 @@ const CampaignForm = () => {
                         onFocus={selectAgent}
                         name="campaignAgentId"
                         value={form.campaignAgentId || ""}
-                        onChange={onChange}
+                        onChange={
+                          onChange
+                          // (event, data) =>
+                          // (form.campaignAgentId = data.options[0].key)
+                        }
                         disabled={step2}
                       />
                       {/* ---------------endDate------------------------- */}
