@@ -367,6 +367,19 @@ export const getCampaign = /* GraphQL */ `
           dailyPoints
           weeklyTarget
           updatedAt
+          kpis {
+            items {
+              id
+              name
+              result
+              target
+              nextWeekTarget
+              coeff
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
         }
         nextToken
       }
