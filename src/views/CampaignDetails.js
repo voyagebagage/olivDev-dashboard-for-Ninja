@@ -40,7 +40,11 @@ function CampaignDetails() {
       // );
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
-      setKpis(campaignData.data.getCampaign.dailyReports.items[0].kpis.items);
+      setKpis(
+        campaignData.data.getCampaign.dailyReports.items[
+          campaignData.data.getCampaign.dailyReports.items.length - 1
+        ].kpis.items
+      );
       // setKpis(DRData.data.getDailyReport.kpis.items);
       console.log(campaignData.data.getCampaign, "campaignData");
       // console.log(DRData.data.getDailyReport, "getDailyReport");

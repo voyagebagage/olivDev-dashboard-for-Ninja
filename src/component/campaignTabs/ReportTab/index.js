@@ -19,7 +19,7 @@ const ReportTab = ({
 }) => {
   const { dailyReportId } = useParams();
   // console.log(dailyReportId, "DR id");
-  console.log("dailyReports:", dailyReports.items, dailyReports.items[0].kpis);
+  // console.log("dailyReports:", dailyReports.items, dailyReports.items[0].kpis);
   console.log("    |   |   |   |   |    ");
   // console.log(
   //   dailyReports?.items[0].createdAt
@@ -30,8 +30,8 @@ const ReportTab = ({
   //   "DRs"
   // );
   const { kpis, setKpis } = useKpis();
-
-  const [dailyReport, setDailyReport] = useState({});
+  const initialReport = dailyReports?.items[dailyReports.items.length - 1];
+  const [dailyReport, setDailyReport] = useState(initialReport);
   const initialState = { date: "", dReport: {} };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
@@ -107,16 +107,16 @@ const ReportTab = ({
         let dateDRToIsoStr = dateDR.toISOString().split("T")[0];
         console.log("                  1                          ");
         let dtToIsoStr = new Date(`${dt} GMT`).toISOString().split("T")[0];
+        let match = dailyReports?.items.find((e) => {
+          const date = toISOStr(e.createdAt);
+          return dtToIsoStr === date;
+        });
+        console.log("match:", match);
         // let dateDRStr = dateDR.toString().slice(0, 15);
         let comp1 = new Date(dt).getTime();
         let comp2 = dateDR.getTime();
         let minus = comp2 - comp1;
         console.log("                  2                          ");
-        // let match = dailyReports?.items.filter((e) => {
-        //   const date = toISOStr(e.createdAt);
-        //   return date === dtToIsoStr;
-        // });
-        // console.log("match:", match);
         console.log(i, "comp1:", comp1, "comp2:", comp2, "minus:", minus);
         console.log(
           i,
@@ -133,14 +133,14 @@ const ReportTab = ({
         console.log("                  3                          ");
         //86400000 miliSecs in 24hours
         //if today
-        if (dateDRToIsoStr === dtToIsoStr) {
+        if (match) {
           console.log("           IFFFFF            ");
           console.log("                             ");
           console.log("==                         ==");
           console.log("====     C O U C O U     ====");
           console.log("=======               =======");
           console.log("=============================");
-          dailyReportsWeek.dReport = dailyReports?.items[i];
+          dailyReportsWeek.dReport = match;
           console.log(dailyReportsWeek.dReport, "dailyReportsWeek.dReport");
           console.log("2 dailyReportsWeek:", { ...dailyReportsWeek });
         } else {
@@ -192,26 +192,26 @@ const ReportTab = ({
   const fetchDailyReport = async () => {
     // setTodayResults(false);
     try {
-      if (dailyReportId) {
-        const dailyReportData = await API.graphql(
-          graphqlOperation(getDailyReport, {
-            id: dailyReportId,
-          })
-        );
-        console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
+      // if (dailyReportId) {
+      //   const dailyReportData = await API.graphql(
+      //     graphqlOperation(getDailyReport, {
+      //       id: dailyReportId,
+      //     })
+      //   );
+      //   console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
 
-        setDailyReport(dailyReportData.data.getDailyReport);
-        // setKpis(dailyReportData.data.getDailyReport.kpis.items);
-        console.log("                 1 1 1                     ");
-        const report = await getDaysArray(startWeekDate, endWeekDate);
-        console.log("                 2 2 2                          ");
+      //   setDailyReport(dailyReportData.data.getDailyReport);
+      // setKpis(dailyReportData.data.getDailyReport.kpis.items);
+      console.log("                 1 1 1                     ");
+      const report = await getDaysArray(startWeekDate, endWeekDate);
+      console.log("                 2 2 2                          ");
 
-        console.log("===================================");
-        console.log(typeof report, report);
-        console.log("===================================");
-        setWeekArray(report);
-        console.log("succes Kpis");
-      }
+      console.log("===================================");
+      console.log(typeof report, report);
+      console.log("===================================");
+      setWeekArray(report);
+      console.log("succes Kpis");
+      // }
     } catch (error) {
       console.log("There is an error with getDailyReport", error);
     }
@@ -303,12 +303,12 @@ const ReportTab = ({
 
   useEffect(() => {
     fetchDailyReport();
-  }, [dailyReportId]);
+  }, [dailyReportId, dailyReports]);
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   // console.log(kpis, "KPIS");
-  // console.log(kpis, "KPIS");
-  console.log(kpis, "<==*****==");
+  console.log(dailyReport, "dailyReport");
+  console.log(kpis, "<==***KPIS**==");
 
   // console.log("weekArray:-=-=-=-=-=", typeof weekArray, weekArray);
   // console.log("===================================");
@@ -344,7 +344,7 @@ const ReportTab = ({
         <Table.Body>
           {weekArray.map((oneDay, idx) => {
             console.log(idx, "=====", oneDay);
-            console.log(idx, "oneDaydReport", oneDay?.dReport);
+            console.log(idx, "oneDaydReport", oneDay?.dReport?.kpis.items);
             console.log(idx, "oneDay.date sliced", oneDay.date.slice(5, 15));
             console.log(idx, "d d d", d);
 
@@ -361,72 +361,69 @@ const ReportTab = ({
                       {oneDay.date}
                     </Header>
                   </Table.Cell>
-                  {oneDay.date.slice(5, 15) !== d && oneDay.dReport
-                    ? // ####################
-                      // ooooo
-                      // ####################
-                      // kpis.map((oneKpi) => (
-                      //   <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
-                      // ))
-
-                      oneDay.dReport?.kpis?.items.map((oneKpi) => {
-                        return (
-                          <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
-                        );
-                      })
-                    : // ####################
+                  {oneDay.dReport && // ####################
                     // ooooo
                     // ####################
-                    !oneDay.dReport &&
-                      oneDay.date.slice(5, 15) === d &&
-                      status === "true"
-                    ? // ####################
+
+                    oneDay.dReport?.kpis.items.map((oneKpi) => (
+                      <Table.Cell width={2}>haha{oneKpi.result}</Table.Cell>
+                    ))}
+
+                  {!oneDay.dReport &&
+                    oneDay.date.slice(5, 15) === d &&
+                    status === "true" &&
+                    // ####################
+                    // ooooo
+                    // ####################
+                    kpis.map((oneKpi, idx) => {
+                      console.log(idx, "====>kpi:<====", oneKpi);
+                      // ####################
                       // ooooo
                       // ####################
-                      kpis.map((oneKpi, idx) => {
-                        console.log(idx, "====>kpi:<====", oneKpi);
-                        // ####################
-                        // ooooo
-                        // ####################
-                        return (
-                          <Table.Cell width={2}>
-                            <Form.Input
-                              type="text"
-                              style={{ maxWidth: "5vw" }}
-                              placeholder={`${oneKpi.name}`}
-                              // disabled={oneDay.date.slice(5, 15) !== d}
-                              inverted
-                              transparent
-                              onChange={(e) => {
-                                console.log([e.target.value]);
-                                const result = Number(e.target.value);
-                                console.log(result, "R  E  S");
-                                setKpis((currentKpis) =>
-                                  currentKpis.map((x) =>
-                                    x.id === oneKpi.id ? { ...x, result } : x
-                                  )
-                                );
-                              }}
-                              value={oneKpi.result || ""}
-                            />
-                          </Table.Cell>
-                          // ) : (
-                          //   <Table.Cell width={2}>COu{oneKpi.result}</Table.Cell>
-                        );
-                        // ####################
-                        // ooooo
-                        // ####################
-                      })
-                    : null}
-                  {!oneDay.dReport && oneDay.date.slice(5, 15) === d
-                    ? status === "true" && (
-                        <TableCell colSpan="2">
-                          <Form.Button type="submit" color="green" fluid>
-                            Submit your work
-                          </Form.Button>
-                        </TableCell>
-                      )
-                    : null}
+                      return (
+                        <Table.Cell width={2}>
+                          <Form.Input
+                            type="text"
+                            style={{ maxWidth: "5vw" }}
+                            placeholder={`${oneKpi.name}`}
+                            // disabled={oneDay.date.slice(5, 15) !== d}
+                            inverted
+                            transparent
+                            onChange={(e) => {
+                              console.log([e.target.value]);
+                              const result = Number(e.target.value);
+                              console.log(result, "R  E  S");
+                              setKpis((currentKpis) =>
+                                currentKpis.map((x) =>
+                                  x.id === oneKpi.id ? { ...x, result } : x
+                                )
+                              );
+                            }}
+                            value={oneKpi.result || ""}
+                          />
+                        </Table.Cell>
+                        // ) : (
+                        //   <Table.Cell width={2}>COu{oneKpi.result}</Table.Cell>
+                      );
+                      // ####################
+                      // ooooo
+                      // ####################
+                    })}
+                  {!oneDay.dReport &&
+                    oneDay.date.slice(5, 15) === d &&
+                    status === "true" && (
+                      <TableCell colSpan="2">
+                        <Form.Button type="submit" color="green" fluid>
+                          Submit your work
+                        </Form.Button>
+                      </TableCell>
+                    )}
+                  {oneDay.dReport && (
+                    <>
+                      <TableCell>DailyPoints</TableCell>
+                      <TableCell>TotalPoint</TableCell>
+                    </>
+                  )}
                 </Table.Row>
               </>
             );
