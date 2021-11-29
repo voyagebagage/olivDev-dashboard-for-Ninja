@@ -33,19 +33,17 @@ function CampaignDetails() {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
-      // console.log(campaignData.data.getCampaign.id, "ID CAMP");
-
-      const DRData = await API.graphql(
-        graphqlOperation(getDailyReport, {
-          id: campaignData.data.getCampaign.dailyReports.items[0].id,
-        })
-      );
+      // const DRData = await API.graphql(
+      //   graphqlOperation(getDailyReport, {
+      //     id: campaignData.data.getCampaign.dailyReports.items[0].id,
+      //   })
+      // );
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
-      // setKpis(campaignData.data.getCampaign.kpis.items);
-      setKpis(DRData.data.getDailyReport.kpis.items);
+      setKpis(campaignData.data.getCampaign.dailyReports.items[0].kpis.items);
+      // setKpis(DRData.data.getDailyReport.kpis.items);
       console.log(campaignData.data.getCampaign, "campaignData");
-      console.log(DRData.data.getDailyReport, "getDailyReport");
+      // console.log(DRData.data.getDailyReport, "getDailyReport");
       console.log("succes campaignData");
     } catch (error) {
       console.log("there is an error with getCampaign", error);
@@ -78,7 +76,7 @@ function CampaignDetails() {
   // console.log(dailyReports?.items.length - 1, "LAST dailyReports");
   // console.log(dailyReports?.items, "dailyReports ARRAY");
   // console.log(dailyReports.items[0].kpi, "dailyReports ARRAY");
-  //'
+  //
   const panes = [
     {
       menuItem: {

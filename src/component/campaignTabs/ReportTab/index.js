@@ -32,13 +32,25 @@ const ReportTab = ({
   const { kpis, setKpis } = useKpis();
 
   const [dailyReport, setDailyReport] = useState({});
-  const initialState = { dates: "", kpi: [] };
+  const initialState = { date: "", dReport: {} };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
-  const d = new Date().toString().slice(0, 3);
+  const [todayResults, setTodayResults] = useState(false);
+  const d = toISOStrDDMMYYY(new Date());
   // console.log(d, "d");
   // const dt = new Date(17 - 11 - 2021);
   // console.log(dt, "DT");
+  function toISOStr(date) {
+    return new Date(date).toISOString().split("T")[0];
+  }
+  function toISOStrDDMMYYY(date) {
+    return new Date(date)
+      .toISOString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("-");
+  }
   //####################################################
   //     GET the first day of the WEEK we are in
   //####################################################
@@ -46,9 +58,13 @@ const ReportTab = ({
     currentWeekNumber(new Date()),
     new Date().getFullYear()
   );
+  console.log("startWeekDate", startWeekDate);
   const lastDay = startWeekDate.getDate() + 4;
+  console.log("lastDay", lastDay);
   const endWeekDate = new Date(startWeekDate);
+  console.log("endWeekDate1", endWeekDate);
   endWeekDate.setDate(lastDay);
+  console.log("endWeekDate2", endWeekDate);
   //#####################################################
   //               WEEK ARRAY DATES
   //#####################################################
@@ -84,68 +100,61 @@ const ReportTab = ({
       const daysArray = ["Mon", "Tue", "Wed", "Thu", "Fri"];
       if (dailyReports?.items[i]) {
         console.log("                  0                          ");
-
+        console.log("dt:", dt);
         let dateDR = new Date(dailyReports?.items[i]?.createdAt);
         console.log("                  01                          ");
 
         let dateDRToIsoStr = dateDR.toISOString().split("T")[0];
         console.log("                  1                          ");
-        const toISOStr = (date) => {
-          return new Date(date).toISOString().split("T")[0];
-        };
-        let dtToIsoStr = dt.toISOString().split("T")[0];
-        // let dtStr = dt.toString().slice(0, 15);
-        console.log("dateDRToIso  :", dateDRToIsoStr);
-        console.log("dtStr  :", dtToIsoStr);
-        let dateDRStr = dateDR.toString().slice(0, 15);
+        let dtToIsoStr = new Date(`${dt} GMT`).toISOString().split("T")[0];
         // let dateDRStr = dateDR.toString().slice(0, 15);
-        // let dtStr = dt.toString();
         let comp1 = new Date(dt).getTime();
         let comp2 = dateDR.getTime();
         let minus = comp2 - comp1;
         console.log("                  2                          ");
-
-        let match = dailyReports?.items.filter((e) => {
-          const date = toISOStr(e.createdAt);
-          return date === dtToIsoStr;
-        });
-        // console.log(i, "M  A  T  C  H -- 1 :", match[match.length - 1]);
-        // // console.log("M  A  T  C  H iii :", match[i]);
-        // dailyReportsWeek.drInfo = match[match.length - 1];
-
-        // console.log("M  A  T  C  H :", match);
+        // let match = dailyReports?.items.filter((e) => {
+        //   const date = toISOStr(e.createdAt);
+        //   return date === dtToIsoStr;
+        // });
+        // console.log("match:", match);
         console.log(i, "comp1:", comp1, "comp2:", comp2, "minus:", minus);
+        console.log(
+          i,
+          "dtToIsoStr:",
+          dtToIsoStr,
+          "dateDR:",
+          dateDR,
+          "dateDRToIsoStr:",
+          dateDRToIsoStr,
+          "dailyReports?.items[i]?.createdAt:",
+          dailyReports?.items[i]?.createdAt
+        );
         console.log("1 dailyReportsWeek:", dailyReportsWeek);
-
-        // if (dtStr === dateDRStr) {
-        // }
         console.log("                  3                          ");
-
         //86400000 miliSecs in 24hours
         //if today
-        if (minus <= 86400000 && dailyReports?.items[i]) {
-          // console.log(dailyReports?.items[i], "IFFFFFF");
+        if (dateDRToIsoStr === dtToIsoStr) {
           console.log("           IFFFFF            ");
           console.log("                             ");
           console.log("==                         ==");
           console.log("====     C O U C O U     ====");
           console.log("=======               =======");
           console.log("=============================");
-          dailyReportsWeek.kpi = dailyReports?.items[i];
-          console.log(dailyReportsWeek.kpi, "dailyReportsWeek.kpi");
+          dailyReportsWeek.dReport = dailyReports?.items[i];
+          console.log(dailyReportsWeek.dReport, "dailyReportsWeek.dReport");
           console.log("2 dailyReportsWeek:", { ...dailyReportsWeek });
         } else {
           console.log("ELSE");
-          dailyReportsWeek.kpi = null;
+          dailyReportsWeek.dReport = null;
         }
         console.log("                  4                          ");
       }
-      dailyReportsWeek.dates = `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
+      dailyReportsWeek.date = `${daysArray[i]}  ${getYYYYMMDD(new Date(dt))
         .split("-")
         .reverse()
         .join("-")}`;
 
-      console.log("dailyReportsWeek.dates:", dailyReportsWeek.dates);
+      console.log("dailyReportsWeek.date:", dailyReportsWeek.date);
       console.log("3 dailyReportsWeek:", { ...dailyReportsWeek });
       // weekArrayLoop = [...weekArray];
       console.log("weekArrayLoop LOOP0000:", weekArrayLoop);
@@ -156,12 +165,12 @@ const ReportTab = ({
       // console.log("weekArray LOOP[i]:", newTab[i], typeof newTab);
       console.log("newTab LOOP:", newTab, typeof newTab);
       console.log("                  7                          ");
-      dailyReportsWeek.dates = "";
+      dailyReportsWeek.date = null;
       console.log("                  8                          ");
 
-      dailyReportsWeek.kpi = [];
+      dailyReportsWeek.dReport = null;
       console.log("                  9                          ");
-      dailyReportsWeek.drInfo = {};
+      // dailyReportsWeek.dReport = {};
       console.log("                  10                          ");
 
       // setDailyReportsWeek({});
@@ -181,6 +190,7 @@ const ReportTab = ({
   //               FETCH DAILY-REPORT
   //#####################################################
   const fetchDailyReport = async () => {
+    // setTodayResults(false);
     try {
       if (dailyReportId) {
         const dailyReportData = await API.graphql(
@@ -191,7 +201,7 @@ const ReportTab = ({
         console.log(dailyReportData.data.getDailyReport.kpis.items, "setKPIS");
 
         setDailyReport(dailyReportData.data.getDailyReport);
-        setKpis(dailyReportData.data.getDailyReport.kpis.items);
+        // setKpis(dailyReportData.data.getDailyReport.kpis.items);
         console.log("                 1 1 1                     ");
         const report = await getDaysArray(startWeekDate, endWeekDate);
         console.log("                 2 2 2                          ");
@@ -210,6 +220,7 @@ const ReportTab = ({
   //               SUBMIT RES + CREATE NEW DR
   //#####################################################
   const newDailyReport = async () => {
+    // setTodayResults(true);
     console.log("===================================");
     console.log("==                               ==");
     console.log("==                               ==");
@@ -241,7 +252,7 @@ const ReportTab = ({
       console.log("There is an error with update KPIS result", error);
     }
     let idReport = "";
-    console.log(dailyReport, "dailyreport sub");
+    console.log(dailyReport, "dailyreport submit");
     try {
       console.log("coucou");
       //here can choose btween id from campaign or camp of DR
@@ -333,8 +344,10 @@ const ReportTab = ({
         <Table.Body>
           {weekArray.map((oneDay, idx) => {
             console.log(idx, "=====", oneDay);
-            console.log(idx, "oneDayKPI", oneDay?.kpi);
-            console.log(oneDay.dates.slice(0, 3), d);
+            console.log(idx, "oneDaydReport", oneDay?.dReport);
+            console.log(idx, "oneDay.date sliced", oneDay.date.slice(5, 15));
+            console.log(idx, "d d d", d);
+
             console.log(status);
             return (
               <>
@@ -343,22 +356,30 @@ const ReportTab = ({
                     <Header
                       as="h4"
                       inverted
-                      color={oneDay.dates.slice(0, 3) === d ? "green" : null}
+                      color={oneDay.date.slice(5, 15) === d ? "green" : null}
                     >
-                      {oneDay.dates}
+                      {oneDay.date}
                     </Header>
                   </Table.Cell>
-                  {oneDay.kpi && oneDay.dates.slice(0, 3) !== d
+                  {oneDay.date.slice(5, 15) !== d && oneDay.dReport
                     ? // ####################
                       // ooooo
                       // ####################
-                      kpis.map((oneKpi) => (
-                        <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
-                      ))
+                      // kpis.map((oneKpi) => (
+                      //   <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
+                      // ))
+
+                      oneDay.dReport?.kpis?.items.map((oneKpi) => {
+                        return (
+                          <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
+                        );
+                      })
                     : // ####################
                     // ooooo
                     // ####################
-                    oneDay.dates.slice(0, 3) === d && status === "true"
+                    !oneDay.dReport &&
+                      oneDay.date.slice(5, 15) === d &&
+                      status === "true"
                     ? // ####################
                       // ooooo
                       // ####################
@@ -367,13 +388,13 @@ const ReportTab = ({
                         // ####################
                         // ooooo
                         // ####################
-                        return !oneKpi.result ? (
+                        return (
                           <Table.Cell width={2}>
                             <Form.Input
                               type="text"
                               style={{ maxWidth: "5vw" }}
                               placeholder={`${oneKpi.name}`}
-                              // disabled={oneDay.dates.slice(0, 3) !== d}
+                              // disabled={oneDay.date.slice(5, 15) !== d}
                               inverted
                               transparent
                               onChange={(e) => {
@@ -386,24 +407,26 @@ const ReportTab = ({
                                   )
                                 );
                               }}
-                              value={oneKpi.result}
+                              value={oneKpi.result || ""}
                             />
                           </Table.Cell>
-                        ) : (
-                          <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
+                          // ) : (
+                          //   <Table.Cell width={2}>COu{oneKpi.result}</Table.Cell>
                         );
                         // ####################
                         // ooooo
                         // ####################
                       })
                     : null}
-                  {oneDay.dates.slice(0, 3) === d && status === "true" && (
-                    <TableCell colSpan="2">
-                      <Form.Button type="submit" color="green" fluid>
-                        Submit your work
-                      </Form.Button>
-                    </TableCell>
-                  )}
+                  {!oneDay.dReport && oneDay.date.slice(5, 15) === d
+                    ? status === "true" && (
+                        <TableCell colSpan="2">
+                          <Form.Button type="submit" color="green" fluid>
+                            Submit your work
+                          </Form.Button>
+                        </TableCell>
+                      )
+                    : null}
                 </Table.Row>
               </>
             );
