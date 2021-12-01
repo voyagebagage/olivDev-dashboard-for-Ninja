@@ -23,6 +23,7 @@ function CampaignDetails() {
   const { kpis, setKpis } = useKpis();
   const [campaignDetails, setCampaignDetails] = useState({});
   const [edit, setEdit] = useState(false);
+  const [dailyReports, setDailyReports] = useState([]);
   // const [status, setStatus] = useState(false);
   // console.log({ name, id }, "params");
   // var currentWeekNumber = require("current-week-number");
@@ -40,6 +41,7 @@ function CampaignDetails() {
       // );
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
+      setDailyReports(campaignData.data.getCampaign.dailyReports.items);
       setKpis(
         campaignData.data.getCampaign.dailyReports.items[
           campaignData.data.getCampaign.dailyReports.items.length - 1
@@ -61,7 +63,7 @@ function CampaignDetails() {
     endDate,
     updatedAt,
     createdAt,
-    dailyReports,
+    // dailyReports,
     weeklyReports,
     monthlyReports,
     // kpis,
@@ -113,7 +115,7 @@ function CampaignDetails() {
         id: "tab2",
         content: "Reports",
         to: `/campaign/${name}/${id}/report/${
-          dailyReports?.items[dailyReports.items.length - 1]?.id
+          dailyReports[dailyReports.length - 1]?.id
         }`,
         exact: true,
         key: "reports",
@@ -124,7 +126,11 @@ function CampaignDetails() {
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
-              <ReportTab campaignDetails={campaignDetails} />
+              <ReportTab
+                campaignDetails={campaignDetails}
+                dailyReports={dailyReports}
+                setDailyReports={setDailyReports}
+              />
             </Tab.Pane>
           )}
         />
@@ -188,8 +194,8 @@ function CampaignDetails() {
           render={() => (
             <Tab.Pane basic attached={false}>
               <TargetSummaryTab
-                dayTarget={dailyReports?.items[0].dailyTarget}
-                week1={dailyReports?.items[0].weeklyTarget}
+                dayTarget={dailyReports[0].dailyTarget}
+                week1={dailyReports[0].weeklyTarget}
                 week2={null}
                 week3={null}
                 week4={null}
