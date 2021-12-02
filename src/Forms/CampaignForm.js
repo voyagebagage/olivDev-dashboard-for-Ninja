@@ -139,8 +139,10 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
       const now = new Date().getTime();
       const startTime = new Date(form.startDate).getTime();
       const endTime = new Date(form.endDate).getTime();
+      if (now < startTime) form.status = "not yet";
       if (now >= startTime && now <= endTime) form.status = "true";
-      if (now <= startTime || now >= endTime) form.status = "false";
+      if (now > endTime) form.status = "done";
+      // if (now <= startTime || now >= endTime) form.status = "false";
       form.category = "campaign";
       let idDailyReport = "";
       try {
@@ -199,8 +201,9 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
         const now = new Date().getTime();
         const startTime = new Date(form.startDate).getTime();
         const endTime = new Date(form.endDate).getTime();
+        if (now < startTime) form.status = "not yet";
         if (now >= startTime && now <= endTime) form.status = "true";
-        if (now <= startTime || now >= endTime) form.status = "false";
+        if (now > endTime) form.status = "done";
         //----------
         const campaignUpdate = await API.graphql(
           graphqlOperation(updateCampaign, { input: form })

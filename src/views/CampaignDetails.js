@@ -12,6 +12,7 @@ import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
 import TargetSummaryTab from "../component/campaignTabs/TargetsSummaryTab";
 import { setStatus } from "../lib/function";
 import { useKpis } from "../context/Provider";
+import { onCreateDailyReport } from "../graphql/subscriptions";
 
 //x
 function CampaignDetails() {
@@ -19,6 +20,7 @@ function CampaignDetails() {
   const goToPreviousPath = () => {
     history.goBack();
   };
+  // const { isLoading, setIsLoading } = useFetch();
   const { name, id } = useParams();
   const { kpis, setKpis } = useKpis();
   const [campaignDetails, setCampaignDetails] = useState({});
@@ -34,11 +36,6 @@ function CampaignDetails() {
       const campaignData = await API.graphql(
         graphqlOperation(getCampaign, { id: id })
       );
-      // const DRData = await API.graphql(
-      //   graphqlOperation(getDailyReport, {
-      //     id: campaignData.data.getCampaign.dailyReports.items[0].id,
-      //   })
-      // );
       console.log(campaignData.data.getCampaign.status, "status");
       setCampaignDetails(campaignData.data.getCampaign);
       setDailyReports(campaignData.data.getCampaign.dailyReports.items);
@@ -47,6 +44,7 @@ function CampaignDetails() {
           campaignData.data.getCampaign.dailyReports.items.length - 1
         ].kpis.items
       );
+      // setIsLoading(false);
       // setKpis(DRData.data.getDailyReport.kpis.items);
       console.log(campaignData.data.getCampaign, "campaignData");
       // console.log(DRData.data.getDailyReport, "getDailyReport");
@@ -57,32 +55,9 @@ function CampaignDetails() {
   };
   useEffect(() => fetchCampaign(), []);
 
-  const {
-    length,
-    startDate,
-    endDate,
-    updatedAt,
-    createdAt,
-    // dailyReports,
-    weeklyReports,
-    monthlyReports,
-    // kpis,
-    notes,
-    client,
-    agent,
-    status,
-  } = campaignDetails;
-  // console.log(status, "STA TUS");
-  // console.log(dailyReports?.items[0], " FIRST dailyReports");
-  // console.log(
-  //   dailyReports?.items[dailyReports.items.length - 1],
-  //   "LAST dailyReports"
-  // );
+  const { weeklyReports, monthlyReports, client, agent, status } =
+    campaignDetails;
 
-  // console.log(dailyReports?.items.length - 1, "LAST dailyReports");
-  // console.log(dailyReports?.items, "dailyReports ARRAY");
-  // console.log(dailyReports.items[0].kpi, "dailyReports ARRAY");
-  //
   const panes = [
     {
       menuItem: {
@@ -122,12 +97,13 @@ function CampaignDetails() {
       },
       pane: (
         <Route
-          path={`/campaign/${name}/${id}/report/:dailyReportId`}
+          path={`/campaign/:campName/:campId/report/:dailyReportId`}
           exact
           render={() => (
             <Tab.Pane basic attached={false}>
               <ReportTab
                 campaignDetails={campaignDetails}
+                setCampaignDetails={setCampaignDetails}
                 dailyReports={dailyReports}
                 setDailyReports={setDailyReports}
               />

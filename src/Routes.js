@@ -16,7 +16,7 @@ export const Routes = [
     path: "/",
     exact: true,
     component: Dashboard,
-    iconName: "game",
+    iconName: "dashboard",
     cName: "nav-text",
   },
   {
@@ -47,13 +47,13 @@ export const Routes = [
     // iconName: "user",
     cName: "nav-text",
   },
-  {
-    title: "Reports",
-    path: "/reports",
-    component: Reports,
-    iconName: "fork",
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Reports",
+  //   path: "/reports",
+  //   component: Reports,
+  //   iconName: "fork",
+  //   cName: "nav-text",
+  // },
   {
     title: "Agent",
     path: "/agent",

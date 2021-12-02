@@ -1,4 +1,4 @@
-import { Menu, Icon, Dropdown } from "semantic-ui-react";
+import { Menu, Icon, Dropdown, Image } from "semantic-ui-react";
 // import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import {
@@ -8,16 +8,19 @@ import {
 } from "../../arrayLists/index";
 import { useDropDownFilter } from "../../context/Provider";
 import SearchBar from "../SearchBar";
+import logoDash from "../../img/logoDash.png";
 
 function Header({ handleSidebarItem }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
+
   console.log(location.pathname, "location");
   return (
     <div>
       <Menu stackable size="tiny">
         <Menu.Item>
-          <img src="https://react.semantic-ui.com/logo.png" alt="logo" />
+          <Image src={logoDash}></Image>
+          {/* <img src={logoDash} alt="logo" id="logoDash" /> */}
         </Menu.Item>
         <Menu.Item onClick={handleSidebarItem}>
           <Icon name="sidebar" />
