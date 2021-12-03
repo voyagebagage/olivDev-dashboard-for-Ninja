@@ -18,6 +18,7 @@ import { getDailyReports } from "../../../graphql/custom-queries";
 import {
   createDailyReport,
   createKpi,
+  updateDailyReport,
   updateKpi,
 } from "../../../graphql/mutations";
 import {
@@ -56,6 +57,7 @@ const ReportTab = ({
   console.log("useState kpis:", kpis);
   // const initialReport = dailyReports[dailyReports.length - 1];
   const [dailyReport, setDailyReport] = useState({});
+  const [dailyPoints, setDailyPoints] = useState(0);
   console.log("useState dailyReport:", dailyReport);
   const initialState = { date: "", dReport: {} };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
@@ -280,12 +282,12 @@ const ReportTab = ({
     console.log("kpisSaved:", kpisSaved);
     try {
       //~~~~~~~~~ UPDATE KPI ~~~~~~~~~~
+      let total = 0;
       for (let i = 0; i < kpis.length; i++) {
         delete kpis[i].createdAt;
         delete kpis[i].updatedAt;
-        // delete kpis[i].campaign;
-        // delete kpis[i].agent;
-        // delete kpis[i].dailyReport;
+        total += kpis[i].result * kpis[i].coeff;
+        console.log(i, "total:", total, typeof total);
         console.log(kpis[i], "KPI [iiii]");
         console.log(kpis[i].id, "KPI [ID]");
         console.log(kpis[i].result, "KPI [RES]");
@@ -297,10 +299,21 @@ const ReportTab = ({
         console.log(`succes with updating ${kpis[i]?.name}`);
         console.log("my K p I", updateResult.data.updateKpi);
       }
+      // setDailyPoints(total);
       // await setKpis([]);
       console.log("kpis update:", kpis);
       // } catch (error) {
       //   console.log("There is an error with update KPIS result", error);
+      // }
+      // try {
+      const updateDailyPoints = await API.graphql(
+        graphqlOperation(updateDailyReport, {
+          input: { id: dailyReport.id, dailyPoints: total },
+        })
+      );
+      console.log("succes ! up DR:", updateDailyPoints.data.updateDailyReport);
+      // } catch (error) {
+      //   console.log("there is a problem with Update Kpi", error);
       // }
       let newDReport = {};
       console.log(dailyReport, "dailyreport submit");
@@ -429,7 +442,7 @@ const ReportTab = ({
             <Table.HeaderCell>% Points</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body style={{ backgroundColor: "#566A63" }}>
           {weekArray &&
             weekArray.map((oneDay, idx) => {
               console.log(idx, "=====", oneDay);
@@ -459,10 +472,7 @@ const ReportTab = ({
                       // ooooo
                       // ####################
                       oneDay.dReport?.kpis?.items.map((oneKpi) => (
-                        <>
-                          <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
-                          {/* <Table.Cell>% target</Table.Cell> */}
-                        </>
+                        <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
                       ))}
                     {!oneDay.dReport && <Table.Cell>bit au cul</Table.Cell>}
                     {oneDay.dReport &&
@@ -520,7 +530,7 @@ const ReportTab = ({
                           // dailyReports.map((dr) => (
                           <>
                             <Table.Cell>
-                              daily points
+                              {oneDay.dReport.dailyPoints}
                               {/* {oneDay.dReport.result * oneDay.dReport.target} */}
                             </Table.Cell>
                             <Table.Cell>% target</Table.Cell>

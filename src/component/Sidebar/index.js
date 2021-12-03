@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+
 import { Route, Link, useLocation } from "react-router-dom";
-import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar, Header } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
@@ -38,11 +39,9 @@ const SidebarComponent = ({ sidebarItem }) => {
                   active={sidebarActive === view.path}
                   onClick={() => setSidebarActive(view.path)}
                 >
-                  <div
-                    className={sidebarItem ? null : "dFlex-sBetween-aCenter"}
-                  >
-                    <Icon size="big" name={view.iconName} />
-                    <h4>{view.title}</h4>
+                  <div className={sidebarItem ? null : "dFlex-fStart-aCenter"}>
+                    <Icon className="sidebarIcon" name={view.iconName} />
+                    <h4 className="dFlex sidebarName">{view.title}</h4>
                   </div>
                 </Menu.Item>
               );

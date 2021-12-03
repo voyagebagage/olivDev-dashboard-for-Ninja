@@ -19,7 +19,7 @@ function Header({ handleSidebarItem }) {
     <div>
       <Menu stackable size="tiny">
         <Menu.Item>
-          <Image src={logoDash}></Image>
+          <Image src={logoDash} className="logoImg" size="tiny"></Image>
           {/* <img src={logoDash} alt="logo" id="logoDash" /> */}
         </Menu.Item>
         <Menu.Item onClick={handleSidebarItem}>

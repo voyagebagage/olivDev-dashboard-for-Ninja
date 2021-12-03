@@ -125,16 +125,6 @@ type Campaign
 ################## REPORTS #########################################
 
 ####################################################################
-type DailyReport @model @searchable {
-  id: ID
-  campaign: Campaign! @connection(name: "CampaignDailyReports")
-  kpis: [Kpi!]! @connection(name: "DailyReportKpis")
-  createdAt: AWSDateTime
-  dailyTarget: Int
-  weeklyReport: WeeklyReport @connection(name: "WeeklyReport")
-  dailyPoints: Int
-  weeklyTarget: Int #it might be taken off
-}
 ##--------------- WEEKLY -----------------------##
 type WeeklyReport @model @searchable {
   id: ID
@@ -155,6 +145,16 @@ type MonthlyReport @model @searchable {
   monthlyTarget: Int!
   weeklyReports: [WeeklyReport]! @connection(name: "MonthlyReport")
   monthlyPoints: Int
+}
+type DailyReport @model @searchable {
+  id: ID
+  campaign: Campaign! @connection(name: "CampaignDailyReports")
+  kpis: [Kpi!]! @connection(name: "DailyReportKpis")
+  createdAt: AWSDateTime
+  dailyTarget: Int
+  weeklyReport: WeeklyReport @connection(name: "WeeklyReport")
+  dailyPoints: Int
+  weeklyTarget: Int #it might be taken off
 }
 ###################################################################
 

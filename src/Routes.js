@@ -12,7 +12,7 @@ import AgentReport from "./views/AgentReport";
 
 export const Routes = [
   {
-    title: "LeaderBoard",
+    title: "HOME",
     path: "/",
     exact: true,
     component: Dashboard,
@@ -20,7 +20,7 @@ export const Routes = [
     cName: "nav-text",
   },
   {
-    title: "Clients",
+    title: "CLIENTS",
     path: "/client-list",
     component: ClientList,
     iconName: "user",
@@ -34,7 +34,7 @@ export const Routes = [
     cName: "nav-text",
   },
   {
-    title: "Campaigns",
+    title: "CAMPAIGNS",
     path: "/campaigns",
     component: Campaigns,
     iconName: "gem",
@@ -55,7 +55,7 @@ export const Routes = [
   //   cName: "nav-text",
   // },
   {
-    title: "Agent",
+    title: "AGENT",
     path: "/agent",
     component: Agent,
     iconName: "hand point right",
@@ -68,7 +68,7 @@ export const Routes = [
     cName: "nav-text",
   },
   {
-    title: "Stats",
+    title: "STATS",
     path: "/stats",
     component: Stats,
     iconName: "chart bar",
