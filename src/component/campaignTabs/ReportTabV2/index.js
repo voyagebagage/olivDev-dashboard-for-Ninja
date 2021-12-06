@@ -9,7 +9,6 @@ import {
   Dimmer,
   Loader,
   Image,
-  Icon,
 } from "semantic-ui-react";
 import { useKpis } from "../../../context/Provider";
 import useForm from "../../../Forms/useForm";
@@ -22,12 +21,11 @@ import {
 } from "../../../graphql/mutations";
 import { onCreateDailyReport } from "../../../graphql/subscriptions";
 import { getDateOfISOWeek } from "../../../lib/function";
-import AddIcon from "../../AddIcon";
 var currentWeekNumber = require("current-week-number");
 //======================
 //     + function +
 //======================
-const ReportTab = ({
+const ReportTabV2 = ({
   campaignDetails,
   setCampaignDetails,
   dailyReports,
@@ -39,7 +37,7 @@ const ReportTab = ({
   // console.log(dailyReportId, campName, "params");
   const { setForm, form } = useForm();
   const [isLoading, setIsLoading] = useState(true);
-  const [addDailyReportBool, setAddDailyReportBool] = useState(false);
+
   const { kpis, setKpis } = useKpis();
   // const initialReport = dailyReports[dailyReports.length - 1];
   const [dailyReport, setDailyReport] = useState({});
@@ -71,7 +69,6 @@ const ReportTab = ({
   const lastDay = startWeekDate.getDate() + 4;
   const endWeekDate = new Date(startWeekDate);
   endWeekDate.setDate(lastDay);
-
   //#####################################################
   //               WEEK ARRAY DATES
   //#####################################################
@@ -86,9 +83,7 @@ const ReportTab = ({
     ) {
       const daysArray = ["Mon", "Tue", "Wed", "Thu", "Fri"];
       if (dailyReportArray[i]) {
-        console.log("dailyReportArray[i]?.date:", dailyReportArray[i]?.date);
         let dateDR = new Date(dailyReportArray[i]?.createdAt);
-        console.log("dateDR:", dateDR);
         let dateDRToIsoStr = toISOStr(`${dateDR} GMT`);
         let dtToIsoStr = toISOStr(`${dt} GMT`);
         //---------+++++++++++++
@@ -104,11 +99,8 @@ const ReportTab = ({
         //---------+++++++++++++
         console.log("find:", find);
         console.log("findNullResult:", findNullResult);
-        // let dateDRStr = dateDR.toString().slice(0, 15);
-        let comp1 = new Date(dt).getTime();
-        let comp2 = new Date().getTime();
-        let minus = comp2 - comp1;
-        console.log("1", comp1, "2", comp2, typeof minus, minus);
+        // let comp1 = new Date(dt).getTime();
+        // let comp2 = dateDR.getTime();
         //if today
         //86400000 miliSecs in 24hours
         if (find) {
@@ -123,14 +115,8 @@ const ReportTab = ({
 
           dailyReportsWeek.dReport = null;
         }
-        if (minus >= 0) dailyReportsWeek.showAddButton = true;
-        if (minus < 0) dailyReportsWeek.showAddButton = false;
       }
       dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYY(dt)}`;
-      console.log(
-        "dailyReportsWeek.showAddButton:",
-        dailyReportsWeek.showAddButton
-      );
       newTab.push({ ...dailyReportsWeek });
       dailyReportsWeek.date = null;
       dailyReportsWeek.dReport = null;
@@ -139,15 +125,11 @@ const ReportTab = ({
     testFind = false;
     return newTab;
   };
-  // weekArray = getDaysArray(startWeekDate, endWeekDate);
-  // console.log(weekArray, "WA", typeof weekArray);
-  // console.log([weekArray], "WA");
   //#####################################################
   //               FETCH DAILY-REPORT
   //#####################################################
   const fetchDailyReport = async () => {
     try {
-      setAddDailyReportBool(false);
       const listDailyReports = await API.graphql(
         graphqlOperation(getDailyReports, { id: campId })
       );
@@ -178,30 +160,47 @@ const ReportTab = ({
   //               SUBMIT RES + CREATE NEW DR
   //#####################################################
   const newDailyReport = async () => {
+    setForm(dailyReport);
     const kpisSaved = dailyReport.kpis.items;
     try {
       //~~~~~~~~~ UPDATE KPI ~~~~~~~~~~
-      let total = 0;
-      for (let i = 0; i < kpis.length; i++) {
-        delete kpis[i].createdAt;
-        delete kpis[i].updatedAt;
-        total += kpis[i].result * kpis[i].coeff;
-        const updateResult = await API.graphql(
-          graphqlOperation(updateKpi, {
-            input: kpis[i],
-          })
-        );
-        console.log(`succes with updating ${kpis[i]?.name}`);
-        console.log("my K p I", updateResult.data.updateKpi);
-      }
-      const updateDailyPoints = await API.graphql(
-        graphqlOperation(updateDailyReport, {
-          input: { id: dailyReport.id, dailyPoints: total },
+      //   let total = 0;
+      //   for (let i = 0; i < kpis.length; i++) {
+      //     delete kpis[i].createdAt;
+      //     delete kpis[i].updatedAt;
+      //     total += kpis[i].result * kpis[i].coeff;
+      //     const updateResult = await API.graphql(
+      //       graphqlOperation(updateKpi, {
+      //         input: kpis[i],
+      //       })
+      //     );
+      //     console.log(`succes with updating ${kpis[i]?.name}`);
+      //     console.log("my K p I", updateResult.data.updateKpi);
+      //   }
+      //   const updateDailyPoints = await API.graphql(
+      //     graphqlOperation(updateDailyReport, {
+      //       input: { id: dailyReport.id, dailyPoints: total },
+      //     })
+      //   );
+      //   console.log("succes ! up DR:", updateDailyPoints.data.updateDailyReport);
+      let newDReport = {};
+      //~~~~~~~~~ CREATE NEW DR ~~~~~~~~~~
+      delete form.kpis;
+      delete form.id;
+      delete form.campaign;
+      delete form.createdAt;
+      delete form.updatedAt;
+      delete form.weeklyReport;
+      delete form.monthlyReport;
+      const createNewDR = await API.graphql(
+        graphqlOperation(createDailyReport, {
+          input: { dailyReportCampaignId: id, ...form },
         })
       );
-      console.log("succes ! up DR:", updateDailyPoints.data.updateDailyReport);
-      let newDReport = {};
-
+      newDReport = createNewDR.data.createDailyReport;
+      setDailyReport(newDReport);
+      console.log(createNewDR.data.createDailyReport, "createNewDR");
+      setForm({});
       //~~~~~~~~~ CREATE NEW KPIS ~~~~~~~~~~
       const elem = [];
       for (let i = 0; i < kpisSaved.length; i++) {
@@ -228,56 +227,24 @@ const ReportTab = ({
       console.log("There is an erro with create Kpi ", error);
     }
   };
-  const addDailyReport = async (idx, date) => {
-    console.log("i", idx, idx, idx, idx, idx, idx, idx, "i");
-    console.log("date", date);
-    setAddDailyReportBool(true);
-    dailyReport.date = date;
-    setForm({ dailyReport });
-    console.log("dailyReport.date:", dailyReport.date);
-    try {
-      //~~~~~~~~~ CREATE NEW DR ~~~~~~~~~~
-      delete form.kpis;
-      delete form.id;
-      delete form.campaign;
-      delete form.createdAt;
-      delete form.updatedAt;
-      delete form.weeklyReport;
-      delete form.monthlyReport;
-      const createNewDR = await API.graphql(
-        graphqlOperation(createDailyReport, {
-          input: { dailyReportCampaignId: id, ...form },
-        })
-      );
-      const newDReport = createNewDR.data.createDailyReport;
-      setDailyReport(newDReport);
-      // setDailyReports([...dailyReports, newDReport]);
-      console.log(createNewDR.data.createDailyReport, "createNewDR");
-      setForm({});
-      console.log("succes");
-    } catch (error) {
-      console.log("there is an error with create DR :", error);
-    }
-  };
+
   useEffect(() => {
     fetchDailyReport();
     //  --------------Suscription--------------------
-    // const subscription = API.graphql(
-    //   graphqlOperation(onCreateDailyReport)
-    // ).subscribe({
-    //   next: (eventData) => {
-    //     const newDR = eventData.value.data.onCreateClient;
-    //     const reports = [...dailyReports, newDR];
-    //     setDailyReports(reports);
-    //     fetchDailyReport();
-    //   },
-    // });
-    // return () => subscription.unsubscribe();
+    const subscription = API.graphql(
+      graphqlOperation(onCreateDailyReport)
+    ).subscribe({
+      next: (eventData) => {
+        const newDR = eventData.value.data.onCreateClient;
+        const reports = [...dailyReports, newDR];
+        setDailyReports(reports);
+        fetchDailyReport();
+      },
+    });
+    return () => subscription.unsubscribe();
   }, []);
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   // console.log(kpis, "KPIS");
-  console.log("form:", { ...form }, "form.date", form.date);
-
   console.log(kpis, "<==***KPIS**==");
   console.log(dailyReport, "dailyReport");
   console.log("<-- d a i l y   R e p o r t s: -->", dailyReports);
@@ -321,7 +288,6 @@ const ReportTab = ({
             weekArray.map((oneDay, idx) => {
               console.log(idx, "=====", oneDay);
               console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
-              console.log("0 R E P O R T :", oneDay.dReport?.kpis?.items[0]);
               console.log(
                 idx,
                 "oneDay.date sliced",
@@ -333,7 +299,7 @@ const ReportTab = ({
               return (
                 <>
                   <Table.Row>
-                    <Table.Cell width={3}>
+                    <Table.Cell>
                       <Header
                         as="h4"
                         inverted
@@ -343,103 +309,76 @@ const ReportTab = ({
                       </Header>
                     </Table.Cell>
                     {oneDay.dReport &&
-                      oneDay.dReport?.kpis?.items[0]?.result !== null &&
-                      // ####################
+                      oneDay.dReport?.kpis?.items[0].result !== null && // ####################
                       // ooooo
                       // ####################
                       oneDay.dReport?.kpis?.items.map((oneKpi) => (
-                        <Table.Cell>{oneKpi.result}</Table.Cell>
+                        <Table.Cell width={2}>{oneKpi.result}</Table.Cell>
                       ))}
-                    {/* {!oneDay.dReport && <Table.Cell>No DR</Table.Cell>} */}
-                    {addDailyReportBool ? (
-                      <>
-                        {oneDay.dReport &&
-                          oneDay.dReport?.kpis?.items[0]?.result === null &&
-                          oneDay.date.slice(5, 15) === d &&
-                          status === "true" &&
-                          // ####################
-                          // ooooo
-                          // ####################
-                          kpis.map((oneKpi, idx) => {
-                            console.log(idx, "====>kpi:<====", oneKpi);
-                            // ####################
-                            // ooooo
-                            // ####################
-                            return (
-                              <Table.Cell width={2}>
-                                <Form.Input
-                                  type="text"
-                                  style={{ maxWidth: "5vw" }}
-                                  placeholder={`${oneKpi.name}`}
-                                  disabled={oneDay.date.slice(5, 15) !== d}
-                                  inverted
-                                  transparent
-                                  onChange={(e) => {
-                                    console.log([e.target.value]);
-                                    const result = Number(e.target.value);
-                                    console.log(result, "R  E  S");
-                                    setKpis((currentKpis) =>
-                                      currentKpis.map((x) =>
-                                        x.id === oneKpi.id
-                                          ? { ...x, result }
-                                          : x
-                                      )
-                                    );
-                                  }}
-                                  value={oneKpi.result || ""}
-                                />
-                              </Table.Cell>
-                            );
-                            // ####################
-                            // ooooo
-                            // ####################
-                          })}
-                        {oneDay.dReport &&
-                          oneDay.dReport?.kpis?.items[0]?.result === null &&
-                          oneDay.date.slice(5, 15) === d &&
-                          status === "true" && (
-                            <TableCell colSpan="2">
-                              <Form.Button type="submit" color="green" fluid>
-                                Submit your work
-                              </Form.Button>
-                            </TableCell>
-                          )}
-                        {oneDay.dReport &&
-                          oneDay.dReport?.kpis?.items[0]?.result !== null && (
-                            <>
-                              <Table.Cell>
-                                {oneDay.dReport.dailyPoints}
-                                {/* {oneDay.dReport.result * oneDay.dReport.target} */}
-                              </Table.Cell>
-                              <Table.Cell>% target</Table.Cell>
-                            </>
-                          )}
-                      </>
-                    ) : oneDay.showAddButton ? (
-                      <Table.Cell
-                        colSpan="5"
-                        style={{ backgroundColor: "#333333" }}
-                      >
-                        <div className="dFlex-center">
-                          <Icon
-                            size="big"
-                            name="add circle"
-                            // color="green"
-                            style={{ color: "#8CABA0" }}
-                            onClick={() =>
-                              addDailyReport(
-                                idx,
-                                oneDay.date
-                                  .slice(5, 15)
-                                  .split("-")
-                                  .reverse()
-                                  .join("-")
-                              )
-                            }
-                          />
-                        </div>
-                      </Table.Cell>
-                    ) : null}
+                    {!oneDay.dReport && <Table.Cell>bit au cul</Table.Cell>}
+                    {oneDay.dReport &&
+                      oneDay.dReport?.kpis?.items[0].result === null &&
+                      oneDay.date.slice(5, 15) === d &&
+                      status === "true" &&
+                      // ####################
+                      // ooooo
+                      // ####################
+                      kpis.map((oneKpi, idx) => {
+                        console.log(idx, "====>kpi:<====", oneKpi);
+                        // ####################
+                        // ooooo
+                        // ####################
+                        return (
+                          <Table.Cell width={2}>
+                            <Form.Input
+                              type="text"
+                              style={{ maxWidth: "5vw" }}
+                              placeholder={`${oneKpi.name}`}
+                              disabled={oneDay.date.slice(5, 15) !== d}
+                              inverted
+                              transparent
+                              onChange={(e) => {
+                                console.log([e.target.value]);
+                                const result = Number(e.target.value);
+                                console.log(result, "R  E  S");
+                                setKpis((currentKpis) =>
+                                  currentKpis.map((x) =>
+                                    x.id === oneKpi.id ? { ...x, result } : x
+                                  )
+                                );
+                              }}
+                              value={oneKpi.result || ""}
+                            />
+                          </Table.Cell>
+                        );
+                        // ####################
+                        // ooooo
+                        // ####################
+                      })}
+                    {oneDay.dReport &&
+                      oneDay.dReport?.kpis?.items[0].result === null &&
+                      oneDay.date.slice(5, 15) === d &&
+                      status === "true" && (
+                        <TableCell colSpan="2">
+                          <Form.Button type="submit" color="green" fluid>
+                            Submit your work
+                          </Form.Button>
+                        </TableCell>
+                      )}
+                    {
+                      oneDay.dReport &&
+                        oneDay.dReport?.kpis?.items[0].result !== null && (
+                          // dailyReports.map((dr) => (
+                          <>
+                            <Table.Cell>
+                              {oneDay.dReport.dailyPoints}
+                              {/* {oneDay.dReport.result * oneDay.dReport.target} */}
+                            </Table.Cell>
+                            <Table.Cell>% target</Table.Cell>
+                          </>
+                        )
+                      // ))
+                    }
                   </Table.Row>
                 </>
               );
@@ -487,4 +426,4 @@ const ReportTab = ({
   );
 };
 
-export default ReportTab;
+export default ReportTabV2;

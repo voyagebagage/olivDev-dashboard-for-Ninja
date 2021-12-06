@@ -100,9 +100,9 @@ html,
 /* .nav-text:after {
   background-color: #566a63;
 } */
-body.sidebar-pushable > .pusher {
+/* body.sidebar-pushable > .pusher {
   background-color: #566a63;
-}
+} */
 .kpi-header {
   padding-left: 10%;
 }

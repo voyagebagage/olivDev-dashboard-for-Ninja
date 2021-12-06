@@ -6,6 +6,7 @@ import { Segment, Header, Tab, Icon, Button } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import InfoTab from "../component/campaignTabs/InfoTab";
 import ReportTab from "../component/campaignTabs/ReportTab";
+import ReportTabV2 from "../component/campaignTabs/ReportTabV2";
 import WeeklySummaryTab from "../component/campaignTabs/WeeklySummaryTab";
 import MonthlyTotalsTab from "../component/campaignTabs/MonthlyTotalsTab";
 import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
@@ -90,7 +91,7 @@ function CampaignDetails() {
         id: "tab2",
         content: "Reports",
         to: `/campaign/${name}/${id}/report/${
-          dailyReports[dailyReports.length - 1]?.id
+          dailyReports[dailyReports.length - 2]?.id
         }`,
         exact: true,
         key: "reports",
@@ -102,6 +103,34 @@ function CampaignDetails() {
           render={() => (
             <Tab.Pane basic attached={false}>
               <ReportTab
+                campaignDetails={campaignDetails}
+                setCampaignDetails={setCampaignDetails}
+                dailyReports={dailyReports}
+                setDailyReports={setDailyReports}
+              />
+            </Tab.Pane>
+          )}
+        />
+      ),
+    },
+    {
+      menuItem: {
+        as: NavLink,
+        id: "tab0",
+        content: "ReportsV2",
+        to: `/campaign/${name}/${id}/reportv2/${
+          dailyReports[dailyReports.length - 1]?.id
+        }`,
+        exact: true,
+        key: "reportsV2",
+      },
+      pane: (
+        <Route
+          path={`/campaign/:campName/:campId/reportv2/:dailyReportId`}
+          exact
+          render={() => (
+            <Tab.Pane basic attached={false}>
+              <ReportTabV2
                 campaignDetails={campaignDetails}
                 setCampaignDetails={setCampaignDetails}
                 dailyReports={dailyReports}

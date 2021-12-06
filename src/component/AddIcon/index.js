@@ -1,12 +1,13 @@
 import { Icon } from "semantic-ui-react";
 import React from "react";
 
-const AddIcon = ({ setVisible }) => (
+const AddIcon = ({ setVisible, color }) => (
   <Icon
     size="big"
     name="add circle"
+    color={color}
     onClick={() => setVisible(true)}
-    style={{ color: "#8CABA0" }}
+    style={{ color: !color ? "#8CABA0" : null }}
   />
 );
 

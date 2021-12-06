@@ -137,7 +137,6 @@ type WeeklyReport @model @searchable {
   weeklyPoints: Int
 }
 ##--------------- MONTHLY -----------------------##
-
 type MonthlyReport @model @searchable {
   id: ID
   campaign: Campaign! @connection(name: "CampaignMonthlyReports")
@@ -146,10 +145,12 @@ type MonthlyReport @model @searchable {
   weeklyReports: [WeeklyReport]! @connection(name: "MonthlyReport")
   monthlyPoints: Int
 }
+##--------------- DAIlY -----------------------##
 type DailyReport @model @searchable {
   id: ID
   campaign: Campaign! @connection(name: "CampaignDailyReports")
   kpis: [Kpi!]! @connection(name: "DailyReportKpis")
+  date: AWSDate
   createdAt: AWSDateTime
   dailyTarget: Int
   weeklyReport: WeeklyReport @connection(name: "WeeklyReport")
