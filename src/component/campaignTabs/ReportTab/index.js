@@ -104,15 +104,7 @@ const ReportTab = ({
           // const date = e.date;
           return dtToIsoStr === e.date;
         });
-        //---------+++++++++++++
-        // let findNullResult = dailyReportArray.find((e) => {
-        //   const nullResult = e.kpis?.items[0]?.result;
-        //   return nullResult === null;
-        // });
-        //---------+++++++++++++
         console.log("find:", find);
-        // console.log("findNullResult:", findNullResult);
-        // let dateDRStr = dateDR.toString().slice(0, 15);
         console.log("1", comp1, "2", comp2, typeof minus, minus);
         //if today
         //86400000 miliSecs in 24hours
@@ -197,13 +189,11 @@ const ReportTab = ({
     console.log("showAddButton:", day.showAddButton);
     console.log("day:", day);
     console.log("date", date);
-    // day.showAddButton = false;
     copyWeekArray[idx].showAddButton = false;
     setForm({ dailyReport });
     console.log("dailyReport.date:", dailyReport.date);
     console.log("showAddButton:", day.showAddButton);
     console.log("copyWeekArray:", copyWeekArray);
-    // console.log("addDailyReportBool:", addDailyReportBool);
     try {
       //~~~~~~~~~ CREATE NEW DR ~~~~~~~~~~
       delete form.kpis;
