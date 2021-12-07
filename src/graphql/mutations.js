@@ -623,6 +623,7 @@ export const createCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -736,6 +737,7 @@ export const updateCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -849,6 +851,7 @@ export const deleteCampaign = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -891,336 +894,6 @@ export const deleteCampaign = /* GraphQL */ `
         }
         nextToken
       }
-      updatedAt
-    }
-  }
-`;
-export const createDailyReport = /* GraphQL */ `
-  mutation CreateDailyReport(
-    $input: CreateDailyReportInput!
-    $condition: ModelDailyReportConditionInput
-  ) {
-    createDailyReport(input: $input, condition: $condition) {
-      id
-      campaign {
-        id
-        category
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        createdAt
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        weeklyReports {
-          nextToken
-        }
-        monthlyReports {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
-          result
-          target
-          nextWeekTarget
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      dailyTarget
-      weeklyReport {
-        id
-        willBeActiveOn
-        campaign {
-          id
-          category
-          name
-          type
-          startDate
-          endDate
-          createdAt
-          status
-          length
-          notes
-          updatedAt
-        }
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        weeklyTarget
-        monthlyReport {
-          id
-          createdAt
-          monthlyTarget
-          monthlyPoints
-          updatedAt
-        }
-        weeklyPoints
-        updatedAt
-      }
-      dailyPoints
-      weeklyTarget
-      updatedAt
-    }
-  }
-`;
-export const updateDailyReport = /* GraphQL */ `
-  mutation UpdateDailyReport(
-    $input: UpdateDailyReportInput!
-    $condition: ModelDailyReportConditionInput
-  ) {
-    updateDailyReport(input: $input, condition: $condition) {
-      id
-      campaign {
-        id
-        category
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        createdAt
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        weeklyReports {
-          nextToken
-        }
-        monthlyReports {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
-          result
-          target
-          nextWeekTarget
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      dailyTarget
-      weeklyReport {
-        id
-        willBeActiveOn
-        campaign {
-          id
-          category
-          name
-          type
-          startDate
-          endDate
-          createdAt
-          status
-          length
-          notes
-          updatedAt
-        }
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        weeklyTarget
-        monthlyReport {
-          id
-          createdAt
-          monthlyTarget
-          monthlyPoints
-          updatedAt
-        }
-        weeklyPoints
-        updatedAt
-      }
-      dailyPoints
-      weeklyTarget
-      updatedAt
-    }
-  }
-`;
-export const deleteDailyReport = /* GraphQL */ `
-  mutation DeleteDailyReport(
-    $input: DeleteDailyReportInput!
-    $condition: ModelDailyReportConditionInput
-  ) {
-    deleteDailyReport(input: $input, condition: $condition) {
-      id
-      campaign {
-        id
-        category
-        name
-        type
-        client {
-          id
-          category
-          firstName
-          lastName
-          email
-          phone
-          companyName
-          website
-          country
-          notes
-          createdAt
-          updatedAt
-        }
-        agent {
-          id
-          category
-          name
-          email
-          dailyPoints
-          weeklyPoints
-          monthlyPoints
-          totalPoints
-          createdAt
-          updatedAt
-        }
-        startDate
-        endDate
-        createdAt
-        status
-        length
-        notes
-        dailyReports {
-          nextToken
-        }
-        weeklyReports {
-          nextToken
-        }
-        monthlyReports {
-          nextToken
-        }
-        kpis {
-          nextToken
-        }
-        updatedAt
-      }
-      kpis {
-        items {
-          id
-          name
-          result
-          target
-          nextWeekTarget
-          coeff
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      createdAt
-      dailyTarget
-      weeklyReport {
-        id
-        willBeActiveOn
-        campaign {
-          id
-          category
-          name
-          type
-          startDate
-          endDate
-          createdAt
-          status
-          length
-          notes
-          updatedAt
-        }
-        dailyReports {
-          nextToken
-        }
-        createdAt
-        weeklyTarget
-        monthlyReport {
-          id
-          createdAt
-          monthlyTarget
-          monthlyPoints
-          updatedAt
-        }
-        weeklyPoints
-        updatedAt
-      }
-      dailyPoints
-      weeklyTarget
       updatedAt
     }
   }
@@ -1287,6 +960,7 @@ export const createWeeklyReport = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -1387,6 +1061,7 @@ export const updateWeeklyReport = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -1487,6 +1162,7 @@ export const deleteWeeklyReport = /* GraphQL */ `
       dailyReports {
         items {
           id
+          date
           createdAt
           dailyTarget
           dailyPoints
@@ -1753,6 +1429,339 @@ export const deleteMonthlyReport = /* GraphQL */ `
     }
   }
 `;
+export const createDailyReport = /* GraphQL */ `
+  mutation CreateDailyReport(
+    $input: CreateDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    createDailyReport(input: $input, condition: $condition) {
+      id
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          name
+          result
+          target
+          nextWeekTarget
+          coeff
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      date
+      createdAt
+      dailyTarget
+      weeklyReport {
+        id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        weeklyTarget
+        monthlyReport {
+          id
+          createdAt
+          monthlyTarget
+          monthlyPoints
+          updatedAt
+        }
+        weeklyPoints
+        updatedAt
+      }
+      dailyPoints
+      weeklyTarget
+      updatedAt
+    }
+  }
+`;
+export const updateDailyReport = /* GraphQL */ `
+  mutation UpdateDailyReport(
+    $input: UpdateDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    updateDailyReport(input: $input, condition: $condition) {
+      id
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          name
+          result
+          target
+          nextWeekTarget
+          coeff
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      date
+      createdAt
+      dailyTarget
+      weeklyReport {
+        id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        weeklyTarget
+        monthlyReport {
+          id
+          createdAt
+          monthlyTarget
+          monthlyPoints
+          updatedAt
+        }
+        weeklyPoints
+        updatedAt
+      }
+      dailyPoints
+      weeklyTarget
+      updatedAt
+    }
+  }
+`;
+export const deleteDailyReport = /* GraphQL */ `
+  mutation DeleteDailyReport(
+    $input: DeleteDailyReportInput!
+    $condition: ModelDailyReportConditionInput
+  ) {
+    deleteDailyReport(input: $input, condition: $condition) {
+      id
+      campaign {
+        id
+        category
+        name
+        type
+        client {
+          id
+          category
+          firstName
+          lastName
+          email
+          phone
+          companyName
+          website
+          country
+          notes
+          createdAt
+          updatedAt
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        startDate
+        endDate
+        createdAt
+        status
+        length
+        notes
+        dailyReports {
+          nextToken
+        }
+        weeklyReports {
+          nextToken
+        }
+        monthlyReports {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        updatedAt
+      }
+      kpis {
+        items {
+          id
+          name
+          result
+          target
+          nextWeekTarget
+          coeff
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      date
+      createdAt
+      dailyTarget
+      weeklyReport {
+        id
+        willBeActiveOn
+        campaign {
+          id
+          category
+          name
+          type
+          startDate
+          endDate
+          createdAt
+          status
+          length
+          notes
+          updatedAt
+        }
+        dailyReports {
+          nextToken
+        }
+        createdAt
+        weeklyTarget
+        monthlyReport {
+          id
+          createdAt
+          monthlyTarget
+          monthlyPoints
+          updatedAt
+        }
+        weeklyPoints
+        updatedAt
+      }
+      dailyPoints
+      weeklyTarget
+      updatedAt
+    }
+  }
+`;
 export const createKpi = /* GraphQL */ `
   mutation CreateKpi(
     $input: CreateKpiInput!
@@ -1834,6 +1843,7 @@ export const createKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        date
         createdAt
         dailyTarget
         weeklyReport {
@@ -1965,6 +1975,7 @@ export const updateKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        date
         createdAt
         dailyTarget
         weeklyReport {
@@ -2096,6 +2107,7 @@ export const deleteKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        date
         createdAt
         dailyTarget
         weeklyReport {

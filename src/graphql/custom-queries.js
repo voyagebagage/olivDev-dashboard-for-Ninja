@@ -10,6 +10,7 @@ export const getDailyReports = /* GraphQL */ `
           dailyPoints
           weeklyTarget
           updatedAt
+          date
           kpis {
             items {
               id
