@@ -7,8 +7,9 @@ import {
   sortDirection,
 } from "../../arrayLists/index";
 import { useDropDownFilter } from "../../context/Provider";
-import SearchBar from "../SearchBar";
-import logoDash from "../../img/logoDash.png";
+import SearchClients from "../SearchBars/SearchClients";
+import SearchCampaigns from "../SearchBars/SearchCampaigns";
+import logoDash from "../../img/logoDash.svg";
 
 function Header({ handleSidebarItem }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
@@ -22,10 +23,13 @@ function Header({ handleSidebarItem }) {
           <Image src={logoDash} className="logoImg" size="tiny"></Image>
           {/* <img src={logoDash} alt="logo" id="logoDash" /> */}
         </Menu.Item>
-        <Menu.Item onClick={handleSidebarItem}>
+        <Menu.Item onClick={handleSidebarItem} transparent>
           <Icon name="sidebar" />
         </Menu.Item>
         <Menu.Menu position="right">
+          {/* //#################################################
+  //           CLIENT LIST
+  //################################################# */}
           <>
             {location.pathname === "/client-list" && (
               <Menu.Item>
@@ -46,6 +50,9 @@ function Header({ handleSidebarItem }) {
                 />
               </Menu.Item>
             )}
+            {/* //#################################################
+  //           Campaigns
+  //################################################# */}
             {location.pathname === "/campaigns" && (
               <Menu.Item>
                 <Dropdown
@@ -101,7 +108,11 @@ function Header({ handleSidebarItem }) {
           </>
 
           <Menu.Item>
-            <SearchBar />
+            {location.pathname === "/client-list" ? (
+              <SearchClients />
+            ) : location.pathname === "/campaigns" ? (
+              <SearchCampaigns />
+            ) : null}
           </Menu.Item>
           <Menu.Item style={{ color: "#566A63" }}>
             <Icon name="user circle" size="big" />

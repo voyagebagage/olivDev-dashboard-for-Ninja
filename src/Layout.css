@@ -122,8 +122,10 @@ html,
 .ui.large.vertical.menu {
   /* width: 16em; */
 }
-.logoImg {
-  /* width: 16em; */
+.ui.tiny.image.logoImg {
+  /* width: 22vw; */
+  width: 18em;
+  max-height: 4vh;
 }
 .ui.inverted.menu .active.item {
   background-color: #566a63;

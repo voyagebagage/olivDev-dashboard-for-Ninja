@@ -12,7 +12,7 @@ import MonthlyTotalsTab from "../component/campaignTabs/MonthlyTotalsTab";
 import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
 import TargetSummaryTab from "../component/campaignTabs/TargetsSummaryTab";
 import { setStatus } from "../lib/function";
-import { useKpis } from "../context/Provider";
+import { useCampaign, useKpis } from "../context/Provider";
 import { onCreateDailyReport } from "../graphql/subscriptions";
 
 //x
@@ -24,7 +24,7 @@ function CampaignDetails() {
   // const { isLoading, setIsLoading } = useFetch();
   const { name, id } = useParams();
   const { kpis, setKpis } = useKpis();
-  const [campaignDetails, setCampaignDetails] = useState({});
+  const { campaignDetails, setCampaignDetails } = useCampaign();
   const [edit, setEdit] = useState(false);
   const [dailyReports, setDailyReports] = useState([]);
   // const [status, setStatus] = useState(false);

@@ -18,14 +18,9 @@ import {
   createDailyReport,
   createKpi,
   updateDailyReport,
-  updateKpi,
 } from "../../../graphql/mutations";
-import {
-  onCreateDailyReport,
-  onUpdateDailyReport,
-} from "../../../graphql/subscriptions";
+import { onUpdateDailyReport } from "../../../graphql/subscriptions";
 import { getDateOfISOWeek } from "../../../lib/function";
-import AddIcon from "../../AddIcon";
 var currentWeekNumber = require("current-week-number");
 //======================
 //     + function +
@@ -39,17 +34,14 @@ const ReportTab = ({
 }) => {
   const { status, id, agent, client } = campaignDetails;
   const { dailyReportId, campId } = useParams();
-  // console.log(dailyReportId, campName, "params");
   const { setForm, form } = useForm();
   const [isLoading, setIsLoading] = useState(true);
   const [addDailyReportBool, setAddDailyReportBool] = useState(false);
   const { kpis, setKpis } = useKpis();
-  // const initialReport = dailyReports[dailyReports.length - 1];
   const [dailyReport, setDailyReport] = useState({});
   const [dailyPoints, setDailyPoints] = useState(0);
   const initialState = { date: "", dReport: {} };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
-
   const [weekArray, setWeekArray] = useState([]);
   const d = toISOStrDDMMYYY(new Date());
 
@@ -79,7 +71,6 @@ const ReportTab = ({
   //               WEEK ARRAY DATES
   //#####################################################
   const getDaysArray = async (start, end, dailyReportArray) => {
-    console.log("XXXXXXXXXXXXXXXXXXXX");
     let i = 0;
     const newTab = [...weekArray];
     let testFind = false;
@@ -93,21 +84,14 @@ const ReportTab = ({
       let comp2 = new Date().getTime();
       let minus = comp2 - comp1;
       if (dailyReportArray[i]) {
-        console.log("dailyReportArray[i]?.date:", dailyReportArray[i]?.date);
         let dateDR = new Date(dailyReportArray[i]?.date);
         let dateDRToIsoStr = toISOStr(`${dateDR} GMT`);
         let dtToIsoStr = toISOStr(`${dt} GMT`);
-        console.log("dateDR:", dateDR, "dt:", dt, "dtToIsoStr:", dtToIsoStr);
         //---------+++++++++++++
         let find = dailyReportArray.find((e) => {
-          // const date = toISOStr(e.date);
-          // const date = e.date;
           return dtToIsoStr === e.date;
         });
-        console.log("find:", find);
-        console.log("1", comp1, "2", comp2, typeof minus, minus);
-        //if today
-        //86400000 miliSecs in 24hours
+
         if (find) {
           console.log("==          IFFFFF         ==");
           dailyReportsWeek.dReport = find;
@@ -121,10 +105,6 @@ const ReportTab = ({
       if (!dailyReportsWeek.showAddButton) dailyReportsWeek.future = true;
       if (dailyReportsWeek.showAddButton) dailyReportsWeek.future = false;
       dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYY(dt)}`;
-      console.log(
-        "dailyReportsWeek.showAddButton:",
-        dailyReportsWeek.showAddButton
-      );
       dailyReportsWeek.id = i;
       newTab.push({ ...dailyReportsWeek });
       dailyReportsWeek.date = null;
@@ -134,9 +114,6 @@ const ReportTab = ({
     testFind = false;
     return newTab;
   };
-  // weekArray = getDaysArray(startWeekDate, endWeekDate);
-  // console.log(weekArray, "WA", typeof weekArray);
-  // console.log([weekArray], "WA");
   //#####################################################
   //               FETCH DAILY-REPORT
   //#####################################################
@@ -155,7 +132,6 @@ const ReportTab = ({
         dailyReportsPath[itemsLength - 2]?.kpis.items;
       //------sets-------
       setDailyReports(listDailyReports.data.getCampaign.dailyReports.items);
-
       if (kpisLastDailyReport) setKpis(kpisLastDailyReport);
       else {
         kpisOneBeforeLastDailyReport.forEach((e) => {
@@ -183,18 +159,11 @@ const ReportTab = ({
   //               ON CLICK ADD BUTTON
   //#####################################################
   const addDailyReport = async (idx, date, day) => {
-    setAddDailyReportBool(true);
-    const copyWeekArray = [...weekArray];
-    console.log("i", idx, idx, idx, idx, idx, idx, idx, "i");
-    console.log("showAddButton:", day.showAddButton);
-    console.log("day:", day);
-    console.log("date", date);
-    copyWeekArray[idx].showAddButton = false;
-    setForm({ dailyReport });
-    console.log("dailyReport.date:", dailyReport.date);
-    console.log("showAddButton:", day.showAddButton);
-    console.log("copyWeekArray:", copyWeekArray);
     try {
+      setAddDailyReportBool(true);
+      const copyWeekArray = [...weekArray];
+      copyWeekArray[idx].showAddButton = false;
+      setForm({ dailyReport });
       //~~~~~~~~~ CREATE NEW DR ~~~~~~~~~~
       delete form.kpis;
       delete form.id;
@@ -205,7 +174,6 @@ const ReportTab = ({
       delete form.monthlyReport;
       form.dailyReportCampaignId = id;
       form.date = date;
-      console.log("form:", form);
       const createNewDR = await API.graphql(
         graphqlOperation(createDailyReport, {
           input: form,
@@ -228,9 +196,6 @@ const ReportTab = ({
   //#####################################################
   const newDailyReport = async (e) => {
     e.preventDefault();
-    console.log("dailyReport:", dailyReport);
-    // const copyWeekArray = [...weekArray];
-    // console.log("i", idx, idx, idx, idx, idx, idx, idx, "i");
     try {
       //~~~~~~~~~ CREATE NEW KPIS ~~~~~~~~~~
       let total = 0;
@@ -260,9 +225,6 @@ const ReportTab = ({
         })
       );
       console.log("succes ! up DR:", updateDailyPoints.data.updateDailyReport);
-      // copyWeekArray[idx].dReport = updateDailyPoints.data.updateDailyReport;
-      // console.log("copyWeekArray:", copyWeekArray);
-
       setDailyReports([
         ...dailyReports,
         updateDailyPoints.data.updateDailyReport,
@@ -282,26 +244,16 @@ const ReportTab = ({
     ).subscribe({
       next: (eventData) => {
         console.log("N   E  X  T");
-        // const newDR = eventData.value.data.onUpdateDailyReport;
-        // const reports = [...dailyReports, newDR];
-        // setDailyReports(...reports);
         fetchDailyReport();
       },
     });
     return () => subscription.unsubscribe();
   }, []);
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  // console.log(kpis, "KPIS");
-  console.log("form:", { ...form }, "form.date", form.date);
   console.log(kpis, "<==***KPIS**==");
   console.log(dailyReport, "dailyReport");
   console.log("<-- d a i l y   R e p o r t s: -->", dailyReports);
-  console.log("addDailyReportBool:", addDailyReportBool);
-
   console.log("weekArray:-=-=-=-=-=", typeof weekArray, weekArray);
-  // console.log("===================================");
-  // console.log(kpis.result, "KPIS.RESULT");
-  // console.log(startWeekDate, "startWeekDate");
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   return !isLoading && campId && weekArray ? (
     <Form onSubmit={newDailyReport}>
@@ -338,14 +290,7 @@ const ReportTab = ({
               console.log(idx, "=====", oneDay);
               console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
               console.log("0 R E P O R T :", oneDay.dReport?.kpis);
-              console.log(
-                idx,
-                "oneDay.date sliced",
-                oneDay.date.slice(5, 15),
-                typeof oneDay.date
-              );
               console.log(idx, "d d d", d, typeof d);
-              console.log(status);
               return (
                 <>
                   <Table.Row>
@@ -360,27 +305,15 @@ const ReportTab = ({
                     </Table.Cell>
                     {oneDay.dReport &&
                       oneDay.dReport.dailyPoints &&
-                      // oneDay.dReport?.kpis?.items[0] &&
-                      // ####################
-                      // ooooo
-                      // ####################
                       oneDay.dReport?.kpis?.items.map((oneKpi) => (
                         <Table.Cell>{oneKpi.result}</Table.Cell>
                       ))}
-                    {/* {!oneDay.dReport && <Table.Cell>No DR</Table.Cell>} */}
                     {(!oneDay.showAddButton && !oneDay.future) ||
                     oneDay.dReport?.dailyPoints ? (
                       <>
                         {!oneDay.dReport?.kpis?.items[0] &&
                           status === "true" &&
-                          // ####################
-                          // ooooo
-                          // ####################
                           kpis.map((oneKpi, idx) => {
-                            console.log(idx, "====>kpi:<====", oneKpi);
-                            // ####################
-                            // ooooo
-                            // ####################
                             return (
                               <Table.Cell width={2}>
                                 <Form.Input
@@ -406,9 +339,6 @@ const ReportTab = ({
                                 />
                               </Table.Cell>
                             );
-                            // ####################
-                            // ooooo
-                            // ####################
                           })}
                         {oneDay.dReport &&
                         !oneDay.dReport?.kpis?.items[0] &&
@@ -421,11 +351,10 @@ const ReportTab = ({
                         ) : (
                           oneDay.dReport && (
                             <>
-                              <Table.Cell>
+                              <Table.Cell width={3}>
                                 {oneDay.dReport?.dailyPoints}
-                                {/* {oneDay.dReport.result * oneDay.dReport.target} */}
                               </Table.Cell>
-                              <Table.Cell>% target</Table.Cell>
+                              <Table.Cell width={3}>% target</Table.Cell>
                             </>
                           )
                         )}

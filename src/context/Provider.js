@@ -45,6 +45,8 @@ export const GlobalProvider = ({ children }) => {
 
   //----------
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [campaignDetails, setCampaignDetails] = useState({});
   //----------
   const initialStateDD = { clientList: "companyName", campaign: "name" };
   const [fieldDropDown, setFieldDropDown] = useState(initialStateDD);
@@ -93,7 +95,14 @@ export const GlobalProvider = ({ children }) => {
         }}
       >
         <CampaignContext.Provider
-          value={{ filteredCampaigns, setFilteredCampaigns }}
+          value={{
+            filteredCampaigns,
+            setFilteredCampaigns,
+            campaigns,
+            setCampaigns,
+            campaignDetails,
+            setCampaignDetails,
+          }}
         >
           <KpisContext.Provider value={{ kpis, setKpis }}>
             <SidebarVisibleContext.Provider value={{ visible, setVisible }}>

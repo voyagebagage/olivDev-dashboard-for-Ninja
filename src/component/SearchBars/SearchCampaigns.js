@@ -1,16 +1,16 @@
 import { Search } from "semantic-ui-react";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { listClients } from "../../graphql/queries";
+import { listCampaigns } from "../../graphql/queries";
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { useClient, useFetch, useSearch } from "../../context/Provider";
+import { useCampaign, useFetch, useSearch } from "../../context/Provider";
 //#################################################
 //           COMPONENT
 //################################################
-const SearchBar = () => {
+const SearchCampaigns = () => {
   let history = useHistory();
-  const { setClients, setClientDetails } = useClient();
+  const { setCampaigns, setCampaignDetails } = useCampaign();
   const {
     // isLoading,
     setIsLoading,
@@ -30,30 +30,31 @@ const SearchBar = () => {
     try {
       if (search.value.length > 2) {
         const filteredRes = await API.graphql(
-          graphqlOperation(listClients, {
+          graphqlOperation(listCampaigns, {
             filter: {
               or: [
-                { firstName: { beginsWith: search.value } },
-                { lastName: { beginsWith: search.value } },
-                { companyName: { beginsWith: search.value } },
-                { phone: { beginsWith: search.value } },
-                { email: { beginsWith: search.value } },
-                { website: { beginsWith: search.value } },
+                { name: { beginsWith: search.value } },
+                // { client: { beginsWith: search.value } },
+                { startDate: { beginsWith: search.value } },
+                { endDate: { beginsWith: search.value } },
+                // { companyName: { beginsWith: search.value } },
+                { notes: { beginsWith: search.value } },
+                { type: { beginsWith: search.value } },
               ],
             },
             // limit: limit,
           })
         );
         // }
-        setFilteredResults(filteredRes.data.listClients.items);
+        setFilteredResults(filteredRes.data.listCampaigns.items);
         setSearch({
-          results: filteredRes.data.listClients.items.map((result, idx) => {
+          results: filteredRes.data.listCampaigns.items.map((result, idx) => {
             return {
               //these are ONLY to display Suggestions
-              title: `${result.firstName}     ${result.lastName}`,
-              description: result.email,
+              title: `${result.name}   ${result.client.firstName}`,
+              description: `S:${result.startDate}    F: ${result.endDate}`,
               // image: result.lastName, could add one in the future
-              price: result.companyName,
+              price: result.type,
               key: result.id,
               //and the rest to setClientDetails, when go to the detail page
               ...result,
@@ -61,10 +62,10 @@ const SearchBar = () => {
           }),
           isLoading: false,
         });
-        console.log(filteredRes.data.listClients.items, "filteredRes-IN");
+        console.log(filteredRes.data.listCampaigns.items, "filteredRes-IN");
       }
     } catch (error) {
-      console.log("error with list clients :", error);
+      console.log("error with list campaigns :", error);
     }
   };
   console.log(search.results, "search.results");
@@ -73,11 +74,9 @@ const SearchBar = () => {
   //           handleResultSelect
   //#################################################
   const handleResultSelect = (e, { result }) => {
-    setSearch({ value: `${result.firstName} ${result.lastName}` });
-    setClientDetails(result);
-    history.push(
-      `/client/${result.firstName}/${result.companyName}/${result.id}`
-    );
+    setSearch({ value: `${result.name} ${result.client}` });
+    setCampaignDetails(result);
+    history.push(`/campaign/${result.name}/${result.id}/info`);
     setTimeout(() => {
       setSearch(initialState);
     }, 1500);
@@ -97,7 +96,7 @@ const SearchBar = () => {
   //#################################################
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      setClients(filteredResults);
+      setCampaigns(filteredResults);
       setIsLoading(false);
       // setTimeout(() => {
       //   setSearch({ value: "" });
@@ -111,7 +110,7 @@ const SearchBar = () => {
     <>
       <Search
         icon="search"
-        placeholder="Search..."
+        placeholder="Search Campaigns"
         style={{ borderRadius: "50%" }}
         loading={search.isLoading}
         onResultSelect={handleResultSelect}
@@ -124,4 +123,4 @@ const SearchBar = () => {
   );
 };
 
-export default SearchBar;
+export default SearchCampaigns;

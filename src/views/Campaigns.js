@@ -50,12 +50,12 @@ function Campaigns() {
     setMaxPages,
   } = useFetch();
   //xxxxxxxxxxxxxxxxxxxx
-  const { filteredCampaigns } = useCampaign();
+  const { filteredCampaigns, campaigns, setCampaigns } = useCampaign();
   //xxxxxxxxxxxxxxxxxxxx
   const { fieldDropDown, directionDropDown } = useDropDownFilter();
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
+  // const [campaigns, setCampaigns] = useState([]);
   // const [isLoading, setIsLoading] = useState(true);
   //---------------------~~~~~~~~~~~----------------------------
   const variables = {
