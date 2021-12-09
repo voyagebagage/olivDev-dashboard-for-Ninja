@@ -20,23 +20,23 @@ import {
   updateDailyReport,
 } from "../../../graphql/mutations";
 import { onUpdateDailyReport } from "../../../graphql/subscriptions";
-import { getDateOfISOWeek } from "../../../lib/function";
+import {
+  updatePoints,
+  toISOStr,
+  toISOStrDDMMYYY,
+  startWeekDate,
+  endWeekDate,
+} from "../../../lib/function";
 var currentWeekNumber = require("current-week-number");
 //======================
 //     + function +
 //======================
-const ReportTab = ({
-  campaignDetails,
-  setCampaignDetails,
-  dailyReports,
-  setDailyReports,
-  fetchCampaign,
-}) => {
+const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   const { status, id, agent, client } = campaignDetails;
+  console.log("agent:", agent);
   const { dailyReportId, campId } = useParams();
   const { setForm, form } = useForm();
   const [isLoading, setIsLoading] = useState(true);
-  const [addDailyReportBool, setAddDailyReportBool] = useState(false);
   const { kpis, setKpis } = useKpis();
   const [dailyReport, setDailyReport] = useState({});
   const [dailyPoints, setDailyPoints] = useState(0);
@@ -44,28 +44,6 @@ const ReportTab = ({
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
   const d = toISOStrDDMMYYY(new Date());
-
-  function toISOStr(date) {
-    return new Date(date).toISOString().split("T")[0];
-  }
-  function toISOStrDDMMYYY(date) {
-    return new Date(`${date} GMT`)
-      .toISOString()
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join("-");
-  }
-  //####################################################
-  //     GET the first day of the WEEK we are in
-  //####################################################
-  const startWeekDate = getDateOfISOWeek(
-    currentWeekNumber(new Date()),
-    new Date().getFullYear()
-  );
-  const lastDay = startWeekDate.getDate() + 4;
-  const endWeekDate = new Date(startWeekDate);
-  endWeekDate.setDate(lastDay);
 
   //#####################################################
   //               WEEK ARRAY DATES
@@ -119,7 +97,6 @@ const ReportTab = ({
   //#####################################################
   const fetchDailyReport = async () => {
     try {
-      setAddDailyReportBool(false);
       const listDailyReports = await API.graphql(
         graphqlOperation(getDailyReports, { id: campId })
       );
@@ -139,7 +116,6 @@ const ReportTab = ({
         });
         setKpis(kpisOneBeforeLastDailyReport);
       }
-
       setDailyReport(dailyReportsPath[itemsLength - 1]);
       const report = await getDaysArray(
         startWeekDate,
@@ -160,7 +136,6 @@ const ReportTab = ({
   //#####################################################
   const addDailyReport = async (idx, date, day) => {
     try {
-      setAddDailyReportBool(true);
       const copyWeekArray = [...weekArray];
       copyWeekArray[idx].showAddButton = false;
       setForm({ dailyReport });
@@ -224,12 +199,12 @@ const ReportTab = ({
           input: { id: dailyReport.id, dailyPoints: total },
         })
       );
+      setDailyPoints(total);
       console.log("succes ! up DR:", updateDailyPoints.data.updateDailyReport);
       setDailyReports([
         ...dailyReports,
         updateDailyPoints.data.updateDailyReport,
       ]);
-      // setWeekArray(copyWeekArray);
       console.log("succes with updating A L L RESULTS");
     } catch (error) {
       console.log("There is an error with create Kpi ", error);
@@ -244,7 +219,12 @@ const ReportTab = ({
     ).subscribe({
       next: (eventData) => {
         console.log("N   E  X  T");
+        console.log(eventData);
+        const agent = eventData.value.data.onUpdateDailyReport.campaign.agent;
+        const dailyPoints =
+          eventData.value.data.onUpdateDailyReport.dailyPoints;
         fetchDailyReport();
+        updatePoints(agent, dailyPoints);
       },
     });
     return () => subscription.unsubscribe();

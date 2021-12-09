@@ -23,7 +23,6 @@ const SearchCampaigns = () => {
     initialState,
   } = useSearch();
   // const initialState = { isLoading: false, results: [], value: "" };
-
   // const [search, setSearch] = useState(initialState);
 
   const fetchResults = async () => {
@@ -51,8 +50,12 @@ const SearchCampaigns = () => {
           results: filteredRes.data.listCampaigns.items.map((result, idx) => {
             return {
               //these are ONLY to display Suggestions
-              title: `${result.name}   ${result.client.firstName}`,
-              description: `S:${result.startDate}    F: ${result.endDate}`,
+              title: `${
+                result.name
+              }   ${result.client.companyName.toUpperCase()}`,
+              description: `S:${result.startDate}    F: ${result.endDate} 
+              
+              CLIENT:${result.client.firstName}   ${result.client.lastName}`,
               // image: result.lastName, could add one in the future
               price: result.type,
               key: result.id,

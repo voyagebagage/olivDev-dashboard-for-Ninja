@@ -126,7 +126,9 @@ function Client() {
   //           RENDER
   //################################################
   return !isLoading && clients.length !== 0 ? (
-    <div style={{ width: "83%" }}>
+    <div
+      style={{ width: "83%", backgroundColor: "greenyellow", height: "100vh" }}
+    >
       <Sidebar.Pushable as={List}>
         <Segment basic className="dFlex-sBetween">
           <Header as="h2">Clients</Header>

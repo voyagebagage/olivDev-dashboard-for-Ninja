@@ -5,6 +5,7 @@ import { PaginationLong } from "../component/Pagination";
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
 import { listAgents, agentByTotalPoints } from "../graphql/queries";
+import { agentByTotalPointsCustom } from "../graphql/custom-queries";
 /* ------------------------------------------------------------------
 -                               Main function                       -
 ------------------------------------------------------------------ */
@@ -33,10 +34,10 @@ function Agent() {
     try {
       const agentData = await API.graphql(
         // graphqlOperation(searchAgents)
-        graphqlOperation(agentByTotalPoints, variables)
+        graphqlOperation(agentByTotalPointsCustom, variables)
       );
-      setAgents(agentData.data.agentByTotalPoints.items);
       console.log(agentData.data.agentByTotalPoints.items, "client");
+      setAgents(agentData.data.agentByTotalPoints.items);
       setIsLoading(false);
     } catch (error) {
       console.log("error with get clients :", error);
@@ -77,7 +78,7 @@ function Agent() {
                   style={{ maxWidth: "10vw" }}
                   className="campaignsTagsUl"
                 >
-                  {agent.campaigns.items.map((campaign, idx) => {
+                  {agent.campaigns.items.map((campaign) => {
                     console.log(campaign);
                     console.log(agent.campaigns.items, "agent.campaigns.items");
                     return (

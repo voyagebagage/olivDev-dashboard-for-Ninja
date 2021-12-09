@@ -113,7 +113,7 @@ function Campaigns() {
   //################################################
   return !isLoading && campaigns.length !== 0 ? (
     <Sidebar.Pushable as={List}>
-      <div style={{ width: "83%" }}>
+      <div style={{ width: "83%", backgroundColor: "greenyellow" }}>
         <Segment basic className="dFlex-sBetween">
           <Header as="h2">Campaigns</Header>
           <AddIcon setVisible={setVisible} />

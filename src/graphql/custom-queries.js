@@ -30,3 +30,40 @@ export const getDailyReports = /* GraphQL */ `
     }
   }
 `;
+export const agentByTotalPointsCustom = /* GraphQL */ `
+  query AgentByTotalPoints(
+    $category: String
+    $totalPoints: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAgentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    agentByTotalPoints(
+      category: $category
+      totalPoints: $totalPoints
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        campaigns {
+          items {
+            id
+            name
+          }
+          nextToken
+        }
+        totalPoints
+      }
+      nextToken
+    }
+    # monthlyPoints
+    # yearPoints {
+    #   nextToken
+    # }
+  }
+`;

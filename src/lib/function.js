@@ -1,3 +1,7 @@
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { updateAgent } from "../graphql/mutations";
+var currentWeekNumber = require("current-week-number");
+
 export const getYYYYMMDD = (date) => {
   const d = date || new Date();
   let day = d.getDate();
@@ -17,6 +21,31 @@ export const setStatus = (start, end, status) => {
   if (now >= startTime && now <= endTime) status = "true";
   if (now <= startTime || now >= endTime) status = "false";
 };
+//####################################################
+//     GET the first day of the WEEK we are in
+//####################################################
+//--used in Report Tab, -----
+export const startWeekDate = getDateOfISOWeek(
+  currentWeekNumber(new Date()),
+  new Date().getFullYear()
+);
+const lastDay = startWeekDate.getDate() + 4;
+export const endWeekDate = new Date(startWeekDate);
+endWeekDate.setDate(lastDay);
+//--------
+
+export function toISOStr(date) {
+  return new Date(date).toISOString().split("T")[0];
+}
+export function toISOStrDDMMYYY(date) {
+  return new Date(`${date} GMT`)
+    .toISOString()
+    .split("T")[0]
+    .split("-")
+    .reverse()
+    .join("-");
+}
+//-------
 export function getDateOfISOWeek(w, y) {
   var simple = new Date(y, 0, 1 + (w - 1) * 7);
   var dow = simple.getDay();
@@ -25,3 +54,22 @@ export function getDateOfISOWeek(w, y) {
   else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
   return ISOweekStart;
 }
+//-------
+export const updatePoints = async (agent, dailyPoints) => {
+  try {
+    console.log(agent);
+    const updateDailyPoints = await API.graphql(
+      graphqlOperation(updateAgent, {
+        input: {
+          id: agent.id,
+          dailyPoints: dailyPoints,
+          weeklyPoints: agent.weeklyPoints + dailyPoints,
+          monthlyPoints: agent.monthlyPoints + dailyPoints,
+        },
+      })
+    );
+    console.log("NEXT:", updateDailyPoints.data.updateAgent);
+  } catch (error) {
+    console.log("there is a suscribtion issue:", error);
+  }
+};

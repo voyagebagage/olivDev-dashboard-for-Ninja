@@ -78,7 +78,7 @@ html,
 .clientListLink {
   display: -webkit-box;
   overflow: hidden;
-  width: 15vw;
+  width: 18em;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;

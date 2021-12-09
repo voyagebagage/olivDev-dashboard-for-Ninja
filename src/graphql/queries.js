@@ -1332,6 +1332,10 @@ export const agentByTotalPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
+          items {
+            id
+            name
+          }
           nextToken
         }
         kpis {

@@ -1,4 +1,4 @@
-import { Segment, Form, Message } from "semantic-ui-react";
+import { Segment, Form, Message, Grid } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import { countries } from "../arrayLists/index";
 
@@ -60,72 +60,74 @@ const NewClientForm = ({ setVisible, clients, setClients }) => {
     }
   };
   return (
-    <Segment style={{ padding: "9%" }} padded basic>
-      <Form widths="equal" onSubmit={(e) => createNewClient(e)}>
-        <Form.Group>
-          <Form.Input
-            type="text"
-            label="First Name"
-            placeholder="ex: Matthew"
-            name="firstName"
-            value={form.firstName || ""}
-            onChange={onChange}
-          />
+    <>
+      <Segment style={{ padding: "9%" }} padded basic>
+        <Form widths="equal" onSubmit={(e) => createNewClient(e)}>
+          <Grid>
+            <Form.Group>
+              <Form.Input
+                type="text"
+                label="First Name"
+                placeholder="ex: Matthew"
+                name="firstName"
+                value={form.firstName || ""}
+                onChange={onChange}
+              />
 
-          <Form.Input
-            type="text"
-            label="Last Name"
-            placeholder="ex: Dunn"
-            name="lastName"
-            value={form.lastName || ""}
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Input
-            type="text"
-            label="Email"
-            name="email"
-            value={form.email || ""}
-            onChange={onChange}
-          />
-          <Form.Input
-            type="text"
-            label="Phone"
-            placeholder="ex: +666..."
-            name="phone"
-            value={form.phone || ""}
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Input
-            type="text"
-            label="Company Name"
-            name="companyName"
-            value={form.companyName || ""}
-            onChange={onChange}
-          />
+              <Form.Input
+                type="text"
+                label="Last Name"
+                placeholder="ex: Dunn"
+                name="lastName"
+                value={form.lastName || ""}
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Input
+                type="text"
+                label="Email"
+                name="email"
+                value={form.email || ""}
+                onChange={onChange}
+              />
+              <Form.Input
+                type="text"
+                label="Phone"
+                placeholder="ex: +666..."
+                name="phone"
+                value={form.phone || ""}
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Input
+                type="text"
+                label="Company Name"
+                name="companyName"
+                value={form.companyName || ""}
+                onChange={onChange}
+              />
 
-          <Form.Dropdown
-            clearable
-            search
-            selection
-            options={countries}
-            label="Select Country"
-            name="country"
-            value={form.country || ""}
-            onChange={onChange}
-          />
-        </Form.Group>
-        <Form.Input
-          type="text"
-          label="Website"
-          name="website"
-          value={form.website || ""}
-          onChange={onChange}
-        />
-        {/* <Form.Group>
+              <Form.Dropdown
+                clearable
+                search
+                selection
+                options={countries}
+                label="Select Country"
+                name="country"
+                value={form.country || ""}
+                onChange={onChange}
+              />
+            </Form.Group>
+            <Form.Input
+              type="text"
+              label="Website"
+              name="website"
+              value={form.website || ""}
+              onChange={onChange}
+            />
+            {/* <Form.Group>
           <Form.Select
             label="Status"
             options={toggleActive}
@@ -135,33 +137,35 @@ const NewClientForm = ({ setVisible, clients, setClients }) => {
           />
         </Form.Group> */}
 
-        <Form.Button
-          disabled={clientFormValid}
-          loading={isSubmitting}
-          type="submit"
-          primary
-          fluid
-        >
-          Add Client
-        </Form.Button>
-      </Form>
-      {
-        // isSubmitting &&
-        errors ? (
-          <Message error>
-            <Message.Header>Error</Message.Header>
-            <p>{errors}</p>
-          </Message>
-        ) : //  (
-        //   <Message success>
-        //     {/* <Message.Header>Succefully added</Message.Header> */}
-        //     {/* <p>{errors}</p> */}Succefully added
-        //   </Message>
-        // )
-        // ) :
-        null
-      }
-    </Segment>
+            <Form.Button
+              disabled={clientFormValid}
+              loading={isSubmitting}
+              type="submit"
+              primary
+              fluid
+            >
+              Add Client
+            </Form.Button>
+          </Grid>
+        </Form>
+        {
+          // isSubmitting &&
+          errors ? (
+            <Message error>
+              <Message.Header>Error</Message.Header>
+              <p>{errors}</p>
+            </Message>
+          ) : //  (
+          //   <Message success>
+          //     {/* <Message.Header>Succefully added</Message.Header> */}
+          //     {/* <p>{errors}</p> */}Succefully added
+          //   </Message>
+          // )
+          // ) :
+          null
+        }
+      </Segment>
+    </>
   );
 };
 

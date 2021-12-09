@@ -31,7 +31,7 @@ function Header({ handleSidebarItem }) {
   //           CLIENT LIST
   //################################################# */}
           <>
-            {location.pathname === "/client-list" && (
+            {location.pathname.includes("/client") && (
               <Menu.Item>
                 <Dropdown
                   basic
@@ -53,7 +53,7 @@ function Header({ handleSidebarItem }) {
             {/* //#################################################
   //           Campaigns
   //################################################# */}
-            {location.pathname === "/campaigns" && (
+            {location.pathname.includes("/campaign") && (
               <Menu.Item>
                 <Dropdown
                   basic
@@ -72,8 +72,8 @@ function Header({ handleSidebarItem }) {
                 />
               </Menu.Item>
             )}
-            {(location.pathname === "/campaigns" ||
-              location.pathname === "/client-list") && (
+            {(location.pathname.includes("/campaign") ||
+              location.pathname.includes("/client")) && (
               <Menu.Item>
                 <Dropdown
                   basic
@@ -108,11 +108,8 @@ function Header({ handleSidebarItem }) {
           </>
 
           <Menu.Item>
-            {location.pathname === "/client-list" ? (
-              <SearchClients />
-            ) : location.pathname === "/campaigns" ? (
-              <SearchCampaigns />
-            ) : null}
+            {location.pathname.includes("/client") && <SearchClients />}
+            {location.pathname.includes("/campaign") && <SearchCampaigns />}
           </Menu.Item>
           <Menu.Item style={{ color: "#566A63" }}>
             <Icon name="user circle" size="big" />
