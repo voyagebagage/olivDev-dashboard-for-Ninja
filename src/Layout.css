@@ -109,6 +109,12 @@ html,
 .ui.inverted.menu .nav-text {
   /* margin-top: 0; */
 }
+.ui.menu.headerBlock {
+  box-shadow: 0em 0.1em 0.4em 0.1em rgba(43, 40, 40, 0.208);
+  z-index: 1;
+  position: relative;
+  /* background-color: aqua; */
+}
 .sidebarItem {
   margin-top: 0;
 }

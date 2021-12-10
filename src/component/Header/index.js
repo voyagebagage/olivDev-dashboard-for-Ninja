@@ -1,6 +1,7 @@
 import { Menu, Icon, Dropdown, Image } from "semantic-ui-react";
 // import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+
 import {
   filterClientList,
   filterCampaignList,
@@ -18,7 +19,13 @@ function Header({ handleSidebarItem }) {
   console.log(location.pathname, "location");
   return (
     <div>
-      <Menu stackable size="tiny">
+      <Menu
+        borderless
+        className="headerBlock"
+        stackable
+        size="tiny"
+        style={{ borderBottom: 0, borderBottomwidth: 0 }}
+      >
         <Menu.Item>
           <Image src={logoDash} className="logoImg" size="tiny"></Image>
           {/* <img src={logoDash} alt="logo" id="logoDash" /> */}
