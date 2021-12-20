@@ -12,7 +12,7 @@ import SearchClients from "../SearchBars/SearchClients";
 import SearchCampaigns from "../SearchBars/SearchCampaigns";
 import logoDash from "../../img/logoDash.svg";
 
-function Header({ handleSidebarItem }) {
+function Header({ handleSidebarItem, user }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
 
@@ -32,6 +32,9 @@ function Header({ handleSidebarItem }) {
         </Menu.Item>
         <Menu.Item onClick={handleSidebarItem} transparent>
           <Icon name="sidebar" />
+        </Menu.Item>
+        <Menu.Item>
+          <h1>Welcome on board, Ninja {user.attributes.name}....</h1>
         </Menu.Item>
         <Menu.Menu position="right">
           {/* //#################################################

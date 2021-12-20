@@ -6,18 +6,28 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "function": {
-        "newWeek": {
+        "dashboardforninjagql85950a7d85950a7dPostConfirmation": {
             "Name": "string",
             "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "newWeekChanges": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
             "LambdaExecutionRole": "string",
-            "CloudWatchEventRule": "string"
+            "Region": "string"
+        }
+    },
+    "auth": {
+        "userPoolGroups": {
+            "AdminGroupRole": "string",
+            "AgentGroupRole": "string",
+            "ClientGroupRole": "string"
+        },
+        "dashboardforninjagql85950a7d85950a7d": {
+            "IdentityPoolId": "string",
+            "IdentityPoolName": "string",
+            "UserPoolId": "string",
+            "UserPoolArn": "string",
+            "UserPoolName": "string",
+            "AppClientIDWeb": "string",
+            "AppClientID": "string",
+            "CreatedSNSRole": "string"
         }
     }
 }

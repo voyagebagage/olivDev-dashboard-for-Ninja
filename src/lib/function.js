@@ -73,3 +73,7 @@ export const updatePoints = async (agent, dailyPoints) => {
     console.log("there is a suscribtion issue:", error);
   }
 };
+
+export function onChange(e) {
+  e.persist();
+}

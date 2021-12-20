@@ -3,18 +3,30 @@ import { useState } from "react";
 export default () => {
   const [form, setForm] = useState({});
   const [array, setArray] = useState([]);
-  // const [form2, setForm2] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState("");
-  // const [errors2, setErrors2] = useState("");
-  // const [fieldErrors, setFieldErrors] = useState({});
+
   const onChange = (e, { name, value }) => {
     setForm({ ...form, [name]: value });
   };
-  const onChange2 = (e, { name, value }) => {
-    setArray([...array, (name = value)]);
-  };
 
+  //******************SIGN IN******************** */
+  const initialFormState = {
+    name: "",
+    password: "",
+    email: "",
+    authCode: "",
+    userType: "",
+    formType: "signUp",
+  };
+  const [formState, updateFormState] = useState(initialFormState);
+  const [user, updateUser] = useState(null);
+  const onChangeSignUp = (e, { name, value }) => {
+    e.persist(); //let's try
+    updateFormState({ ...formState, [name]: value });
+    // console.log(name, value);
+  };
+  //******************+++++++******************** */
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
   // if (error) {
@@ -49,11 +61,17 @@ export default () => {
     !form.coeff?.length || !form.name?.length || !form.target?.length;
 
   return {
+    //--signup--login
+    onChangeSignUp,
+    formState,
+    updateFormState,
+    user,
+    updateUser,
+    //-------------
     form,
     setForm,
     onChange,
-    array,
-    onChange2,
+    // array,
     clientFormValid,
     addKpiButtonValid,
     campaignFormValid,

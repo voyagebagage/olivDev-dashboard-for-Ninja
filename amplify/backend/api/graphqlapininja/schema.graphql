@@ -27,6 +27,12 @@ type Client
 # add campaigns together
 type Agent
   @model
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"] }
+      { allow: owner, ownerField: "username", operations: [read] }
+    ]
+  )
   @key(
     name: "agentByDailyPoints"
     fields: ["category", "dailyPoints"]

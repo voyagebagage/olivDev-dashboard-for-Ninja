@@ -9,18 +9,24 @@
       "UnauthRoleName": "amplify-dashboardforninjagql-dev-190119-unauthRole",
       "StackName": "amplify-dashboardforninjagql-dev-190119",
       "StackId": "arn:aws:cloudformation:ap-southeast-1:847054957517:stack/amplify-dashboardforninjagql-dev-190119/a1a9d9a0-2441-11ec-a8f6-068bdc3a7ec0",
-      "AmplifyAppId": "dcc5jfrf7panr"
+      "AmplifyAppId": "dcc5jfrf7panr",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-dashboardforninjagql-dev-190119-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "function": {
-        "newWeek": {
-          "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
-          "s3Key": "amplify-builds/newWeek-70664f684a334b303555-build.zip"
+        "dashboardauthPostConfirmation": {
+          "GROUP": "agent"
         },
-        "newWeekChanges": {
+        "dashboardforninjagql85950a7d85950a7dPostConfirmation": {
           "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
-          "s3Key": "amplify-builds/newWeekChanges-764a69767361794d3550-build.zip"
+          "s3Key": "amplify-builds/dashboardforninjagql85950a7d85950a7dPostConfirmation-38577833775162342b71-build.zip"
         }
+      },
+      "auth": {
+        "dashboardauth": {},
+        "dashboardforninjagql3d963724": {},
+        "dashboardforninjagql82d6988282d69882": {},
+        "dashboardforninjagql85950a7d85950a7d": {}
       }
     }
   }
