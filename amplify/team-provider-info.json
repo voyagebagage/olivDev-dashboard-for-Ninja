@@ -19,7 +19,7 @@
         },
         "dashboardforninjagql85950a7d85950a7dPostConfirmation": {
           "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
-          "s3Key": "amplify-builds/dashboardforninjagql85950a7d85950a7dPostConfirmation-38577833775162342b71-build.zip"
+          "s3Key": "amplify-builds/dashboardforninjagql85950a7d85950a7dPostConfirmation-39366a67795a4c564374-build.zip"
         }
       },
       "auth": {

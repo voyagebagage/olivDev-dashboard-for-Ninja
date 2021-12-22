@@ -1,7 +1,9 @@
 var aws = require("aws-sdk");
 var ddb = new aws.DynamoDB();
 
-function setParams(event, model, userType, tableName) {
+function setParams(event, model, userType, TABLE_NAME) {
+  // console.log(process.env[TABLE_NAME]);
+  // console.log(process.env["TABLE_NAME"]);
   let date = new Date();
   return {
     Item: {
@@ -13,7 +15,7 @@ function setParams(event, model, userType, tableName) {
       createdAt: { S: date.toISOString() },
       updatedAt: { S: date.toISOString() },
     },
-    TableName: `process.env.${tableName}`,
+    TableName: TABLE_NAME,
   };
 }
 exports.handler = async (event) => {
@@ -23,10 +25,10 @@ exports.handler = async (event) => {
     let userType = event.request.userAttributes["custom:user_type"];
     let params = {};
     if (userType === "agent") {
-      params = setParams(event, "Agent", userType, AGENTTABLE);
+      params = setParams(event, "Agent", userType, process.env.AGENTTABLE);
     }
     if (userType === "client") {
-      params = setParams(event, "Client", userType, CLIENTTABLE);
+      params = setParams(event, "Client", userType, process.env.CLIENTTABLE);
     }
     console.log("PARAMS:", params);
     try {

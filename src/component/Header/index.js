@@ -1,7 +1,6 @@
-import { Menu, Icon, Dropdown, Image } from "semantic-ui-react";
-// import React, { useState, useEffect } from "react";
+import { Menu, Icon, Dropdown, Image, Button } from "semantic-ui-react";
 import { useLocation } from "react-router-dom";
-
+import { Auth } from "aws-amplify";
 import {
   filterClientList,
   filterCampaignList,
@@ -34,7 +33,7 @@ function Header({ handleSidebarItem, user }) {
           <Icon name="sidebar" />
         </Menu.Item>
         <Menu.Item>
-          <h1>Welcome on board, Ninja {user.attributes.name}....</h1>
+          <h3>Welcome on board, Ninja {user.attributes.name}....</h3>
         </Menu.Item>
         <Menu.Menu position="right">
           {/* //#################################################
@@ -122,7 +121,19 @@ function Header({ handleSidebarItem, user }) {
             {location.pathname.includes("/campaign") && <SearchCampaigns />}
           </Menu.Item>
           <Menu.Item style={{ color: "#566A63" }}>
-            <Icon name="user circle" size="big" />
+            {/* <h4>{user.attributes.name}</h4> */}
+            <Dropdown text={<Icon name="user circle" size="big" />}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  button
+                  icon="sign-out"
+                  content=" Log out "
+                  onClick={() => Auth.signOut()}
+                />
+                <Dropdown.Divider />
+                <Dropdown.Item icon="setting" content="settings" />
+              </Dropdown.Menu>
+            </Dropdown>
           </Menu.Item>
         </Menu.Menu>
       </Menu>

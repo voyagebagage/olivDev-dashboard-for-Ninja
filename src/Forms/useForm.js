@@ -17,15 +17,15 @@ export default () => {
     email: "",
     authCode: "",
     userType: "",
-    formType: "signUp",
+    formType: "signIn",
   };
   const [formState, updateFormState] = useState(initialFormState);
   const [user, updateUser] = useState(null);
   const onChangeSignUp = (e, { name, value }) => {
     e.persist(); //let's try
     updateFormState({ ...formState, [name]: value });
-    // console.log(name, value);
   };
+  console.log("formState useform", formState.formType);
   //******************+++++++******************** */
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
