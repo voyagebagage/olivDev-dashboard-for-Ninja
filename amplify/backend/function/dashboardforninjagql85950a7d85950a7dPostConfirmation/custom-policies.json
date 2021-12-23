@@ -1,6 +1,10 @@
 [
   {
-    "Action": [],
-    "Resource": []
+    "Effect": "Allow",
+    "Action": ["dynamodb:PutItem"],
+    "Resource": [
+      "arn:aws:dynamodb:ap-southeast-1:847054957517:table/Agent-mu23lgj7nrd3nc2ab45r6uxlqm-dev",
+      "arn:aws:dynamodb:ap-southeast-1:847054957517:table/Client-mu23lgj7nrd3nc2ab45r6uxlqm-dev"
+    ]
   }
 ]

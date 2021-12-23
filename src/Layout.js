@@ -57,6 +57,7 @@ function Layout() {
     }
   }
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
+  console.log("formtype LaYOUT:", formState.formType);
 
   return (
     <Router>
@@ -76,6 +77,7 @@ function Layout() {
         -                                 LAYOUT                        -
       ------------------------------------------------------------------    */}
         <Route
+          path="/"
           render={() =>
             formType === "signedIn" ? (
               <>

@@ -94,8 +94,11 @@ html,
   overflow-x: scroll;
 }
 
-.sidebar-menu {
-  background-color: #8caba0;
+.ui.vertical.menu.sidebar-menu {
+  /* background-color: #8caba0; */
+  /* width: 10px; */
+  width: 16em;
+  overflow: visible;
 }
 /* .nav-text:after {
   background-color: #566a63;
@@ -115,8 +118,9 @@ html,
   position: relative;
   /* background-color: aqua; */
 }
-.sidebarItem {
+.ui.vertical.menu.sidebarItem {
   margin-top: 0;
+  /* width: 800px; */
 }
 .dFlex.sidebarName {
   margin: 0 0 0;
@@ -125,9 +129,9 @@ html,
   display: flex;
   padding-right: 10%;
 }
-.ui.large.vertical.menu {
-  /* width: 16em; */
-}
+/* .ui.large.vertical.menu {
+  width: 16em;
+} */
 .ui.tiny.image.logoImg {
   /* width: 22vw; */
   width: 18em;

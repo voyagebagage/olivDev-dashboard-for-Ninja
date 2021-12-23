@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Route, Link, useLocation } from "react-router-dom";
-import { Icon, Menu, Segment, Sidebar, Header } from "semantic-ui-react";
+import { Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { Routes } from "../../Routes";
 
 const SidebarComponent = ({ sidebarItem }) => {
@@ -19,10 +19,11 @@ const SidebarComponent = ({ sidebarItem }) => {
           icon="labeled"
           primary
           inverted
+          // stackable
           vertical
           visible
           width={sidebarItem ? "thin" : "large"}
-          // className="sidebar-menu"
+          className="sidebar-menu"
           style={{ backgroundColor: "#8CABA0" }}
         >
           {Routes.map((view, index) => {
@@ -66,7 +67,7 @@ const SidebarComponent = ({ sidebarItem }) => {
                   }
             }
           >
-            {Routes.map((route, index) => (
+            {Routes.map((route) => (
               // <Route
               //   exact={route.exact}
               //   path={route.path}

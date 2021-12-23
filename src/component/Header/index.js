@@ -14,8 +14,8 @@ import logoDash from "../../img/logoDash.svg";
 function Header({ handleSidebarItem, user }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
-
   console.log(location.pathname, "location");
+
   return (
     <div>
       <Menu
