@@ -5,6 +5,7 @@ import { Form, Segment, Image } from "semantic-ui-react";
 import loginPic from "../img/loginPic.png";
 import logoDash from "../img/logoDash.svg";
 // import { useHistory } from "react-router-dom";
+import "../animation.css";
 
 const LoginCustom = ({
   formState,
@@ -68,8 +69,8 @@ const LoginCustom = ({
       >
         <Image src={loginPic} style={{ height: "100%" }} />
         <div>
-          <Image src={logoDash} size="medium" />
-          <Form>
+          <Image src={logoDash} size="medium" className="logo-log-in" />
+          <Form className="log-in-form">
             {formType === "signUp" && (
               <Segment centered fitted padded basic>
                 <Form.Input
