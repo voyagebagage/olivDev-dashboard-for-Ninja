@@ -208,11 +208,13 @@
             {
               "Effect": "Allow",
               "Action": [
-                "dynamodb:PutItem"
+                "dynamodb:PutItem",
+                "cognito-idp:*"
               ],
               "Resource": [
                 "arn:aws:dynamodb:ap-southeast-1:847054957517:table/Agent-mu23lgj7nrd3nc2ab45r6uxlqm-dev",
-                "arn:aws:dynamodb:ap-southeast-1:847054957517:table/Client-mu23lgj7nrd3nc2ab45r6uxlqm-dev"
+                "arn:aws:dynamodb:ap-southeast-1:847054957517:table/Client-mu23lgj7nrd3nc2ab45r6uxlqm-dev",
+                "arn:aws:cognito-idp:ap-southeast-1:847054957517:userpool/ap-southeast-1_IGu8uTXLT"
               ]
             }
           ]
