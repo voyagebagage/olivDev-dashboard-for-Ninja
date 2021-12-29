@@ -17,11 +17,12 @@ function setParams(event, model, userType, TABLE_NAME) {
     TableName: TABLE_NAME,
   };
 }
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event) => {
   console.log("event", event);
 
   if (event.request.userAttributes.sub) {
     let userType = event.request.userAttributes["custom:user_type"];
+    let adminCode = event.request.userAttributes["custom:admin_code"];
     var CognitoGroupParams = {
       //The name of the group in you cognito user pool that you want to add the user to
       GroupName: userType.charAt(0).toUpperCase() + userType.slice(1),
@@ -29,7 +30,10 @@ exports.handler = async (event, context, callback) => {
       Username: event.userName,
     };
     let params = {};
-    if (userType === "agent") {
+    if (
+      userType === "agent" ||
+      (userType === "admin" && adminCode === process.env.ADMIN_CODE)
+    ) {
       params = setParams(event, "Agent", userType, process.env.AGENTTABLE);
     }
     if (userType === "client") {
@@ -38,15 +42,6 @@ exports.handler = async (event, context, callback) => {
     console.log("PARAMS:", params);
     try {
       await ddb.putItem(params).promise(); //writing in dynamo
-      //some minimal checks to make sure the user was properly confirmed
-      if (
-        !(
-          event.request.userAttributes["cognito:user_status"] === "CONFIRMED" &&
-          event.request.userAttributes.email_verified === "true"
-        )
-      )
-        callback("User was not properly confirmed and/or email not verified");
-
       console.log("CognitoGroupParams:", CognitoGroupParams);
       await cognitoISP.adminAddUserToGroup(CognitoGroupParams).promise();
       console.log("Success");
@@ -56,7 +51,14 @@ exports.handler = async (event, context, callback) => {
     console.log("Success: Everything executed correctly");
     return null;
   } else {
-    console.log("Error: Nothing was written to DynamoDB");
+    if (
+      !(
+        event.request.userAttributes["cognito:user_status"] === "CONFIRMED" &&
+        event.request.userAttributes.email_verified === "true"
+      )
+    )
+      console.log("User was not properly confirmed and/or email not verified");
+    else console.log("Error: Nothing was written to DynamoDB");
     // context.done(null, event);
     return null;
   }

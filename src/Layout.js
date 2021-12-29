@@ -19,8 +19,16 @@ import useForm from "./Forms/useForm";
 //---------------------Assets------------------------------
 
 function Layout() {
-  const { onChangeSignUp, formState, user, updateFormState, updateUser } =
-    useForm();
+  const {
+    onChangeSignUp,
+    formState,
+    user,
+    updateFormState,
+    updateUser,
+    signUpValid,
+    confirmSignUpValid,
+    signInValid,
+  } = useForm();
   //---------------------States------------------------------
   const [sidebarItem, setSidebarItem] = useState(false);
   const { formType, userType } = formState;
@@ -30,7 +38,15 @@ function Layout() {
   useEffect(() => {
     checkUser();
     setAuthListener();
+    removeAdminCodeFromPublic();
   }, []);
+
+  async function removeAdminCodeFromPublic() {
+    let rItem = JSON.parse(
+      localStorage.getItem(user?.storage[user.userDataKey])
+    );
+    rItem = rItem?.UserAttributes.filter((e) => e.Name !== "custom:admin_code");
+  }
   async function setAuthListener() {
     Hub.listen("auth", (data) => {
       switch (data.payload.event) {
@@ -46,6 +62,15 @@ function Layout() {
   async function checkUser() {
     try {
       const user = await Auth.currentAuthenticatedUser();
+      //removing the admin code from being visible
+      delete user.attributes["custom:admin_code"];
+      delete user.signInUserSession.idToken.payload["custom:admin_code"];
+
+      let rItem = JSON.parse(user.storage[user.userDataKey]);
+      rItem = rItem.UserAttributes.filter(
+        (e) => e.Name !== "custom:admin_code"
+      );
+      user.storage[user.userDataKey] = JSON.stringify(rItem);
       console.log("checkUSER", user);
       updateUser(await user);
       console.log("checkUSER FORM STATE:", formState.formType);
@@ -57,12 +82,41 @@ function Layout() {
     }
   }
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
-  console.log("formtype LaYOUT:", formState.formType);
-
+  console.log("formtype LaYOUT:", formState);
+  console.log("LAYOUT USER", user);
   return (
     <Router>
       <GlobalProvider>
-        <Route path="/login">
+        {/* ------------------------------------------------------------------
+        -                                 LAYOUT                        -
+      ------------------------------------------------------------------    */}
+        <Route
+          // path="/"
+          render={
+            () =>
+              formType === "signedIn" ? (
+                <>
+                  <div
+                    style={
+                      //this will need to change
+                      window.location.origin !== "http://localhost:3000"
+                        ? { height: "100vh" }
+                        : { height: "100%" }
+                    }
+                  >
+                    <Header handleSidebarItem={handleSidebarItem} user={user} />
+                    <div>
+                      <SidebarComponent sidebarItem={sidebarItem} />
+                    </div>
+                  </div>
+                </>
+              ) : null //<Redirect to="/login" />
+          }
+        />
+        {/* ------------------------------------------------------------------
+        -                                 LOGIN                        -
+      ------------------------------------------------------------------    */}
+        <Route>
           {formType !== "signedIn" && (
             <LoginCustom
               formState={formState}
@@ -70,36 +124,12 @@ function Layout() {
               onChangeSignUp={onChangeSignUp}
               user={user}
               updateUser={updateUser}
+              signUpValid={signUpValid}
+              confirmSignUpValid={confirmSignUpValid}
+              signInValid={signInValid}
             />
           )}
         </Route>
-        {/* ------------------------------------------------------------------
-        -                                 LAYOUT                        -
-      ------------------------------------------------------------------    */}
-        <Route
-          path="/"
-          render={() =>
-            formType === "signedIn" ? (
-              <>
-                <div
-                  style={
-                    //this will need to change
-                    window.location.origin !== "http://localhost:3000"
-                      ? { height: "100vh" }
-                      : { height: "100%" }
-                  }
-                >
-                  <Header handleSidebarItem={handleSidebarItem} user={user} />
-                  <div>
-                    <SidebarComponent sidebarItem={sidebarItem} />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
-        />
       </GlobalProvider>
     </Router>
   );

@@ -33,7 +33,7 @@ function Header({ handleSidebarItem, user }) {
           <Icon name="sidebar" />
         </Menu.Item>
         <Menu.Item>
-          <h3>Welcome on board, Ninja {user.attributes.name}....</h3>
+          <h3>Welcome on board, Ninja {user?.attributes?.name}....</h3>
         </Menu.Item>
         <Menu.Menu position="right">
           {/* //#################################################

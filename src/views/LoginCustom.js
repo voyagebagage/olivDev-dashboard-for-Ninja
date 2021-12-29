@@ -1,36 +1,54 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Auth, Hub } from "aws-amplify";
-import { Form, Segment, Image } from "semantic-ui-react";
+import { Form, Segment, Image, Icon, Button } from "semantic-ui-react";
 // import useForm from "../Forms/useForm";
 import loginPic from "../img/loginPic.png";
 import logoDash from "../img/logoDash.svg";
 // import { useHistory } from "react-router-dom";
 import "../animation.css";
+import useForm from "../Forms/useForm";
 
-const LoginCustom = ({
+function LoginCustom({
   formState,
   updateFormState,
   onChangeSignUp,
-  updateUser,
-  user,
-}) => {
-  //   const { updateUser, user } = useForm();
-  const { formType, userType } = formState;
+  signUpValid,
+  confirmSignUpValid,
+  signInValid,
+}) {
+  // const { signUpValid } = useForm();
+  console.log("signUpValid", signUpValid);
+  const {
+    formType,
+    userType,
+    toSeePassword,
+    toSeeConfirmPassword,
+    toSeeAdminCode,
+  } = formState;
+  const [toSee, setToSee] = useState(false);
   //   let history = useHistory();
 
   async function signUp() {
     try {
-      const { name, password, email, userType } = formState;
+      const { name, password, confirmPassword, email, adminCode, userType } =
+        formState;
       console.log(formState);
-      const { user } = await Auth.signUp({
-        username: email,
-        password,
-        attributes: { name, email, "custom:user_type": userType },
-      });
-      console.log("user:", user);
-      updateFormState(() => ({ ...formState, formType: "confirmSignUp" }));
+      if (password === confirmPassword) {
+        const { user } = await Auth.signUp({
+          username: email,
+          password,
+          attributes: {
+            name,
+            email,
+            "custom:user_type": userType,
+            "custom:admin_code": adminCode,
+          },
+        });
+        console.log("user:", user);
+        updateFormState(() => ({ ...formState, formType: "confirmSignUp" }));
+      }
     } catch (error) {
-      console.log("bloody signUp", error);
+      console.log("error w/ signUp", error);
     }
   }
   async function confirmSignUp() {
@@ -38,7 +56,10 @@ const LoginCustom = ({
       const { email, authCode } = formState;
       const { confirm } = await Auth.confirmSignUp(email, authCode);
       console.log(confirm);
-      updateFormState(() => ({ ...formState, formType: "signIn" }));
+      updateFormState(() => ({
+        ...formState,
+        formType: "signIn",
+      }));
     } catch (error) {
       console.log("confirmSignUp error", error);
     }
@@ -54,9 +75,9 @@ const LoginCustom = ({
     }
   }
 
-  console.log("formtype LOG C:", formState.formType);
-  console.log("user: Login C", user);
-  console.log("Auth: LogC", Auth.user?.username);
+  // console.log("formtype LOG C:", formState.formType);
+  // console.log("user: Login C", user);
+  // console.log("Auth: LogC", Auth.user?.username);
   return (
     <>
       <div
@@ -76,18 +97,50 @@ const LoginCustom = ({
                 <Form.Input
                   name="name"
                   type="text"
+                  // value={formState.name || ""}
                   onChange={onChangeSignUp}
                   label="Name"
                 />
                 <Form.Input
                   name="password"
-                  type="password"
+                  type={!toSeePassword ? "password" : "text"}
+                  action={
+                    <Button
+                      icon="eye"
+                      onClick={() =>
+                        updateFormState({
+                          ...formState,
+                          toSeePassword: !toSeePassword,
+                        })
+                      }
+                    />
+                  }
+                  // value={formState.password || ""}
                   onChange={onChangeSignUp}
                   label="Password"
                 />
                 <Form.Input
+                  name="confirmPassword"
+                  type={!toSeeConfirmPassword ? "password" : "text"}
+                  action={
+                    <Button
+                      icon="eye"
+                      onClick={() =>
+                        updateFormState({
+                          ...formState,
+                          toSeeConfirmPassword: !toSeeConfirmPassword,
+                        })
+                      }
+                    />
+                  }
+                  // value={formState.confirmPassword || ""}
+                  onChange={onChangeSignUp}
+                  label="Confirm Password"
+                />
+                <Form.Input
                   name="email"
-                  type="email"
+                  type="text"
+                  // value={formState.email || ""}
                   onChange={onChangeSignUp}
                   label="Email"
                 />
@@ -109,7 +162,7 @@ const LoginCustom = ({
                     label="Client"
                   />
                   <Form.Radio
-                    disabled
+                    // disabled
                     radio
                     name="userType"
                     checked={userType === "admin"}
@@ -118,8 +171,32 @@ const LoginCustom = ({
                     label="Admin"
                   />
                 </Form.Group>
+                {userType === "admin" && (
+                  <Form.Input
+                    name="adminCode"
+                    type={!toSeeAdminCode ? "password" : "text"}
+                    action={
+                      <Button
+                        icon="eye"
+                        onClick={() =>
+                          updateFormState({
+                            ...formState,
+                            toSeeAdminCode: !toSeeAdminCode,
+                          })
+                        }
+                      />
+                    }
+                    onChange={onChangeSignUp}
+                    label="Admin Code"
+                  />
+                )}
                 <Form.Group>
-                  <Form.Button content="Sign up" primary onClick={signUp} />
+                  <Form.Button
+                    disabled={signUpValid}
+                    content="Sign up"
+                    primary
+                    onClick={signUp}
+                  />
                   <Form.Button
                     secondary
                     content="Sign in"
@@ -142,31 +219,46 @@ const LoginCustom = ({
                   placeholder="confirmation code"
                 />
                 <Form.Button
+                  disabled={confirmSignUpValid}
                   content="confirm sign up"
                   onClick={confirmSignUp}
                 />
               </Segment>
             )}
+            {/* //******************SIGN IN******************** */}
             {formType === "signIn" && (
               <Segment centered fitted padded basic>
-                {/* <Form.Input
-        name="name"
-        onChange={onChangeSignUp}
-        placeholder="name"
-      /> */}
                 <Form.Input
                   name="email"
+                  // value={formState.email || ""}
                   onChange={onChangeSignUp}
-                  placeholder="email"
+                  label="email"
                 />
                 <Form.Input
                   name="password"
-                  type="password"
+                  type={!toSeePassword ? "password" : "text"}
+                  action={
+                    <Button
+                      icon="eye"
+                      onClick={() =>
+                        updateFormState({
+                          ...formState,
+                          toSeePassword: !toSeePassword,
+                        })
+                      }
+                    />
+                  }
+                  // value={formState.password || ""}
                   onChange={onChangeSignUp}
-                  placeholder="password"
+                  label="Password"
                 />
                 <Form.Group>
-                  <Form.Button content="Log in" primary onClick={signIn} />
+                  <Form.Button
+                    content="Log in"
+                    primary
+                    onClick={signIn}
+                    disabled={signInValid}
+                  />
                   <Form.Button
                     content="Sign Up"
                     secondary
@@ -186,6 +278,6 @@ const LoginCustom = ({
       </div>
     </>
   );
-};
+}
 
 export default LoginCustom;

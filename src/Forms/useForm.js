@@ -14,8 +14,13 @@ export default () => {
   const initialFormState = {
     name: "",
     password: "",
+    toSeePassword: false,
+    confirmPassword: "",
+    toSeeConfirmPassword: false,
     email: "",
     authCode: "",
+    adminCode: "",
+    toSeeAdminCode: false,
     userType: "",
     formType: "signIn",
   };
@@ -25,7 +30,7 @@ export default () => {
     e.persist(); //let's try
     updateFormState({ ...formState, [name]: value });
   };
-  console.log("formState useform", formState.formType);
+  // console.log("formState useform", formState);
   //******************+++++++******************** */
   // console.log(form, "form");
   // console.log(fieldErrors, "fieldErrors");
@@ -60,6 +65,19 @@ export default () => {
   const addKpiButtonValid =
     !form.coeff?.length || !form.name?.length || !form.target?.length;
 
+  //********************SIGN UP****************** */
+  const signUpValid =
+    !formState.name?.length ||
+    !formState.password?.length ||
+    !formState.confirmPassword?.length ||
+    !formState.email?.length ||
+    !formState.userType?.length ||
+    (formState.userType === "admin" && !formState.adminCode?.length);
+  //********************CONFIRM****************** */
+  const confirmSignUpValid = !formState.authCode?.length;
+  //********************SIGN IN****************** */
+  const signInValid = !formState.password?.length || !formState.email?.length;
+
   return {
     //--signup--login
     onChangeSignUp,
@@ -67,6 +85,9 @@ export default () => {
     updateFormState,
     user,
     updateUser,
+    signInValid,
+    signUpValid,
+    confirmSignUpValid,
     //-------------
     form,
     setForm,

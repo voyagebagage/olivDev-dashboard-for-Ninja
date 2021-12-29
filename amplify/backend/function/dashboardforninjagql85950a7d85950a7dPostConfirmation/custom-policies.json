@@ -8,9 +8,4 @@
       "arn:aws:cognito-idp:ap-southeast-1:847054957517:userpool/ap-southeast-1_IGu8uTXLT"
     ]
   }
-  // {
-  //   "Effect": "Allow",
-  //   "Action": ["cognito-idp:AdminAddUserToGroup"],
-  //   "Resource": "arn:aws:cognito-idp:ap-southeast-1:847054957517:userpool/ap-southeast-1_IGu8uTXLT"
-  // }
 ]
