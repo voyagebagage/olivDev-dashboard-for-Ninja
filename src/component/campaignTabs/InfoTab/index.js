@@ -76,7 +76,7 @@ const InfoTab = ({ setEdit, edit, campaignDetails }) => {
                   )}
                 </Table.HeaderCell>
                 {edit && (
-                  <Table.HeaderCell>
+                  <Table.HeaderCell style={{ width: "50%" }}>
                     <div className="dFlex-aCenter">
                       <Header
                         as="div"
@@ -85,7 +85,7 @@ const InfoTab = ({ setEdit, edit, campaignDetails }) => {
                         inverted
                         textAlign="left"
                       >
-                        Update to...
+                        Update to ...
                       </Header>
                     </div>
                   </Table.HeaderCell>

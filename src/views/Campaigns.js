@@ -8,6 +8,8 @@ import {
   Dimmer,
   Image,
   Loader,
+  Button,
+  Confirm,
 } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 
@@ -25,6 +27,9 @@ import {
 import { API, graphqlOperation } from "aws-amplify";
 import { searchCampaigns } from "../graphql/queries";
 import CampaignForm from "../Forms/CampaignForm";
+import { deleteCampaign } from "../graphql/mutations";
+import useForm from "../Forms/useForm";
+import { onDeleteCampaign } from "../graphql/subscriptions";
 
 // import { fetchClients } from "../fetch/FetchClients";
 //#################################################
@@ -34,6 +39,7 @@ function Campaigns() {
   let history = useHistory();
 
   const { setVisible } = useVisible();
+  const { setIsSubmitting } = useForm();
   //xxxxxxxxxxxxxxxxxxxx
   const {
     isLoading,
@@ -53,6 +59,14 @@ function Campaigns() {
   const { filteredCampaigns, campaigns, setCampaigns } = useCampaign();
   //xxxxxxxxxxxxxxxxxxxx
   const { fieldDropDown, directionDropDown } = useDropDownFilter();
+  const [areYouSure, setAreYouSure] = useState(false);
+  const show = () => setAreYouSure(true);
+  const handleCancel = () => setAreYouSure(false);
+  const handleConfirm = (idx) => {
+    setIsSubmitting(true);
+    removeCampaign(idx);
+    setAreYouSure(false);
+  };
   //---------------------States------------------------------
   // const [activeCampaign, setActiveCampaign] = useState(false);
   // const [campaigns, setCampaigns] = useState([]);
@@ -96,17 +110,44 @@ function Campaigns() {
       console.log("error with get campaigns :", error);
     }
   };
-  useEffect(
-    () => fetchCampaigns(),
-    [
-      from,
-      targetPage,
-      directionDropDown,
-      fieldDropDown,
-      filteredCampaigns,
-      maxPages,
-    ]
-  );
+
+  //------------------------===========Del============---------------------
+  const removeCampaign = async (idx) => {
+    try {
+      const inputDel = { id: campaigns[idx].id };
+      console.log("inputDel", inputDel);
+      const campaignDelete = await API.graphql(
+        graphqlOperation(deleteCampaign, {
+          input: inputDel,
+        })
+      );
+      console.log(campaignDelete, "campaignDelete");
+      console.log("succes");
+      // history.push("/client-list");
+    } catch (error) {
+      console.log("error erasing a Campaign", error);
+    }
+  };
+  useEffect(() => {
+    fetchCampaigns();
+    const subscription = API.graphql(
+      graphqlOperation(onDeleteCampaign)
+    ).subscribe({
+      next: (eventData) => {
+        const delCampaign = eventData.value.data.onDeleteCampaign;
+        console.log("delCampaign", delCampaign);
+        setCampaigns([...campaigns]);
+      },
+    });
+    return () => subscription.unsubscribe();
+  }, [
+    from,
+    targetPage,
+    directionDropDown,
+    fieldDropDown,
+    filteredCampaigns,
+    maxPages,
+  ]);
   console.log(campaigns.length, "CAMPAIGNS");
   //#################################################
   //           RENDER
@@ -130,6 +171,7 @@ function Campaigns() {
               <Table.HeaderCell collapsing>END</Table.HeaderCell>
               <Table.HeaderCell
                 textAlign="center"
+                colSpan="2"
                 // style={{ maxWidth: "10vw", marginRight: 0 }}
               >
                 STATUS
@@ -143,38 +185,127 @@ function Campaigns() {
               <Table.Row
                 key={campaign.id}
                 style={{ cursor: "pointer" }}
-                onClick={() =>
-                  history.push(`/campaign/${campaign.name}/${campaign.id}/info`)
-                }
+                // onClick={() =>
+                //   history.push(`/campaign/${campaign.name}/${campaign.id}/info`)
+                // }
               >
-                <Table.Cell>
+                <Table.Cell
+                  onClick={() =>
+                    history.push(
+                      `/campaign/${campaign.name}/${campaign.id}/info`
+                    )
+                  }
+                >
                   {campaign.client?.firstName}&nbsp;&nbsp;
                   {campaign.client?.lastName}
                 </Table.Cell>
-                <Table.Cell collapsing>{campaign.name}</Table.Cell>
-                <Table.Cell textAlign="center">
+                <Table.Cell
+                  collapsing
+                  onClick={() =>
+                    history.push(
+                      `/campaign/${campaign.name}/${campaign.id}/info`
+                    )
+                  }
+                >
+                  {campaign.name}
+                </Table.Cell>
+                <Table.Cell
+                  textAlign="center"
+                  onClick={() =>
+                    history.push(
+                      `/campaign/${campaign.name}/${campaign.id}/info`
+                    )
+                  }
+                >
                   {campaign.agent?.name}
                 </Table.Cell>
-                <Table.Cell collapsing>
+                <Table.Cell
+                  collapsing
+                  onClick={() =>
+                    history.push(
+                      `/campaign/${campaign.name}/${campaign.id}/info`
+                    )
+                  }
+                >
                   {campaign.startDate.split("-").reverse().join("-")}
                 </Table.Cell>
-                <Table.Cell collapsing>
+                <Table.Cell
+                  collapsing
+                  onClick={() =>
+                    history.push(
+                      `/campaign/${campaign.name}/${campaign.id}/info`
+                    )
+                  }
+                >
                   {campaign.endDate.split("-").reverse().join("-")}
                 </Table.Cell>
                 <Table.Cell textAlign="center">
-                  <Icon
-                    as={Icon}
-                    name="circle thin"
-                    color={
-                      campaign.status === "true"
-                        ? "green"
-                        : campaign.status === "not yet"
-                        ? "blue"
-                        : campaign.status === "done"
-                        ? "red"
-                        : "grey"
-                    }
-                  />
+                  <div className="dFlex-fEnd-aCenter" style={{ width: "100%" }}>
+                    <div
+                      basic
+                      fluid
+                      className="dFlex-fEnd-aCenter-width"
+                      style={{ borderWidth: 0 }}
+                    >
+                      <Icon
+                        as={Icon}
+                        name="circle thin"
+                        color={
+                          campaign.status === "true"
+                            ? "green"
+                            : campaign.status === "not yet"
+                            ? "blue"
+                            : campaign.status === "done"
+                            ? "red"
+                            : "grey"
+                        }
+                      />
+                      <Button
+                        animated
+                        // transparent
+                        as={Segment}
+                        basic
+                        // fitted
+                        style={{
+                          borderWidth: 0,
+                          // borderColor: "transparent",
+                          padding: 0,
+                          margin: 0,
+                          shadowBox: "none",
+                        }}
+                        size="large"
+                      >
+                        <Button.Content
+                          visible
+                          basic
+                          // transparent
+                          // borderless
+                          // style={{ borderWidth: 0, padding: 0, margin: 0 }}
+                        >
+                          <Icon name="ellipsis vertical" />
+                        </Button.Content>
+                        <Button.Content
+                          hidden
+                          basic
+                          borderless
+                          // style={{ borderWidth: 0, padding: 0, margin: 0 }}
+                          onClick={show}
+                        >
+                          <Icon
+                            name="delete"
+                            color="red"
+                            // style={{ borderWidth: 0 }}
+                          />
+                        </Button.Content>
+                      </Button>
+                      <Confirm
+                        open={areYouSure}
+                        content="Are you sure you want to delete the Campaign ?"
+                        onCancel={handleCancel}
+                        onConfirm={() => handleConfirm(idx)}
+                      />
+                    </div>
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -200,10 +331,9 @@ function Campaigns() {
     </Sidebar.Pushable>
   ) : !isLoading && campaigns.length === 0 ? (
     <Sidebar.Pushable as={List}>
-      {/* <div style={{ width: "83%" }}> */}
-      <Segment basic className="centerSized">
+      <Segment basic className="centerSizedDirection">
         <Header as="h2">Campaigns</Header>
-        <AddIcon setVisible={setVisible} />
+        <AddIcon setVisible={setVisible} size="big" />
       </Segment>
       <SidebarForm>
         <CampaignForm campaigns={campaigns} setCampaigns={setCampaigns} />
@@ -228,49 +358,3 @@ function Campaigns() {
 }
 
 export default Campaigns;
-
-// const now = new Date().getTime();
-// for (let i = 0; i < campaignData.data.searchCampaigns.items.length; i++) {
-//   // if (!campaignData.data.searchCampaigns.items[i].status) {
-//   const startTime = new Date(
-//     campaignData.data.searchCampaigns.items[i].startDate
-//   ).getTime();
-//   const endTime = new Date(
-//     campaignData.data.searchCampaigns.items[i].endDate
-//   ).getTime();
-
-//   if (now < startTime) {
-//     campaignData.data.searchCampaigns.items[i].status = "not yet";
-//     const elem = campaignData.data.searchCampaigns.items[i];
-//     console.log(elem, "elem");
-//     delete elem.createdAt;
-//     delete elem.updatedAt;
-//     delete elem.client;
-//     delete elem.agent;
-//     delete elem.dailyReports;
-//     delete elem.weeklyReports;
-//     delete elem.monthlyReports;
-//     delete elem.kpis;
-//     const campaignUpdate = await API.graphql(
-//       graphqlOperation(updateCampaign, { input: elem })
-//     );
-//   }
-
-//   if (now > endTime) {
-//     campaignData.data.searchCampaigns.items[i].status = "done";
-//     const elem = campaignData.data.searchCampaigns.items[i];
-//     console.log(elem, "elem");
-//     delete elem.createdAt;
-//     delete elem.updatedAt;
-//     delete elem.client;
-//     delete elem.agent;
-//     delete elem.dailyReports;
-//     delete elem.weeklyReports;
-//     delete elem.monthlyReports;
-//     delete elem.kpis;
-//     const campaignUpdate = await API.graphql(
-//       graphqlOperation(updateCampaign, { input: elem })
-//     );
-//   }
-//   // }
-// }

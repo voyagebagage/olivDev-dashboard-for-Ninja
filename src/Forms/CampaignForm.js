@@ -35,7 +35,10 @@ import {
 // import { v4 as uuidv4 } from "uuid";
 import useForm from "./useForm";
 import { setStatus } from "../lib/function";
-import { onCreateCampaign } from "../graphql/subscriptions";
+import {
+  onCreateCampaign,
+  onUpdateDailyReport,
+} from "../graphql/subscriptions";
 
 const CampaignForm = ({ campaigns, setCampaigns }) => {
   const {
@@ -66,17 +69,7 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
     ? campaignFormValid || step2
     : campaignFormUpdateValid;
   //-------------------Functions------------------------------
-  useEffect(() => {
-    const subscription = API.graphql(
-      graphqlOperation(onCreateCampaign)
-    ).subscribe({
-      next: (eventData) => {
-        const newCampaign = eventData.value.data.onCreateCampaign;
-        setCampaigns([...campaigns, newCampaign]);
-      },
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+
   //#########################################################
   //                     DROPDOWNs
   //#########################################################
@@ -378,19 +371,29 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
     setVisible(false);
     console.log("succes FINAL SUBMIT CAMPAIGN");
   };
-  console.log([
+  console.log(
+    "isSubmitting:",
     isSubmitting,
+    "form:",
     form,
+    "listKpi:",
     listKpi,
-    backButton,
-    "isSubmitting",
-    "form",
-    "listKpi",
-    "backbutton",
-  ]);
+    "backbutton:",
+    backButton
+  );
   useEffect(() => {
     selectClient();
     selectAgent();
+    const subscription = API.graphql(
+      graphqlOperation(onUpdateDailyReport)
+    ).subscribe({
+      next: (eventData) => {
+        const newCampaign = eventData.value.data.onUpdateDailyReport.campaign;
+        console.log("newCampaign,", newCampaign);
+        setCampaigns([...campaigns, newCampaign]);
+      },
+    });
+    return () => subscription.unsubscribe();
   }, []);
   return (
     <>

@@ -261,11 +261,11 @@ function Client() {
         <Segment
           basic
           fluid
-          className="centerSized"
+          className="centerSizedDirection"
           // style={{ alignItems : "center" }}
         >
           <Header as="h2">Clients</Header>
-          <AddIcon setVisible={setVisible} />
+          <AddIcon setVisible={setVisible} size="big" />
         </Segment>
         <SidebarForm>
           <Segment

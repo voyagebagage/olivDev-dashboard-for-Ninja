@@ -27,12 +27,12 @@ type Client
 # add campaigns together
 type Agent
   @model
-  @auth(
-    rules: [
-      { allow: groups, groups: ["Admin"] }
-      { allow: owner, ownerField: "username", operations: [read] }
-    ]
-  )
+  # @auth(
+  #   rules: [
+  #     { allow: groups, groups: ["Admin"] }
+  #     { allow: owner, ownerField: "username", operations: [read] }
+  #   ]
+  # )
   @key(
     name: "agentByDailyPoints"
     fields: ["category", "dailyPoints"]
@@ -127,9 +127,7 @@ type Campaign
   kpis: [Kpi!]! @connection(name: "CampaignKpis")
 }
 ####################################################################
-
-################## REPORTS #########################################
-
+#                           REPORTS                               #
 ####################################################################
 ##--------------- WEEKLY -----------------------##
 type WeeklyReport @model @searchable {
@@ -167,11 +165,6 @@ type DailyReport @model @searchable {
 
 ###################################################################
 type Kpi @model @searchable {
-  # @key(
-  #   name: "kpiByTarget"
-  #   fields: ["name", "agent"]
-  #   queryField: "kpiByTarget"
-  # )
   campaign: Campaign! @connection(name: "CampaignKpis")
   id: ID
   name: String! #category
@@ -182,27 +175,3 @@ type Kpi @model @searchable {
   dailyReport: DailyReport! @connection(name: "DailyReportKpis")
   agent: Agent! @connection(name: "AgentKpis", sortField: "name")
 }
-#---------------------------------------------------------------------------
-
-# -                                                                                              -
-
-#---------------------------------------------------------------------------
-# type Kpi @model @searchable {
-#   id: ID
-#   name: String!
-#   dailyReports: [KpiDailyReports]! @connection(name: "DailyReportKpis")
-# }
-# type KpiDailyReports @model(queries: null) {
-#   dailyReport: DailyReport! @connection(name: "KpiDailyReports") #kpiDailyReportsDailyReportId
-#   kpi: Kpi! @connection(name: "DailyReportKpis") #kpiDailyReportsKpiId
-#   target: Int!
-#   coeff: Int!
-# }
-
-# type DailyReport @model @searchable {
-#   id: ID
-#   campaignName: String
-#   date: AWSDate!
-#   campaign: Campaign @connection(name: "CampaignDailyReports") #dailyReportCampaignId
-#   kpis: [KpiDailyReports]! @connection(name: "KpiDailyReports")
-# }

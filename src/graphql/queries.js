@@ -368,19 +368,6 @@ export const getCampaign = /* GraphQL */ `
           dailyPoints
           weeklyTarget
           updatedAt
-          kpis {
-            items {
-              id
-              name
-              result
-              target
-              nextWeekTarget
-              coeff
-              createdAt
-              updatedAt
-            }
-            nextToken
-          }
         }
         nextToken
       }
@@ -1332,10 +1319,6 @@ export const agentByTotalPoints = /* GraphQL */ `
           updatedAt
         }
         campaigns {
-          items {
-            id
-            name
-          }
           nextToken
         }
         kpis {

@@ -7,10 +7,14 @@ function setParams(event, model, userType, TABLE_NAME) {
   return {
     Item: {
       id: { S: event.request.userAttributes.sub },
+      username: { S: event.request.userAttributes.email },
       __typename: { S: model }, //model name Appsync
       category: { S: userType },
-      username: { S: event.userName },
       email: { S: event.request.userAttributes.email },
+      name: { S: event.request.userAttributes.name },
+      dailyPoints: { N: "0" },
+      weeklyPoints: { N: "0" },
+      monthlyPoints: { N: "0" },
       createdAt: { S: date.toISOString() },
       updatedAt: { S: date.toISOString() },
     },

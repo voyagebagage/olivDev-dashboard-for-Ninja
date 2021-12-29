@@ -5,7 +5,7 @@ import { PaginationLong } from "../component/Pagination";
 //------------------------graphQl----------------------
 import { API, graphqlOperation } from "aws-amplify";
 import { listAgents, agentByTotalPoints } from "../graphql/queries";
-import { agentByTotalPointsCustom } from "../graphql/custom-queries";
+import { agentByMonthlyPointsCustom } from "../graphql/custom-queries";
 /* ------------------------------------------------------------------
 -                               Main function                       -
 ------------------------------------------------------------------ */
@@ -34,10 +34,10 @@ function Agent() {
     try {
       const agentData = await API.graphql(
         // graphqlOperation(searchAgents)
-        graphqlOperation(agentByTotalPointsCustom, variables)
+        graphqlOperation(agentByMonthlyPointsCustom, variables)
       );
-      console.log(agentData.data.agentByTotalPoints.items, "client");
-      setAgents(agentData.data.agentByTotalPoints.items);
+      console.log(agentData.data.agentByMonthlyPoints.items, "client");
+      setAgents(agentData.data.agentByMonthlyPoints.items);
       setIsLoading(false);
     } catch (error) {
       console.log("error with get clients :", error);

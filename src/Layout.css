@@ -17,6 +17,10 @@ html,
 .dFlex {
   display: flex;
 }
+.dFlex-gap {
+  display: flex;
+  gap: 10;
+}
 .dFlex-1 {
   display: flex;
   flex: 1;
@@ -33,6 +37,12 @@ html,
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.dFlex-fEnd-aCenter-width {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 55%;
 }
 .dFlex-fStart-aCenter {
   display: flex;
@@ -67,9 +77,25 @@ html,
   height: 100%;
   width: 100%;
 }
+.centerSizedDirection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .dFlex-fEnd {
   display: flex;
   justify-content: flex-end;
+}
+.dFlex-fEnd-aCenter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 .noDecoration {
   text-decoration: none;

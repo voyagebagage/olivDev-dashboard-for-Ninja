@@ -30,18 +30,18 @@ export const getDailyReports = /* GraphQL */ `
     }
   }
 `;
-export const agentByTotalPointsCustom = /* GraphQL */ `
-  query AgentByTotalPoints(
+export const agentByMonthlyPointsCustom = /* GraphQL */ `
+  query AgentByMonthlyPoints(
     $category: String
-    $totalPoints: ModelIntKeyConditionInput
+    $monthlyPoints: ModelIntKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelAgentFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    agentByTotalPoints(
+    agentByMonthlyPoints(
       category: $category
-      totalPoints: $totalPoints
+      monthlyPoints: $monthlyPoints
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -57,7 +57,7 @@ export const agentByTotalPointsCustom = /* GraphQL */ `
           }
           nextToken
         }
-        totalPoints
+        monthlyPoints
       }
       nextToken
     }
