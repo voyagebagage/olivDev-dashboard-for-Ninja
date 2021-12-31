@@ -35,9 +35,19 @@ endWeekDate.setDate(lastDay);
 //--------
 
 export function toISOStr(date) {
+  console.log("toISOStr", new Date(date).toISOString().split("T")[0]);
   return new Date(date).toISOString().split("T")[0];
 }
-export function toISOStrDDMMYYY(date) {
+export function toISOStrDDMMYYYY(date) {
+  console.log(
+    "toISOStrDDMMYYYY",
+    new Date(`${date} GMT`)
+      .toISOString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("-")
+  );
   return new Date(`${date} GMT`)
     .toISOString()
     .split("T")[0]
@@ -55,14 +65,16 @@ export function getDateOfISOWeek(w, y) {
   return ISOweekStart;
 }
 //-------
-export const updatePoints = async (agent, dailyPoints) => {
+export const updatePoints = async (agent, dailyPoints, dailyReportDate) => {
   try {
+    let date = new Date();
     console.log(agent);
+    date = toISOStr(date);
     const updateDailyPoints = await API.graphql(
       graphqlOperation(updateAgent, {
         input: {
           id: agent.id,
-          dailyPoints: dailyPoints,
+          dailyPoints: date === dailyReportDate ? dailyPoints : 0,
           weeklyPoints: agent.weeklyPoints + dailyPoints,
           monthlyPoints: agent.monthlyPoints + dailyPoints,
         },

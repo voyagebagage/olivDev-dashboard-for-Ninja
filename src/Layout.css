@@ -172,3 +172,9 @@ html,
 /* #logoDash {
 
 } */
+.ui.small.statistic {
+  margin-bottom: 0;
+}
+.ui.segment.dFlex-fEnd {
+  margin-bottom: 0;
+}

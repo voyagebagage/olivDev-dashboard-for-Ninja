@@ -112,6 +112,18 @@ export const getAgent = /* GraphQL */ `
         }
         nextToken
       }
+      dailyReports {
+        items {
+          id
+          date
+          createdAt
+          dailyTarget
+          dailyPoints
+          weeklyTarget
+          updatedAt
+        }
+        nextToken
+      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -159,6 +171,9 @@ export const listAgents = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -196,6 +211,9 @@ export const getYearPoints = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -341,6 +359,9 @@ export const getCampaign = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -786,6 +807,40 @@ export const getDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        dailyReports {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
       date
       createdAt
       dailyTarget
@@ -850,6 +905,18 @@ export const listDailyReports = /* GraphQL */ `
         }
         kpis {
           nextToken
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
         }
         date
         createdAt
@@ -948,6 +1015,18 @@ export const getKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
         date
         createdAt
         dailyTarget
@@ -982,6 +1061,9 @@ export const getKpi = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -1168,6 +1250,9 @@ export const agentByDailyPoints = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -1218,6 +1303,9 @@ export const agentByWeeklyPoints = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -1272,6 +1360,9 @@ export const agentByMonthlyPoints = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -1324,6 +1415,9 @@ export const agentByTotalPoints = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -1374,6 +1468,9 @@ export const agentByName = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -1840,6 +1937,18 @@ export const searchDailyReports = /* GraphQL */ `
         }
         kpis {
           nextToken
+        }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
         }
         date
         createdAt

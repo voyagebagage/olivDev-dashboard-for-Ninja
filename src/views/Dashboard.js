@@ -168,42 +168,48 @@ function Dashboard() {
                   {/* <Table.HeaderCell>% TO TARGET</Table.HeaderCell> */}
                 </Table.Row>
               </Table.Header>
-              {agents.map((agent, idx) => (
-                <Table.Body>
-                  <Table.Row
-                    positive={idx < 3 && agents.length > 3 ? true : false}
-                    negative={
-                      idx >= agents.length - 3 && agents.length > 3
-                        ? true
-                        : false
-                    }
-                  >
-                    <Table.Cell>
-                      {idx < 3 ? (
-                        <Label ribbon>
-                          <Icon name="first order" color="yellow" />
-                          {idx + 1}
-                        </Label>
-                      ) : (
-                        idx + 1
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>{agent.name}</Table.Cell>
-                    <Table.Cell>
-                      {activeItem === "" && agent.totalPoints
-                        ? agent.totalPoints
-                        : activeItem === "daily" && agent.dailyPoints
-                        ? agent.dailyPoints
-                        : activeItem === "weekly" && agent.weeklyPoints
-                        ? agent.weeklyPoints
-                        : activeItem === "monthly" && agent.monthlyPoints
-                        ? agent.monthlyPoints
-                        : "-"}
-                      pts
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              ))}
+              {agents.map((agent, idx) => {
+                // if (agent.dailyPoints === null) {
+                //   agent.noPoints = "not updated";
+                // }
+                return (
+                  <Table.Body>
+                    <Table.Row
+                      positive={idx < 3 && agents.length > 3 ? true : false}
+                      negative={
+                        idx >= agents.length - 3 && agents.length > 3
+                          ? true
+                          : false
+                      }
+                      warning={!agent.dailyPoints}
+                    >
+                      <Table.Cell>
+                        {idx < 3 ? (
+                          <Label ribbon>
+                            <Icon name="first order" color="yellow" />
+                            {idx + 1}
+                          </Label>
+                        ) : (
+                          idx + 1
+                        )}
+                      </Table.Cell>
+                      <Table.Cell>{agent.name}</Table.Cell>
+                      <Table.Cell>
+                        {activeItem === "" && agent.totalPoints
+                          ? agent.totalPoints
+                          : activeItem === "daily" && agent.dailyPoints
+                          ? agent.dailyPoints
+                          : activeItem === "weekly" && agent.weeklyPoints
+                          ? agent.weeklyPoints
+                          : activeItem === "monthly" && agent.monthlyPoints
+                          ? agent.monthlyPoints
+                          : "-"}
+                        pts
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
+                );
+              })}
             </Table>
             {/* <PaginationLong /> */}
           </div>

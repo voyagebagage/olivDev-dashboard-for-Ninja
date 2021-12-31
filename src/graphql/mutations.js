@@ -164,6 +164,18 @@ export const createAgent = /* GraphQL */ `
         }
         nextToken
       }
+      dailyReports {
+        items {
+          id
+          date
+          createdAt
+          dailyTarget
+          dailyPoints
+          weeklyTarget
+          updatedAt
+        }
+        nextToken
+      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -231,6 +243,18 @@ export const updateAgent = /* GraphQL */ `
           nextWeekTarget
           coeff
           createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      dailyReports {
+        items {
+          id
+          date
+          createdAt
+          dailyTarget
+          dailyPoints
+          weeklyTarget
           updatedAt
         }
         nextToken
@@ -306,6 +330,18 @@ export const deleteAgent = /* GraphQL */ `
         }
         nextToken
       }
+      dailyReports {
+        items {
+          id
+          date
+          createdAt
+          dailyTarget
+          dailyPoints
+          weeklyTarget
+          updatedAt
+        }
+        nextToken
+      }
       dailyPoints
       weeklyPoints
       monthlyPoints
@@ -353,6 +389,9 @@ export const createYearPoints = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -398,6 +437,9 @@ export const updateYearPoints = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -441,6 +483,9 @@ export const deleteYearPoints = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -604,6 +649,9 @@ export const createCampaign = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -718,6 +766,9 @@ export const updateCampaign = /* GraphQL */ `
         kpis {
           nextToken
         }
+        dailyReports {
+          nextToken
+        }
         dailyPoints
         weeklyPoints
         monthlyPoints
@@ -830,6 +881,9 @@ export const deleteCampaign = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -1500,6 +1554,40 @@ export const createDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        dailyReports {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
       date
       createdAt
       dailyTarget
@@ -1611,6 +1699,40 @@ export const updateDailyReport = /* GraphQL */ `
         }
         nextToken
       }
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        dailyReports {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
+      }
       date
       createdAt
       dailyTarget
@@ -1721,6 +1843,40 @@ export const deleteDailyReport = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      agent {
+        id
+        category
+        name
+        email
+        team {
+          id
+          name
+          dailyPoints
+          weeklyPoints
+          monthlyPoint
+          totalPoints
+          createdAt
+          updatedAt
+        }
+        campaigns {
+          nextToken
+        }
+        kpis {
+          nextToken
+        }
+        dailyReports {
+          nextToken
+        }
+        dailyPoints
+        weeklyPoints
+        monthlyPoints
+        yearPoints {
+          nextToken
+        }
+        totalPoints
+        createdAt
+        updatedAt
       }
       date
       createdAt
@@ -1843,6 +1999,18 @@ export const createKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
         date
         createdAt
         dailyTarget
@@ -1877,6 +2045,9 @@ export const createKpi = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -1975,6 +2146,18 @@ export const updateKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
         date
         createdAt
         dailyTarget
@@ -2009,6 +2192,9 @@ export const updateKpi = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints
@@ -2107,6 +2293,18 @@ export const deleteKpi = /* GraphQL */ `
         kpis {
           nextToken
         }
+        agent {
+          id
+          category
+          name
+          email
+          dailyPoints
+          weeklyPoints
+          monthlyPoints
+          totalPoints
+          createdAt
+          updatedAt
+        }
         date
         createdAt
         dailyTarget
@@ -2141,6 +2339,9 @@ export const deleteKpi = /* GraphQL */ `
           nextToken
         }
         kpis {
+          nextToken
+        }
+        dailyReports {
           nextToken
         }
         dailyPoints

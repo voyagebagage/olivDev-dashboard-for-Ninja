@@ -1,23 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  // Header,
-  // Image,
-  // Menu,
-  // Label,
-  // Table,
-  Icon,
-  Dropdown,
-  // Segment,
-  // Grid,
-  // Container,
-  Statistic,
-} from "semantic-ui-react";
+import { Icon, Dropdown, Statistic, Header, Segment } from "semantic-ui-react";
 const TimeComponent = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [timeZone, setTimeZone] = useState("Asia/Bangkok");
-  //   const timeZones = "Asia/Bangkok";
   useEffect(() => fetchTime(), [timeZone]);
   const fetchTime = async () => {
     const response = await axios.get(
@@ -27,15 +14,31 @@ const TimeComponent = () => {
     setData(response.data);
     setIsLoading(false);
   };
+  let date = new Date(data.datetime).toString().split(" ");
+  console.log("data", date[0] + date[2]);
   return !isLoading ? (
     <div className="dFlex">
-      <Statistic
-        value={data.datetime.split("T")[1].slice(0, 8)}
-        label={data.timezone}
-        size="small"
-        color="teal"
-      />
-      <Dropdown text={<Icon name="adjust" size="large" />}>
+      <Header
+        as={Segment}
+        className="dFlex-aCenter"
+        style={{
+          color: "#566A63",
+          backgroundColor: "#8CABA0",
+          paddingBottom: 0,
+          paddingTop: 0,
+        }}
+      >{`${date[0]} ${date[2]}`}</Header>
+      <Statistic size="small">
+        <Statistic.Value style={{ color: "#8CABA0" }}>
+          {data.datetime.split("T")[1].slice(0, 8)}
+        </Statistic.Value>
+        <Statistic.Label style={{ color: "#566A63" }}>
+          {data.timezone}
+        </Statistic.Label>
+      </Statistic>
+      <Dropdown
+        text={<Icon name="adjust" size="large" style={{ color: "#566A63" }} />}
+      >
         <Dropdown.Menu>
           <Dropdown.Item
             icon="adjust"

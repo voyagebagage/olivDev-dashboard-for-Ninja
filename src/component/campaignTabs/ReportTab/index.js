@@ -23,7 +23,7 @@ import { onUpdateDailyReport } from "../../../graphql/subscriptions";
 import {
   updatePoints,
   toISOStr,
-  toISOStrDDMMYYY,
+  toISOStrDDMMYYYY,
   startWeekDate,
   endWeekDate,
 } from "../../../lib/function";
@@ -39,11 +39,13 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { kpis, setKpis } = useKpis();
   const [dailyReport, setDailyReport] = useState({});
+  const [dReportCount, setDReportCount] = useState(0);
   const [dailyPoints, setDailyPoints] = useState(0);
+  const [disable, setDisable] = useState(false);
   const initialState = { date: "", dReport: {} };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
-  const d = toISOStrDDMMYYY(new Date());
+  const d = toISOStrDDMMYYYY(new Date());
 
   //#####################################################
   //               WEEK ARRAY DATES
@@ -51,7 +53,6 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   const getDaysArray = async (start, end, dailyReportArray) => {
     let i = 0;
     const newTab = [...weekArray];
-    let testFind = false;
     for (
       var weekArrayLoop = [], dt = new Date(start);
       dt <= end;
@@ -76,20 +77,23 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         } else {
           console.log("ELSE");
           dailyReportsWeek.dReport = null;
+          setDReportCount(dReportCount + i);
         }
       }
       if (minus >= 0) dailyReportsWeek.showAddButton = true;
       if (minus < 0) dailyReportsWeek.showAddButton = false;
+      if (minus <= 86400000) dailyReportsWeek.past = false;
+      else dailyReportsWeek.past = true;
       if (!dailyReportsWeek.showAddButton) dailyReportsWeek.future = true;
       if (dailyReportsWeek.showAddButton) dailyReportsWeek.future = false;
-      dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYY(dt)}`;
+      dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYYY(dt)}`;
       dailyReportsWeek.id = i;
       newTab.push({ ...dailyReportsWeek });
       dailyReportsWeek.date = null;
       dailyReportsWeek.dReport = null;
       i++;
     }
-    testFind = false;
+    console.log("newTab", newTab);
     return newTab;
   };
   //#####################################################
@@ -148,6 +152,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
       delete form.weeklyReport;
       delete form.monthlyReport;
       form.dailyReportCampaignId = id;
+      form.dailyReportAgentId = agent.id;
       form.date = date;
       const createNewDR = await API.graphql(
         graphqlOperation(createDailyReport, {
@@ -167,7 +172,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
     }
   };
   //#####################################################
-  //               SUBMIT RES + CREATE NEW DR
+  //               SUBMIT RES + UPD NEW DR
   //#####################################################
   const newDailyReport = async (e) => {
     e.preventDefault();
@@ -223,13 +228,15 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         const agent = eventData.value.data.onUpdateDailyReport.campaign.agent;
         const dailyPoints =
           eventData.value.data.onUpdateDailyReport.dailyPoints;
+        const dailyReportDate = eventData.value.data.onUpdateDailyReport.date;
         fetchDailyReport();
-        updatePoints(agent, dailyPoints);
+        updatePoints(agent, dailyPoints, dailyReportDate);
       },
     });
     return () => subscription.unsubscribe();
   }, []);
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  console.log("dReportCount", dReportCount);
   console.log(kpis, "<==***KPIS**==");
   console.log(dailyReport, "dailyReport");
   console.log("<-- d a i l y   R e p o r t s: -->", dailyReports);
@@ -267,7 +274,12 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         <Table.Body style={{ backgroundColor: "#566A63" }}>
           {weekArray &&
             weekArray.map((oneDay, idx) => {
+              oneDay.disable = false;
+              if (!oneDay.future && !oneDay.past && dReportCount !== idx) {
+                oneDay.disable = true;
+              }
               console.log(idx, "=====", oneDay);
+              console.log(idx, "====+", oneDay.disable);
               console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
               console.log("0 R E P O R T :", oneDay.dReport?.kpis);
               console.log(idx, "d d d", d, typeof d);
@@ -339,31 +351,41 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
                           )
                         )}
                       </>
+                    ) : oneDay.showAddButton && status === "true" ? (
+                      <Table.Cell
+                        colSpan="5"
+                        style={{ backgroundColor: "#333333" }}
+                      >
+                        <div className="dFlex-center">
+                          <Icon
+                            size="big"
+                            name="add circle"
+                            disabled={oneDay.disable}
+                            style={{
+                              color: "#8CABA0",
+                              cursor: !oneDay.disable && "pointer",
+                            }}
+                            onClick={() =>
+                              addDailyReport(
+                                idx,
+                                oneDay.date
+                                  .slice(5, 15)
+                                  .split("-")
+                                  .reverse()
+                                  .join("-"),
+                                oneDay
+                              )
+                            }
+                          />
+                        </div>
+                      </Table.Cell>
                     ) : (
-                      oneDay.showAddButton && (
+                      idx === 2 && (
                         <Table.Cell
                           colSpan="5"
                           style={{ backgroundColor: "#333333" }}
                         >
-                          <div className="dFlex-center">
-                            <Icon
-                              size="big"
-                              name="add circle"
-                              // color="green"
-                              style={{ color: "#8CABA0" }}
-                              onClick={() =>
-                                addDailyReport(
-                                  idx,
-                                  oneDay.date
-                                    .slice(5, 15)
-                                    .split("-")
-                                    .reverse()
-                                    .join("-"),
-                                  oneDay
-                                )
-                              }
-                            />
-                          </div>
+                          <h3 className="center">it haven't started yet</h3>
                         </Table.Cell>
                       )
                     )}

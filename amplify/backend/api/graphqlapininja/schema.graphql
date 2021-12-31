@@ -65,6 +65,7 @@ type Agent
   team: Team @connection(name: "TeamAgent")
   campaigns: [Campaign]! @connection(name: "CampaignAgent")
   kpis: [Kpi]! @connection(name: "AgentKpis", sortField: "target")
+  dailyReports: [DailyReport]! @connection(name: "AgentDailyReports")
   dailyPoints: Int
   weeklyPoints: Int
   monthlyPoints: Int
@@ -154,6 +155,7 @@ type DailyReport @model @searchable {
   id: ID
   campaign: Campaign! @connection(name: "CampaignDailyReports")
   kpis: [Kpi!]! @connection(name: "DailyReportKpis")
+  agent: Agent! @connection(name: "AgentDailyReports")
   date: AWSDate
   createdAt: AWSDateTime
   dailyTarget: Int

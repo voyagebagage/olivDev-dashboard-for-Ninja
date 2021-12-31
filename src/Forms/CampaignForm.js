@@ -1,13 +1,4 @@
-import {
-  Header,
-  Segment,
-  Form,
-  Icon,
-  Label,
-  // Divider,
-  Grid,
-  Button,
-} from "semantic-ui-react";
+import { Header, Segment, Form, Icon, Label, Grid } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useVisible } from "../context/Provider";
 import { API, graphqlOperation } from "aws-amplify";
@@ -20,25 +11,12 @@ import {
   updateDailyReport,
   createWeeklyReport,
   createMonthlyReport,
-  // updateAgent,
-  // updateClient,
 } from "../graphql/mutations";
-import {
-  agentByName,
-  clientByfirstName,
-  // agentByNameLight,
-  // listClients,
-  // searchClients,
-} from "../graphql/queries";
+import { agentByName, clientByfirstName } from "../graphql/queries";
 
-// import { getYYYYMMDD } from "../lib/function";
-// import { v4 as uuidv4 } from "uuid";
 import useForm from "./useForm";
-import { setStatus } from "../lib/function";
-import {
-  onCreateCampaign,
-  onUpdateDailyReport,
-} from "../graphql/subscriptions";
+// import { setStatus } from "../lib/function";
+import { onUpdateDailyReport } from "../graphql/subscriptions";
 
 const CampaignForm = ({ campaigns, setCampaigns }) => {
   const {
@@ -138,6 +116,7 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
       // if (now <= startTime || now >= endTime) form.status = "false";
       form.category = "campaign";
       let idDailyReport = "";
+      let idAgent = "";
       try {
         const newCampaignData = await API.graphql(
           graphqlOperation(createCampaign, {
@@ -149,6 +128,8 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
         setForm({});
         setNewCampaign(newCampaignData.data.createCampaign);
         idDailyReport = newCampaignData.data.createCampaign.id;
+        idAgent = newCampaignData.data.createCampaign.agent.id;
+        console.log("idAgent", idAgent);
         console.log(newCampaignData.data.createCampaign, "newCampaignData");
         console.log("succes createCampaign");
       } catch (error) {
@@ -164,6 +145,7 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
           graphqlOperation(createDailyReport, {
             input: {
               dailyReportCampaignId: idDailyReport,
+              dailyReportAgentId: idAgent,
             },
           })
         );
@@ -269,9 +251,9 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
       console.log("there is a Error with Deleting KPI", error);
     }
   };
-  console.log(clientName, "clientName");
-  console.log(listKpi, "listKpi--OUT");
-  console.log(form, "FORM");
+  // console.log(clientName, "clientName");
+  // console.log(listKpi, "listKpi--OUT");
+  // console.log(form, "FORM");
   //-
   //#########################################################
   //                FINAL SUBMIT CAMPAIGN
@@ -349,7 +331,6 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
             weeklyTarget: dailyReport.weeklyTarget,
             dailyTarget: dailyReport.dailyTarget,
             dailyReportWeeklyReportId: idWeeklyReport,
-            // newWeeklyReport.data.createWeeklyReport.id,
           },
         })
       );
@@ -371,7 +352,12 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
     setVisible(false);
     console.log("succes FINAL SUBMIT CAMPAIGN");
   };
+  //#########################################################
+  //          END FUNCTION FINAL SUBMIT CAMPAIGN
+  //#########################################################
   console.log(
+    "newCampaign",
+    newCampaign,
     "isSubmitting:",
     isSubmitting,
     "form:",
@@ -389,7 +375,11 @@ const CampaignForm = ({ campaigns, setCampaigns }) => {
     ).subscribe({
       next: (eventData) => {
         const newCampaign = eventData.value.data.onUpdateDailyReport.campaign;
-        console.log("newCampaign,", newCampaign);
+        console.log(
+          "newCampaign Suscritpion,",
+          eventData.value.data.onUpdateDailyReport
+        );
+        console.log("newCampaign Suscritpion,", newCampaign);
         setCampaigns([...campaigns, newCampaign]);
       },
     });

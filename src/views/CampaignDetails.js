@@ -1,12 +1,11 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { Link, useHistory, Route, useParams, NavLink } from "react-router-dom";
+import { useHistory, Route, useParams, NavLink } from "react-router-dom";
 // import { panes } from "../arrayLists/index";
-import { getCampaign, getDailyReport } from "../graphql/queries";
+import { getCampaign } from "../graphql/queries";
 import { Segment, Header, Tab, Icon, Button } from "semantic-ui-react";
 import { useState, useEffect } from "react";
 import InfoTab from "../component/campaignTabs/InfoTab";
 import ReportTab from "../component/campaignTabs/ReportTab";
-import ReportTabV2 from "../component/campaignTabs/ReportTabV2";
 import WeeklySummaryTab from "../component/campaignTabs/WeeklySummaryTab";
 import MonthlyTotalsTab from "../component/campaignTabs/MonthlyTotalsTab";
 import KpiPointsTab from "../component/campaignTabs/KpiPointsTab";
@@ -103,34 +102,6 @@ function CampaignDetails() {
           render={() => (
             <Tab.Pane basic attached={false}>
               <ReportTab
-                campaignDetails={campaignDetails}
-                setCampaignDetails={setCampaignDetails}
-                dailyReports={dailyReports}
-                setDailyReports={setDailyReports}
-              />
-            </Tab.Pane>
-          )}
-        />
-      ),
-    },
-    {
-      menuItem: {
-        as: NavLink,
-        id: "tab0",
-        content: "ReportsV2",
-        to: `/campaign/${name}/${id}/reportv2/${
-          dailyReports[dailyReports.length - 1]?.id
-        }`,
-        exact: true,
-        key: "reportsV2",
-      },
-      pane: (
-        <Route
-          path={`/campaign/:campName/:campId/reportv2/:dailyReportId`}
-          exact
-          render={() => (
-            <Tab.Pane basic attached={false}>
-              <ReportTabV2
                 campaignDetails={campaignDetails}
                 setCampaignDetails={setCampaignDetails}
                 dailyReports={dailyReports}
@@ -266,7 +237,15 @@ function CampaignDetails() {
           <Icon
             as={Icon}
             name="circle thin"
-            color={status === "true" ? "green" : "grey"}
+            color={
+              status === "true"
+                ? "green"
+                : status === "not yet"
+                ? "blue"
+                : status === "done"
+                ? "red"
+                : "grey"
+            }
           />
         </div>
         <div className="dFlex" as="h3">

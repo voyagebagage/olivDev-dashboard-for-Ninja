@@ -10,6 +10,7 @@ import {
   Loader,
   Button,
   Confirm,
+  Popup,
 } from "semantic-ui-react";
 import SidebarForm from "../component/SidebarForm";
 
@@ -78,6 +79,13 @@ function Campaigns() {
     limit: limit,
     sort: { direction: directionDropDown, field: fieldDropDown.campaign },
   };
+
+  const colorCode = {
+    blue: "The campaign has NOT STARTED yet",
+    green: "The campaign is ON",
+    red: "The campaign is OVER",
+    grey: "The Campaign is NOT ON",
+  };
   //---------------------Functions------------------------------
   const fetchCampaigns = async () => {
     try {
@@ -114,6 +122,8 @@ function Campaigns() {
   //------------------------===========Del============---------------------
   const removeCampaign = async (idx) => {
     try {
+      console.log("campaigns", campaigns);
+
       const inputDel = { id: campaigns[idx].id };
       console.log("inputDel", inputDel);
       const campaignDelete = await API.graphql(
@@ -122,6 +132,7 @@ function Campaigns() {
         })
       );
       console.log(campaignDelete, "campaignDelete");
+      console.log("campaigns", campaigns);
       console.log("succes");
       // history.push("/client-list");
     } catch (error) {
@@ -134,9 +145,11 @@ function Campaigns() {
       graphqlOperation(onDeleteCampaign)
     ).subscribe({
       next: (eventData) => {
-        const delCampaign = eventData.value.data.onDeleteCampaign;
-        console.log("delCampaign", delCampaign);
-        setCampaigns([...campaigns]);
+        const delCampaignId = eventData.value.data.onDeleteCampaign.id;
+        let newTab = [...campaigns];
+        newTab = newTab.filter((e) => e.id !== delCampaignId);
+        console.log("onDeleteCampaign new Tab", newTab);
+        setCampaigns(newTab);
       },
     });
     return () => subscription.unsubscribe();
@@ -247,55 +260,50 @@ function Campaigns() {
                       className="dFlex-fEnd-aCenter-width"
                       style={{ borderWidth: 0 }}
                     >
-                      <Icon
-                        as={Icon}
-                        name="circle thin"
-                        color={
+                      <Popup
+                        trigger={
+                          <Icon
+                            as={Icon}
+                            name="circle thin"
+                            color={
+                              campaign.status === "true"
+                                ? "green"
+                                : campaign.status === "not yet"
+                                ? "blue"
+                                : campaign.status === "done"
+                                ? "red"
+                                : "grey"
+                            }
+                          />
+                        }
+                        content={
                           campaign.status === "true"
-                            ? "green"
+                            ? colorCode.green
                             : campaign.status === "not yet"
-                            ? "blue"
+                            ? colorCode.blue
                             : campaign.status === "done"
-                            ? "red"
-                            : "grey"
+                            ? colorCode.red
+                            : colorCode.grey
                         }
                       />
+
                       <Button
                         animated
-                        // transparent
                         as={Segment}
                         basic
-                        // fitted
                         style={{
                           borderWidth: 0,
-                          // borderColor: "transparent",
                           padding: 0,
                           margin: 0,
                           shadowBox: "none",
                         }}
                         size="large"
                       >
-                        <Button.Content
-                          visible
-                          basic
-                          // transparent
-                          // borderless
-                          // style={{ borderWidth: 0, padding: 0, margin: 0 }}
-                        >
+                        <Button.Content visible basic>
                           <Icon name="ellipsis vertical" />
                         </Button.Content>
-                        <Button.Content
-                          hidden
-                          basic
-                          borderless
-                          // style={{ borderWidth: 0, padding: 0, margin: 0 }}
-                          onClick={show}
-                        >
-                          <Icon
-                            name="delete"
-                            color="red"
-                            // style={{ borderWidth: 0 }}
-                          />
+                        <Button.Content hidden basic borderless onClick={show}>
+                          <Icon name="delete" color="red" />
                         </Button.Content>
                       </Button>
                       <Confirm
