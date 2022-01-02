@@ -4,11 +4,12 @@ import { Form, Segment, Image, Icon, Button } from "semantic-ui-react";
 // import useForm from "../Forms/useForm";
 import loginPic from "../img/loginPic.png";
 import logoDash from "../img/logoDash.svg";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "../animation.css";
 import useForm from "../Forms/useForm";
 
 function LoginCustom({
+  setUser,
   formState,
   updateFormState,
   onChangeSignUp,
@@ -16,6 +17,8 @@ function LoginCustom({
   confirmSignUpValid,
   signInValid,
 }) {
+  let history = useHistory();
+
   // const { signUpValid } = useForm();
   console.log("signUpValid", signUpValid);
   const {
@@ -25,8 +28,6 @@ function LoginCustom({
     toSeeConfirmPassword,
     toSeeAdminCode,
   } = formState;
-  const [toSee, setToSee] = useState(false);
-  //   let history = useHistory();
 
   async function signUp() {
     try {
@@ -68,16 +69,19 @@ function LoginCustom({
     try {
       const { email, password } = formState;
       await Auth.signIn({ username: email, password });
-      console.log("Auth", Auth);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
+      // setUser(
+      //   Auth.user.signInUserSession.idToken.jwtToken,
+      //   Auth.user.attributes.name
+      // );
+      console.log("Auth", Auth);
+      // history.push("/");
     } catch (error) {
       console.log("signIn error", error);
     }
   }
+  console.log("Auth OUT", Auth);
 
-  // console.log("formtype LOG C:", formState.formType);
-  // console.log("user: Login C", user);
-  // console.log("Auth: LogC", Auth.user?.username);
   return (
     <>
       <div

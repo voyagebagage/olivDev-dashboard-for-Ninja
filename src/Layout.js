@@ -7,9 +7,12 @@ import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import SidebarComponent from "./component/Sidebar";
 import Header from "./component/Header";
 import LoginCustom from "./views/LoginCustom";
+// import { setUser } from "./lib/function";
 //---------------------AWS------------------------------
 import { Auth, Hub } from "aws-amplify";
 
+//---------------------Semantic UI------------------------------
+import { Image } from "semantic-ui-react";
 //---------------------Context------------------------------
 import { GlobalProvider } from "./context/Provider";
 //---------------------Plugin------------------------------
@@ -17,6 +20,9 @@ import Cookies from "js-cookie";
 import useForm from "./Forms/useForm";
 
 //---------------------Assets------------------------------
+import loginPic from "./img/loginPic.png";
+import logoDash from "./img/logoDash.svg";
+import "./animation.css";
 
 function Layout() {
   const {
@@ -32,7 +38,7 @@ function Layout() {
   //---------------------States------------------------------
   const [sidebarItem, setSidebarItem] = useState(false);
   const { formType, userType } = formState;
-  const [token, setToken] = useState(Cookies.get("token") || null);
+  // const [token, setToken] = useState(Cookies.get("token") || null);
   // const [username, setUsername] = useState(Cookies.get("username") || "");
   //-------------------Functions---------------------------
   useEffect(() => {
@@ -53,6 +59,7 @@ function Layout() {
         case "signOut":
           console.log("data from event:", data);
           updateFormState(() => ({ ...formState, formType: "signIn" }));
+          // setUser(null, "");
           break;
         default:
           break;
@@ -65,60 +72,43 @@ function Layout() {
       //removing the admin code from being visible
       delete user.attributes["custom:admin_code"];
       delete user.signInUserSession.idToken.payload["custom:admin_code"];
-
       let rItem = JSON.parse(user.storage[user.userDataKey]);
       rItem = rItem.UserAttributes.filter(
         (e) => e.Name !== "custom:admin_code"
       );
       user.storage[user.userDataKey] = JSON.stringify(rItem);
       console.log("checkUSER", user);
-      updateUser(await user);
+      updateUser(user);
+      // if (user)
+      //   setUser(user.signInUserSession.idToken.jwtToken, user.attributes.name);
       console.log("checkUSER FORM STATE:", formState.formType);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
-      //   history.push("/");
     } catch (error) {
       updateUser(null);
       // console.log("checkUser", error);
     }
   }
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
+
+  // const setUser = (userToken, username) => {
+  //   setToken(userToken);
+  //   setUsername(username);
+  //   Cookies.set("token", userToken, { expires: 1 });
+  //   Cookies.set("username", username, { expires: 1 });
+  // };
+
   console.log("formtype LaYOUT:", formState);
   console.log("LAYOUT USER", user);
   return (
     <Router>
       <GlobalProvider>
         {/* ------------------------------------------------------------------
-        -                                 LAYOUT                        -
-      ------------------------------------------------------------------    */}
-        <Route
-          // path="/"
-          render={
-            () =>
-              formType === "signedIn" ? (
-                <>
-                  <div
-                    style={
-                      //this will need to change
-                      window.location.origin !== "http://localhost:3000"
-                        ? { height: "100vh" }
-                        : { height: "100%" }
-                    }
-                  >
-                    <Header handleSidebarItem={handleSidebarItem} user={user} />
-                    <div>
-                      <SidebarComponent sidebarItem={sidebarItem} />
-                    </div>
-                  </div>
-                </>
-              ) : null //<Redirect to="/login" />
-          }
-        />
-        {/* ------------------------------------------------------------------
-        -                                 LOGIN                        -
-      ------------------------------------------------------------------    */}
+                        -                                 LOGIN                        -
+                      ------------------------------------------------------------------    */}
         <Route>
           {formType !== "signedIn" && (
             <LoginCustom
+              // setUser={setUser}
               formState={formState}
               updateFormState={updateFormState}
               onChangeSignUp={onChangeSignUp}
@@ -130,6 +120,30 @@ function Layout() {
             />
           )}
         </Route>
+        {/* ------------------------------------------------------------------
+        -                                 LAYOUT                        -
+      ------------------------------------------------------------------    */}
+        <Route
+          render={() =>
+            formType === "signedIn" && (
+              <>
+                <div
+                  style={
+                    //this will need to change
+                    window.location.origin !== "http://localhost:3000"
+                      ? { height: "100vh" }
+                      : { height: "100%" }
+                  }
+                >
+                  <Header handleSidebarItem={handleSidebarItem} user={user} />
+                  <div>
+                    <SidebarComponent sidebarItem={sidebarItem} />
+                  </div>
+                </div>
+              </>
+            )
+          }
+        />
       </GlobalProvider>
     </Router>
   );

@@ -46,7 +46,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
   const d = toISOStrDDMMYYYY(new Date());
-
+  console.log("d:", d, "=====================");
   //#####################################################
   //               WEEK ARRAY DATES
   //#####################################################
@@ -179,12 +179,14 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
     try {
       //~~~~~~~~~ CREATE NEW KPIS ~~~~~~~~~~
       let total = 0;
+      let target = 0;
       const elem = [];
       for (let i = 0; i < kpis.length; i++) {
         delete kpis[i].createdAt;
         delete kpis[i].updatedAt;
         delete kpis[i].id;
         total += kpis[i].result * kpis[i].coeff;
+        target += (kpis[i].result * 100) / kpis[i].target;
         const newKpi = await API.graphql(
           graphqlOperation(createKpi, {
             input: {
@@ -199,9 +201,14 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         console.log(newKpi.data.createKpi, "kpi");
       }
       setKpis(elem.reverse());
+      //    ===============================================
       const updateDailyPoints = await API.graphql(
         graphqlOperation(updateDailyReport, {
-          input: { id: dailyReport.id, dailyPoints: total },
+          input: {
+            id: dailyReport.id,
+            dailyPoints: total,
+            dailyTarget: target,
+          },
         })
       );
       setDailyPoints(total);
@@ -380,14 +387,32 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
                         </div>
                       </Table.Cell>
                     ) : (
-                      idx === 2 && (
+                      //----------------------------------------Status & Week End------
+                      (status === "not yet" && idx === 2 && (
                         <Table.Cell
                           colSpan="5"
                           style={{ backgroundColor: "#333333" }}
                         >
                           <h3 className="center">it haven't started yet</h3>
                         </Table.Cell>
-                      )
+                      )) ||
+                      (status === "done" && idx === 2 && (
+                        <Table.Cell
+                          colSpan="5"
+                          style={{ backgroundColor: "#333333" }}
+                        >
+                          <h3 className="center">Campaign is over</h3>
+                        </Table.Cell>
+                      )) ||
+                      (status === "true" && idx === 2 && (
+                        <Table.Cell
+                          colSpan="5"
+                          style={{ backgroundColor: "#333333" }}
+                        >
+                          <h3 className="center">it's the Week End</h3>
+                        </Table.Cell>
+                      ))
+                      //---------------------------------------------------------------
                     )}
                   </Table.Row>
                 </>

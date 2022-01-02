@@ -148,7 +148,6 @@ function Campaigns() {
         const delCampaignId = eventData.value.data.onDeleteCampaign.id;
         let newTab = [...campaigns];
         newTab = newTab.filter((e) => e.id !== delCampaignId);
-        console.log("onDeleteCampaign new Tab", newTab);
         setCampaigns(newTab);
       },
     });
