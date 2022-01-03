@@ -178,3 +178,6 @@ html,
 .ui.segment.dFlex-fEnd {
   margin-bottom: 0;
 }
+.four.wide.column {
+  max-width: 17%;
+}

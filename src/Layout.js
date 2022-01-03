@@ -38,8 +38,8 @@ function Layout() {
   //---------------------States------------------------------
   const [sidebarItem, setSidebarItem] = useState(false);
   const { formType, userType } = formState;
-  // const [token, setToken] = useState(Cookies.get("token") || null);
-  // const [username, setUsername] = useState(Cookies.get("username") || "");
+  const [token, setToken] = useState(Cookies.get("token") || null);
+  const [username, setUsername] = useState(Cookies.get("username") || "");
   //-------------------Functions---------------------------
   useEffect(() => {
     checkUser();
@@ -59,8 +59,23 @@ function Layout() {
         case "signOut":
           console.log("data from event:", data);
           updateFormState(() => ({ ...formState, formType: "signIn" }));
-          // setUser(null, "");
+          Cookies.remove("token");
+          Cookies.remove("username");
+          setToken(null);
+          setUsername("");
           break;
+        // case "signIn":
+        //   console.log("data from event:", data);
+        //   updateFormState(() => ({ ...formState, formType: "signedIn" }));
+        //   break;
+        // case "signUp":
+        //   console.log("data from event:", data);
+        //   updateFormState(() => ({ ...formState, formType: "confirmSignUp" }));
+        //   break;
+        // case "confirmSignUp":
+        //   console.log("data from event:", data);
+        //   updateFormState(() => ({ ...formState, formType: "signIn" }));
+        //   break;
         default:
           break;
       }
@@ -78,9 +93,12 @@ function Layout() {
       );
       user.storage[user.userDataKey] = JSON.stringify(rItem);
       console.log("checkUSER", user);
+      if (!token)
+        setUser(
+          user?.signInUserSession?.idToken.jwtToken,
+          user?.attributes?.name
+        );
       updateUser(user);
-      // if (user)
-      //   setUser(user.signInUserSession.idToken.jwtToken, user.attributes.name);
       console.log("checkUSER FORM STATE:", formState.formType);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
     } catch (error) {
@@ -90,42 +108,38 @@ function Layout() {
   }
   const handleSidebarItem = () => setSidebarItem(!sidebarItem);
 
-  // const setUser = (userToken, username) => {
-  //   setToken(userToken);
-  //   setUsername(username);
-  //   Cookies.set("token", userToken, { expires: 1 });
-  //   Cookies.set("username", username, { expires: 1 });
-  // };
+  const setUser = (userToken, username) => {
+    setToken(userToken);
+    setUsername(username);
+    Cookies.set("token", userToken, { expires: 1 });
+    Cookies.set("username", username, { expires: 1 });
+  };
 
   console.log("formtype LaYOUT:", formState);
   console.log("LAYOUT USER", user);
   return (
     <Router>
       <GlobalProvider>
-        {/* ------------------------------------------------------------------
-                        -                                 LOGIN                        -
-                      ------------------------------------------------------------------    */}
-        <Route>
-          {formType !== "signedIn" && (
-            <LoginCustom
-              // setUser={setUser}
-              formState={formState}
-              updateFormState={updateFormState}
-              onChangeSignUp={onChangeSignUp}
-              user={user}
-              updateUser={updateUser}
-              signUpValid={signUpValid}
-              confirmSignUpValid={confirmSignUpValid}
-              signInValid={signInValid}
-            />
-          )}
+        <Route path="/login">
+          {/* {formType !== "signedIn" && ( */}
+          <LoginCustom
+            setUser={setUser}
+            formState={formState}
+            updateFormState={updateFormState}
+            onChangeSignUp={onChangeSignUp}
+            user={user}
+            updateUser={updateUser}
+            signUpValid={signUpValid}
+            confirmSignUpValid={confirmSignUpValid}
+            signInValid={signInValid}
+          />
+          {/* )} */}
         </Route>
-        {/* ------------------------------------------------------------------
-        -                                 LAYOUT                        -
-      ------------------------------------------------------------------    */}
+
         <Route
+          path="/"
           render={() =>
-            formType === "signedIn" && (
+            token ? (
               <>
                 <div
                   style={
@@ -135,12 +149,17 @@ function Layout() {
                       : { height: "100%" }
                   }
                 >
-                  <Header handleSidebarItem={handleSidebarItem} user={user} />
+                  <Header
+                    handleSidebarItem={handleSidebarItem}
+                    username={username}
+                  />
                   <div>
                     <SidebarComponent sidebarItem={sidebarItem} />
                   </div>
                 </div>
               </>
+            ) : (
+              <Redirect to="/login" />
             )
           }
         />

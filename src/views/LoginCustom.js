@@ -18,8 +18,6 @@ function LoginCustom({
   signInValid,
 }) {
   let history = useHistory();
-
-  // const { signUpValid } = useForm();
   console.log("signUpValid", signUpValid);
   const {
     formType,
@@ -69,13 +67,13 @@ function LoginCustom({
     try {
       const { email, password } = formState;
       await Auth.signIn({ username: email, password });
+      setUser(
+        await Auth.user?.signInUserSession?.idToken.jwtToken,
+        await Auth.user?.attributes?.name
+      );
       updateFormState(() => ({ ...formState, formType: "signedIn" }));
-      // setUser(
-      //   Auth.user.signInUserSession.idToken.jwtToken,
-      //   Auth.user.attributes.name
-      // );
       console.log("Auth", Auth);
-      // history.push("/");
+      history.push("/");
     } catch (error) {
       console.log("signIn error", error);
     }

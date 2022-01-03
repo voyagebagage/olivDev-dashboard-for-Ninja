@@ -10,12 +10,12 @@ const TimeComponent = () => {
     const response = await axios.get(
       `http://worldtimeapi.org/api/timezone/${timeZone}`
     );
-    console.log(response.data);
+    // console.log(response.data);
     setData(response.data);
     setIsLoading(false);
   };
   let date = new Date(data.datetime).toString().split(" ");
-  console.log("data", date[0] + date[2]);
+  // console.log("data", date[0] + date[2]);
   return !isLoading ? (
     <div className="dFlex">
       <Header

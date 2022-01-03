@@ -10,8 +10,9 @@ import { useDropDownFilter } from "../../context/Provider";
 import SearchClients from "../SearchBars/SearchClients";
 import SearchCampaigns from "../SearchBars/SearchCampaigns";
 import logoDash from "../../img/logoDash.svg";
+import Cookies from "js-cookie";
 
-function Header({ handleSidebarItem, user }) {
+function Header({ handleSidebarItem, username, user }) {
   const { setFieldDropDown, setDirectionDropDown } = useDropDownFilter();
   let location = useLocation();
   console.log(location.pathname, "location");
@@ -33,7 +34,10 @@ function Header({ handleSidebarItem, user }) {
           <Icon name="sidebar" />
         </Menu.Item>
         <Menu.Item>
-          <h3>Welcome on board, Ninja {user?.attributes?.name}....</h3>
+          <h3>
+            Welcome on board, Ninja {username}
+            ....
+          </h3>
         </Menu.Item>
         <Menu.Menu position="right">
           {/* //#################################################
@@ -128,7 +132,11 @@ function Header({ handleSidebarItem, user }) {
                   button
                   icon="sign-out"
                   content=" Log out "
-                  onClick={() => Auth.signOut()}
+                  onClick={() => {
+                    Auth.signOut();
+                    // Cookies.remove("token");
+                    // Cookies.remove("username");
+                  }}
                 />
                 <Dropdown.Divider />
                 <Dropdown.Item icon="setting" content="settings" />

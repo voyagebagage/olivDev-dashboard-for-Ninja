@@ -77,7 +77,6 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         } else {
           console.log("ELSE");
           dailyReportsWeek.dReport = null;
-          setDReportCount(dReportCount + i);
         }
       }
       if (minus >= 0) dailyReportsWeek.showAddButton = true;
@@ -85,7 +84,10 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
       if (minus <= 86400000) dailyReportsWeek.past = false;
       else dailyReportsWeek.past = true;
       if (!dailyReportsWeek.showAddButton) dailyReportsWeek.future = true;
-      if (dailyReportsWeek.showAddButton) dailyReportsWeek.future = false;
+      if (dailyReportsWeek.showAddButton) {
+        dailyReportsWeek.future = false;
+        // dailyReportsWeek.addButtonCount
+      }
       dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYYY(dt)}`;
       dailyReportsWeek.id = i;
       newTab.push({ ...dailyReportsWeek });
@@ -207,7 +209,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
           input: {
             id: dailyReport.id,
             dailyPoints: total,
-            dailyTarget: target,
+            dailyTarget: target.toFixed(0),
           },
         })
       );
@@ -282,9 +284,11 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
           {weekArray &&
             weekArray.map((oneDay, idx) => {
               oneDay.disable = false;
-              if (!oneDay.future && !oneDay.past && dReportCount !== idx) {
+              oneDay.addButtonCount = false;
+              if (!oneDay.future && !oneDay.past && dReportCount !== idx)
                 oneDay.disable = true;
-              }
+              if (oneDay.showAddButton) oneDay.addButtonCount = true;
+
               console.log(idx, "=====", oneDay);
               console.log(idx, "====+", oneDay.disable);
               console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
@@ -353,7 +357,9 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
                               <Table.Cell width={3}>
                                 {oneDay.dReport?.dailyPoints}
                               </Table.Cell>
-                              <Table.Cell width={3}>% target</Table.Cell>
+                              <Table.Cell width={3}>
+                                {oneDay.dReport?.dailyTarget}
+                              </Table.Cell>
                             </>
                           )
                         )}
@@ -404,12 +410,12 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
                           <h3 className="center">Campaign is over</h3>
                         </Table.Cell>
                       )) ||
-                      (status === "true" && idx === 2 && (
+                      (oneDay.addButtonCount && status === "true" && idx === 2 && (
                         <Table.Cell
                           colSpan="5"
                           style={{ backgroundColor: "#333333" }}
                         >
-                          <h3 className="center">it's the Week End</h3>
+                          <h3 className="center">it's the Week End chill-Ax</h3>
                         </Table.Cell>
                       ))
                       //---------------------------------------------------------------
@@ -435,7 +441,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         <Table.Header>
           <Table.Row style={{ backgroundColor: "#566A63" }}>
             <Table.HeaderCell className="dFlex-sBetween">
-              Week {currentWeekNumber(new Date())}
+              {/* Week {currentWeekNumber(new Date())} */}
             </Table.HeaderCell>
             <Table.HeaderCell>Kpi1</Table.HeaderCell>
             <Table.HeaderCell>Kpi2</Table.HeaderCell>
