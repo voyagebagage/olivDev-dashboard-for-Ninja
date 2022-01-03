@@ -121,7 +121,6 @@ function Layout() {
     <Router>
       <GlobalProvider>
         <Route path="/login">
-          {/* {formType !== "signedIn" && ( */}
           <LoginCustom
             setUser={setUser}
             formState={formState}
@@ -133,7 +132,6 @@ function Layout() {
             confirmSignUpValid={confirmSignUpValid}
             signInValid={signInValid}
           />
-          {/* )} */}
         </Route>
 
         <Route
