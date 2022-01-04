@@ -291,8 +291,6 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         <Table.Body style={{ backgroundColor: "#566A63" }}>
           {weekArray &&
             weekArray.map((oneDay, idx) => {
-              // oneDay.disable = false;
-              // oneDay.addButtonCount = false;
               if (!oneDay.future && !oneDay.past && dReportCount === idx)
                 oneDay.disable = true;
               if (oneDay.showAddButton) oneDay.addButtonCount = true;
