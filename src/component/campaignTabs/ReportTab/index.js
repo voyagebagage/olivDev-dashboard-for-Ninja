@@ -42,7 +42,12 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   const [dReportCount, setDReportCount] = useState(0);
   const [dailyPoints, setDailyPoints] = useState(0);
   const [disable, setDisable] = useState(false);
-  const initialState = { date: "", dReport: {} };
+  const initialState = {
+    date: "",
+    dReport: {},
+    addButtonCount: false,
+    disable: false,
+  };
   const [dailyReportsWeek, setDailyReportsWeek] = useState(initialState);
   const [weekArray, setWeekArray] = useState([]);
   const d = toISOStrDDMMYYYY(new Date());
@@ -74,6 +79,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         if (find) {
           console.log("==          IFFFFF         ==");
           dailyReportsWeek.dReport = find;
+          setDReportCount(dReportCount + i);
         } else {
           console.log("ELSE");
           dailyReportsWeek.dReport = null;
@@ -86,7 +92,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
       if (!dailyReportsWeek.showAddButton) dailyReportsWeek.future = true;
       if (dailyReportsWeek.showAddButton) {
         dailyReportsWeek.future = false;
-        // dailyReportsWeek.addButtonCount
+        // dailyReportsWeek.addButtonCount = true;
       }
       dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYYY(dt)}`;
       dailyReportsWeek.id = i;
@@ -283,17 +289,25 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         <Table.Body style={{ backgroundColor: "#566A63" }}>
           {weekArray &&
             weekArray.map((oneDay, idx) => {
-              oneDay.disable = false;
-              oneDay.addButtonCount = false;
-              if (!oneDay.future && !oneDay.past && dReportCount !== idx)
+              // oneDay.disable = false;
+              // oneDay.addButtonCount = false;
+              if (!oneDay.future && !oneDay.past && dReportCount === idx)
                 oneDay.disable = true;
               if (oneDay.showAddButton) oneDay.addButtonCount = true;
+              console.log(
+                "i",
+                idx,
+                "dReportCount",
+                dReportCount,
+                "====+",
+                oneDay.disable
+              );
 
-              console.log(idx, "=====", oneDay);
-              console.log(idx, "====+", oneDay.disable);
-              console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
-              console.log("0 R E P O R T :", oneDay.dReport?.kpis);
-              console.log(idx, "d d d", d, typeof d);
+              // console.log(idx, "=====", oneDay);
+              // console.log(idx, "====+", oneDay.disable);
+              // console.log(idx, "oneDaydReport", oneDay.dReport?.kpis?.items);
+              // console.log("0 R E P O R T :", oneDay.dReport?.kpis);
+              // console.log(idx, "d d d", d, typeof d);
               return (
                 <>
                   <Table.Row>
