@@ -85,7 +85,8 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
           dailyReportsWeek.dReport = null;
         }
       }
-      if (minus >= 0) dailyReportsWeek.showAddButton = true;
+      if (minus >= 0 && dailyReportsWeek.dReport === null)
+        dailyReportsWeek.showAddButton = true;
       if (minus < 0) dailyReportsWeek.showAddButton = false;
       if (minus <= 86400000) dailyReportsWeek.past = false;
       else dailyReportsWeek.past = true;
