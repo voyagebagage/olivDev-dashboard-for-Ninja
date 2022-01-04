@@ -57,6 +57,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
   //#####################################################
   const getDaysArray = async (start, end, dailyReportArray) => {
     let i = 0;
+    let count = 0;
     const newTab = [...weekArray];
     for (
       var weekArrayLoop = [], dt = new Date(start);
@@ -79,7 +80,6 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
         if (find) {
           console.log("==          IFFFFF         ==");
           dailyReportsWeek.dReport = find;
-          setDReportCount(dReportCount + i);
         } else {
           console.log("ELSE");
           dailyReportsWeek.dReport = null;
@@ -92,6 +92,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
       if (!dailyReportsWeek.showAddButton) dailyReportsWeek.future = true;
       if (dailyReportsWeek.showAddButton) {
         dailyReportsWeek.future = false;
+        count = count + 1;
         // dailyReportsWeek.addButtonCount = true;
       }
       dailyReportsWeek.date = `${daysArray[i]}  ${toISOStrDDMMYYYY(dt)}`;
@@ -101,6 +102,7 @@ const ReportTab = ({ campaignDetails, dailyReports, setDailyReports }) => {
       dailyReportsWeek.dReport = null;
       i++;
     }
+    setDReportCount(count - 1);
     console.log("newTab", newTab);
     return newTab;
   };
