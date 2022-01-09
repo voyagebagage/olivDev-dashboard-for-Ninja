@@ -8,7 +8,7 @@ const TimeComponent = () => {
   useEffect(() => fetchTime(), [timeZone]);
   const fetchTime = async () => {
     const response = await axios.get(
-      `http://worldtimeapi.org/api/timezone/${timeZone}`
+      `https://worldtimeapi.org/api/timezone/${timeZone}`
     );
     // console.log(response.data);
     setData(response.data);
