@@ -26,6 +26,7 @@ import {
 } from "../graphql/queries";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import TimeComponent from "../component/TimeComponent";
+import { IconParkOutlineFullScreen } from "../lib/function";
 //#################################################
 //           FUNCTION
 //################################################
@@ -103,6 +104,8 @@ function Dashboard() {
 
         <div className="dFlex-sBetween">
           <Header as="h2">Leaderboard</Header>
+
+          {/* <IconParkOutlineFullScreen  onClick={handle.enter}/> */}
           <Icon
             name="expand arrows alternate"
             color="grey"
