@@ -90,21 +90,21 @@ export function onChange(e) {
   e.persist();
 }
 
-export function IconParkOutlineFullScreen(props) {
-  return (
-    <svg width="1em" height="1em" viewBox="0 0 48 48" {...props}>
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M33 6h9v9"></path>
-        <path d="M42 33v9h-9"></path>
-        <path d="M15 42H6v-9"></path>
-        <path d="M6 15V6h9"></path>
-      </g>
-    </svg>
-  );
-}
+// export function IconParkOutlineFullScreen(props) {
+//   return (
+//     <svg width="1em" height="1em" viewBox="0 0 48 48" {...props}>
+//       <g
+//         fill="none"
+//         stroke="currentColor"
+//         strokeWidth="5"
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//       >
+//         <path d="M33 6h9v9"></path>
+//         <path d="M42 33v9h-9"></path>
+//         <path d="M15 42H6v-9"></path>
+//         <path d="M6 15V6h9"></path>
+//       </g>
+//     </svg>
+//   );
+// }

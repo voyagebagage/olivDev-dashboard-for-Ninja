@@ -27,6 +27,7 @@ import {
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import TimeComponent from "../component/TimeComponent";
 import { IconParkOutlineFullScreen } from "../lib/function";
+import Updates from "../component/Updates";
 //#################################################
 //           FUNCTION
 //################################################
@@ -162,7 +163,7 @@ function Dashboard() {
                     backgroundColor: "cyan",
                   }}
                 >
-                  UPDATES
+                  <Updates />
                 </Segment>
                 <Table.Row>
                   <Table.HeaderCell>RANK</Table.HeaderCell>

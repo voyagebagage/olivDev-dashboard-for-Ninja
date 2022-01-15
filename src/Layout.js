@@ -2,7 +2,12 @@ import "semantic-ui-css/semantic.min.css";
 import "./Layout.css";
 //---------------------REACT------------------------------
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 // import Login from "./views/Login";
 import SidebarComponent from "./component/Sidebar";
 import Header from "./component/Header";
@@ -119,49 +124,51 @@ function Layout() {
   console.log("LAYOUT USER", user);
   return (
     <Router>
-      <GlobalProvider>
-        <Route path="/login">
-          <LoginCustom
-            setUser={setUser}
-            formState={formState}
-            updateFormState={updateFormState}
-            onChangeSignUp={onChangeSignUp}
-            user={user}
-            updateUser={updateUser}
-            signUpValid={signUpValid}
-            confirmSignUpValid={confirmSignUpValid}
-            signInValid={signInValid}
-          />
-        </Route>
+      <Switch>
+        <GlobalProvider>
+          <Route path="/login">
+            <LoginCustom
+              setUser={setUser}
+              formState={formState}
+              updateFormState={updateFormState}
+              onChangeSignUp={onChangeSignUp}
+              user={user}
+              updateUser={updateUser}
+              signUpValid={signUpValid}
+              confirmSignUpValid={confirmSignUpValid}
+              signInValid={signInValid}
+            />
+          </Route>
 
-        <Route
-          path="/"
-          render={() =>
-            token ? (
-              <>
-                <div
-                  style={
-                    //this will need to change
-                    window.location.origin !== "http://localhost:3000"
-                      ? { height: "100vh" }
-                      : { height: "100%" }
-                  }
-                >
-                  <Header
-                    handleSidebarItem={handleSidebarItem}
-                    username={username}
-                  />
-                  <div>
-                    <SidebarComponent sidebarItem={sidebarItem} />
+          <Route
+            path="/"
+            render={() =>
+              token ? (
+                <>
+                  <div
+                    style={
+                      //this will need to change
+                      window.location.origin !== "http://localhost:3000"
+                        ? { height: "100vh" }
+                        : { height: "100%" }
+                    }
+                  >
+                    <Header
+                      handleSidebarItem={handleSidebarItem}
+                      username={username}
+                    />
+                    <div>
+                      <SidebarComponent sidebarItem={sidebarItem} />
+                    </div>
                   </div>
-                </div>
-              </>
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
-        />
-      </GlobalProvider>
+                </>
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+        </GlobalProvider>
+      </Switch>
     </Router>
   );
 }
