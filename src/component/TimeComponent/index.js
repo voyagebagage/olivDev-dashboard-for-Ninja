@@ -15,7 +15,7 @@ const TimeComponent = () => {
   //   // console.log(response.data);
   //   setData(response.data);
   //   setIsLoading(false);
-  // };
+  //// };
   const fetchTime = async () => {
     try {
       const newTimezone = await API.graphql(
