@@ -98,11 +98,11 @@ function Layout() {
       );
       user.storage[user.userDataKey] = JSON.stringify(rItem);
       console.log("checkUSER", user);
-      if (!token)
-        setUser(
-          user?.signInUserSession?.idToken.jwtToken,
-          user?.attributes?.name
-        );
+      // if (!token)
+      //   setUser(
+      //     user?.signInUserSession?.idToken.jwtToken,
+      //     user?.attributes?.name
+      //   );
       updateUser(user);
       console.log("checkUSER FORM STATE:", formState.formType);
       updateFormState(() => ({ ...formState, formType: "signedIn" }));

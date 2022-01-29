@@ -20,13 +20,18 @@
         "dashboardforninjagql85950a7d85950a7dPostConfirmation": {
           "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
           "s3Key": "amplify-builds/dashboardforninjagql85950a7d85950a7dPostConfirmation-44686b63424c6a734542-build.zip"
+        },
+        "timeApiFunction": {
+          "deploymentBucketName": "amplify-dashboardforninjagql-dev-190119-deployment",
+          "s3Key": "amplify-builds/timeApiFunction-4e70754144586950456e-build.zip"
         }
       },
       "auth": {
         "dashboardauth": {},
         "dashboardforninjagql3d963724": {},
         "dashboardforninjagql82d6988282d69882": {},
-        "dashboardforninjagql85950a7d85950a7d": {}
+        "dashboardforninjagql85950a7d85950a7d": {},
+        "userPoolGroups": {}
       }
     }
   }

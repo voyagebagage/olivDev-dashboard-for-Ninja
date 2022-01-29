@@ -17,8 +17,6 @@ import {
 import { API, graphqlOperation } from "aws-amplify";
 
 import {
-  // listAgents,
-  // searchAgents,
   agentByTotalPoints,
   agentByMonthlyPoints,
   agentByWeeklyPoints,
@@ -100,7 +98,7 @@ function Dashboard() {
             // backgroundColor: "brown",
           }}
         >
-          <TimeComponent />
+          {/* <TimeComponent /> */}
         </Segment>
 
         <div className="dFlex-sBetween">

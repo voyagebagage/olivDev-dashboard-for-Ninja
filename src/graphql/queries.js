@@ -1,6 +1,14 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getTimezone = /* GraphQL */ `
+  query GetTimezone($timezone: String) {
+    getTimezone(timezone: $timezone) {
+      timezone
+      datetime
+    }
+  }
+`;
 export const getClient = /* GraphQL */ `
   query GetClient($id: ID!) {
     getClient(id: $id) {

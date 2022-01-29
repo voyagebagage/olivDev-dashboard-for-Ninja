@@ -177,3 +177,14 @@ type Kpi @model @searchable {
   dailyReport: DailyReport! @connection(name: "DailyReportKpis")
   agent: Agent! @connection(name: "AgentKpis", sortField: "name")
 }
+
+type Timezone {
+  # timezoneJSON: AWSJSON
+  timezone: String
+  # abbreviation: String
+  datetime: String
+}
+type Query {
+  getTimezone(timezone: String): Timezone
+    @function(name: "timeApiFunction-${env}")
+}
